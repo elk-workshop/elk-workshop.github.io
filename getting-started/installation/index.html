@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>本地安装 - ELK Workshop</title>
+<meta name="description" content="为Elastic技术社区精心打造">
+<meta name="generator" content="Hugo 0.54.0" />
+<link href="http://elk-workshop.github.ioindex.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="http://elk-workshop.github.io/getting-started/installation/">
+<link rel="stylesheet" href="http://elk-workshop.github.io/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="http://elk-workshop.github.io/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="http://elk-workshop.github.io/js/functions.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="http://elk-workshop.github.io/js/jquery.backtothetop/jquery.backtothetop.min.js"></script></head>
+<body>
+<div class="container"><header>
+<h1>ELK Workshop</h1>
+
+ <span class="version">Version 0.1.0</span>
+<a href="https://github.com/martinliu/elasticstack-workshop" class="github"><i class="fab fa-github"></i></a>
+<p class="description">为Elastic技术社区精心打造</p>
+
+</header>
+
+<div class="content-container">
+<main><h1>本地安装</h1>
+
+<h2 id="环境需求">环境需求</h2>
+
+<p>笔记本电脑的软硬件需求如下。</p>
+
+<p>建议的硬件配置：</p>
+
+<ul>
+<li>4~8GB内存</li>
+<li>2核以上CPU</li>
+<li>SSD硬盘</li>
+<li>Wifi无线上网</li>
+</ul>
+
+<p>软件配置需求：</p>
+
+<ul>
+<li>VirtualBox 用于运行实验环境的虚拟机</li>
+<li>Centos 7 用于安装和运行elastic产品</li>
+<li>虚拟机最小配置，1vCPU+4GB内存+80GB硬盘+NAT网络</li>
+</ul>
+
+<h2 id="准备虚拟机环境">准备虚拟机环境</h2>
+
+<p>网络端口准备，下面的描述以MacOS为例，Windows操作系统请理解后做相应配置。</p>
+
+<h3 id="1-确定ip地址">1 确定IP地址</h3>
+
+<p>登录虚拟机的控制台确认虚拟机的Ip地址，使用的命令 <code>ip add s</code>。</p>
+
+<pre><code>[root@localhost ~]# ip add s
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:4c:fc:fd brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global noprefixroute dynamic enp0s3
+       valid_lft 82892sec preferred_lft 82892sec
+    inet6 fe80::eb9e:f469:c79a:b9b0/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+[root@localhost ~]#
+
+</code></pre>
+
+<h3 id="2-设置virtualbox网络端口转发">2 设置VirtualBox网络端口转发</h3>
+
+<p>增加3条端口转发规则。如下图所示：</p>
+
+<p><img src="/media/9591568016572_.pic_hd.jpg" alt="9591568016572_.pic_hd" /></p>
+
+<p>操作系统准备</p>
+
+<h2 id="configure">Configure</h2>
+
+<pre><code>scp -P 2233 elasticsearch-7.3.1-linux-x86_64.tar.gz  root@127.0.0.1:/root/es.tar.gz
+tar  -zxvf  es.tar.gz -C /usr/local/
+
+</code></pre>
+
+<p>/root/elasticsearch-7.3.1/jdk</p>
+
+<p>export JAVA_HOME=/var/elasticsearch-7.3.1/jdk
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH</p>
+
+<p>adduser esuser
+passwd esuser</p>
+
+<p>chown -R esuaer /usr/local/elasticsearch-7.3.1</p>
+
+<p>You may specify options in config.toml (or config.yaml/config.json) of your site to make use of this theme&rsquo;s features.</p>
+
+<p>For an example of <code>config.toml</code>, see <a href="https://github.com/thingsym/hugo-theme-techdoc/blob/master/exampleSite/config.toml">config.toml</a> in exampleSite.</p>
+
+<p>See <a href="../configuration/">the Configuration documentation</a>.</p>
+
+<h2 id="preview-site">Preview site</h2>
+
+<p>network.host: [<em>local</em>, 172.30.6.1]</p>
+
+<p>vim /etc/sysctl.conf</p>
+
+<p>vm.max_map_count=655360</p>
+
+<p>sysctl -p</p>
+
+<p>vim /etc/security/limits.conf</p>
+
+<ul>
+<li>soft nofile 65536</li>
+<li>hard nofile 131072</li>
+<li>soft nproc 2048</li>
+<li>hard nproc 4096</li>
+</ul>
+
+<h2 id="安装kibana">安装Kibana</h2>
+
+<p>scp -P 2233 kibana-7.3.1-linux-x86_64.tar.gz   root@127.0.0.1:/root/</p>
+<div class="edit-meta">
+Last updated on 2017-10-17
+
+
+<br>
+Published on 2017-10-17
+<br><a href="https://github.com/martinliu/elasticstack-workshop/edit/master/content/getting-started/installation.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/getting-started/" title="获得&amp;准备实验环境"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - 获得&amp;准备实验环境</a>
+<a class="nav nav-next" href="/getting-started/1/" title="获得Elastic云环境">Next - 获得Elastic云环境 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+<nav>
+<ul>
+<li class=""><a href="http://elk-workshop.github.io">Home</a></li>
+
+<li class="parent"><a href="/getting-started/">获得&amp;准备实验环境</a>
+<ul class="sub-menu">
+<li class="active"><a href="/getting-started/installation/">本地安装</a></li>
+<li class=""><a href="/getting-started/1/">获得Elastic云环境</a></li>
+<li class=""><a href="/getting-started/configuration/">环境确认</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/sample/">测试数据&amp;文件</a>
+</li>
+
+<li class=""><a href="/chapter1/">L1 Elasticsearch基础</a>
+<ul class="">
+<li class=""><a href="/chapter1/1/">节点管理</a></li>
+<li class=""><a href="/chapter1/2/">数据管理</a></li>
+<li class=""><a href="/chapter1/3/">数据集管理</a></li>
+<li class=""><a href="/chapter1/4/">集群高级管理</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter2/">L2 Logstash实战</a>
+<ul class="">
+<li class=""><a href="/chapter2/1/">运行Logstash</a></li>
+<li class=""><a href="/chapter2/2/">测试首条流水线</a></li>
+<li class=""><a href="/chapter2/3/">插件管理</a></li>
+<li class=""><a href="/chapter2/4/">使用File input插件</a></li>
+<li class=""><a href="/chapter2/5/">使用JDBC input插件</a></li>
+<li class=""><a href="/chapter2/6/">使用ES output插件</a></li>
+<li class=""><a href="/chapter2/7/">使用csv output插件</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter3/">L3 Elasticsearch大数据实战</a>
+<ul class="">
+<li class=""><a href="/chapter3/1/">Bucket 聚合</a></li>
+<li class=""><a href="/chapter3/2/">Metric 聚合</a></li>
+<li class=""><a href="/chapter3/3/">Matrix 聚合</a></li>
+
+<li class=""><a href="/chapter3/chapter3-2/">实战案例1-Wifi服务</a>
+<ul class="">
+<li class=""><a href="/chapter3/chapter3-2/3/">Wifi使用率概况</a></li>
+<li class=""><a href="/chapter3/chapter3-2/7/">位置分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/5/">使用率分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/1/">导入测试数据</a></li>
+<li class=""><a href="/chapter3/chapter3-2/4/">排名分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/6/">用户模式分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/2/">确认导入结果</a></li>
+</ul>
+  
+</li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter4/">L4 Logstash数据清洗实战</a>
+<ul class="">
+<li class=""><a href="/chapter4/1/">CSV Filter解析csv文件</a></li>
+<li class=""><a href="/chapter4/2/">Mutate Filter处理字段</a></li>
+<li class=""><a href="/chapter4/3/">Grok Filter解析</a></li>
+<li class=""><a href="/chapter4/4/">Geoip Filter解释</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter5/">L5 Beats数据摄入实战</a>
+<ul class="">
+<li class=""><a href="/chapter5/1/">使用Filebeat采集日志</a></li>
+<li class=""><a href="/chapter5/2/">使用Metricbeat采集指标</a></li>
+<li class=""><a href="/chapter5/3/">使用Heartbeat</a></li>
+<li class=""><a href="/chapter5/4/">使用Packetbeat采集</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter6/">L6 Kibana数据可视化和分析实战</a>
+<ul class="">
+<li class=""><a href="/chapter6/1/">导入Apache日志</a></li>
+<li class=""><a href="/chapter6/2/">配置Index Pattern</a></li>
+<li class=""><a href="/chapter6/3/">浏览和搜索日志</a></li>
+<li class=""><a href="/chapter6/4/">使用Discover查询</a></li>
+<li class=""><a href="/chapter6/5/">复杂查询</a></li>
+<li class=""><a href="/chapter6/6/">DSL执行查询</a></li>
+<li class=""><a href="/chapter6/7/">Kibana查询管理</a></li>
+<li class=""><a href="/chapter6/8/">过滤器使用</a></li>
+<li class=""><a href="/chapter6/9/">数据可视化</a></li>
+<li class=""><a href="/chapter6/10/">网站分析实战</a></li>
+<li class=""><a href="/chapter6/11/">管理仪表板</a></li>
+<li class=""><a href="/chapter6/12/">Timeline时间序列分析</a></li>
+<li class=""><a href="/chapter6/13/">Kibana插件管理</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter7/">L7 IoT应用案例实战</a>
+<ul class="">
+<li class=""><a href="/chapter7/1/">准备数据结构</a></li>
+<li class=""><a href="/chapter7/2/">数据库初始化</a></li>
+<li class=""><a href="/chapter7/3/">数据处理流水线</a></li>
+<li class=""><a href="/chapter7/4/">构建业务前端</a></li>
+</ul>
+  
+</li>
+
+
+
+
+
+
+
+
+
+
+</ul>
+</nav>
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

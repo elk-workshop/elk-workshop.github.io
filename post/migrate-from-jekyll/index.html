@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Migrate to Hugo from Jekyll - ELK Workshop</title>
+<meta name="description" content="为Elastic技术社区精心打造">
+<meta name="generator" content="Hugo 0.54.0" />
+<link href="http://elk-workshop.github.ioindex.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="http://elk-workshop.github.io/post/migrate-from-jekyll/">
+<link rel="stylesheet" href="http://elk-workshop.github.io/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="http://elk-workshop.github.io/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="http://elk-workshop.github.io/js/functions.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="http://elk-workshop.github.io/js/jquery.backtothetop/jquery.backtothetop.min.js"></script></head>
+<body>
+<div class="container"><header>
+<h1>ELK Workshop</h1>
+
+ <span class="version">Version 0.1.0</span>
+<a href="https://github.com/martinliu/elasticstack-workshop" class="github"><i class="fab fa-github"></i></a>
+<p class="description">为Elastic技术社区精心打造</p>
+
+</header>
+
+<div class="content-container">
+<main><h1>Migrate to Hugo from Jekyll</h1>
+
+<h2 id="move-static-content-to-static">Move static content to <code>static</code></h2>
+
+<p>Jekyll has a rule that any directory not starting with <code>_</code> will be copied as-is to the <code>_site</code> output. Hugo keeps all static content under <code>static</code>. You should therefore move it all there.
+With Jekyll, something that looked like</p>
+
+<pre><code>▾ &lt;root&gt;/
+    ▾ images/
+        logo.png
+</code></pre>
+
+<p>should become</p>
+
+<pre><code>▾ &lt;root&gt;/
+    ▾ static/
+        ▾ images/
+            logo.png
+</code></pre>
+
+<p>Additionally, you&rsquo;ll want any files that should reside at the root (such as <code>CNAME</code>) to be moved to <code>static</code>.</p>
+
+<h2 id="create-your-hugo-configuration-file">Create your Hugo configuration file</h2>
+
+<p>Hugo can read your configuration as JSON, YAML or TOML. Hugo supports parameters custom configuration too. Refer to the <a href="/overview/configuration/">Hugo configuration documentation</a> for details.</p>
+
+<h2 id="set-your-configuration-publish-folder-to-site">Set your configuration publish folder to <code>_site</code></h2>
+
+<p>The default is for Jekyll to publish to <code>_site</code> and for Hugo to publish to <code>public</code>. If, like me, you have <a href="http://blog.blindgaenger.net/generate_github_pages_in_a_submodule.html"><code>_site</code> mapped to a git submodule on the <code>gh-pages</code> branch</a>, you&rsquo;ll want to do one of two alternatives:</p>
+
+<ol>
+<li><p>Change your submodule to point to map <code>gh-pages</code> to public instead of <code>_site</code> (recommended).</p>
+
+<pre><code>git submodule deinit _site
+git rm _site
+git submodule add -b gh-pages git@github.com:your-username/your-repo.git public
+</code></pre></li>
+
+<li><p>Or, change the Hugo configuration to use <code>_site</code> instead of <code>public</code>.</p>
+
+<pre><code>{
+    ..
+    &quot;publishdir&quot;: &quot;_site&quot;,
+    ..
+}
+</code></pre></li>
+</ol>
+
+<h2 id="convert-jekyll-templates-to-hugo-templates">Convert Jekyll templates to Hugo templates</h2>
+
+<p>That&rsquo;s the bulk of the work right here. The documentation is your friend. You should refer to <a href="http://jekyllrb.com/docs/templates/">Jekyll&rsquo;s template documentation</a> if you need to refresh your memory on how you built your blog and <a href="/layout/templates/">Hugo&rsquo;s template</a> to learn Hugo&rsquo;s way.</p>
+
+<p>As a single reference data point, converting my templates for <a href="http://heyitsalex.net/">heyitsalex.net</a> took me no more than a few hours.</p>
+
+<h2 id="convert-jekyll-plugins-to-hugo-shortcodes">Convert Jekyll plugins to Hugo shortcodes</h2>
+
+<p>Jekyll has <a href="http://jekyllrb.com/docs/plugins/">plugins</a>; Hugo has <a href="/doc/shortcodes/">shortcodes</a>. It&rsquo;s fairly trivial to do a port.</p>
+
+<h3 id="implementation">Implementation</h3>
+
+<p>As an example, I was using a custom <a href="https://github.com/alexandre-normand/alexandre-normand/blob/74bb12036a71334fdb7dba84e073382fc06908ec/_plugins/image_tag.rb"><code>image_tag</code></a> plugin to generate figures with caption when running Jekyll. As I read about shortcodes, I found Hugo had a nice built-in shortcode that does exactly the same thing.</p>
+
+<p>Jekyll&rsquo;s plugin:</p>
+
+<pre><code>module Jekyll
+  class ImageTag &lt; Liquid::Tag
+    @url = nil
+    @caption = nil
+    @class = nil
+    @link = nil
+    // Patterns
+    IMAGE_URL_WITH_CLASS_AND_CAPTION =
+    IMAGE_URL_WITH_CLASS_AND_CAPTION_AND_LINK = /(\w+)(\s+)((https?:\/\/|\/)(\S+))(\s+)&quot;(.*?)&quot;(\s+)-&gt;((https?:\/\/|\/)(\S+))(\s*)/i
+    IMAGE_URL_WITH_CAPTION = /((https?:\/\/|\/)(\S+))(\s+)&quot;(.*?)&quot;/i
+    IMAGE_URL_WITH_CLASS = /(\w+)(\s+)((https?:\/\/|\/)(\S+))/i
+    IMAGE_URL = /((https?:\/\/|\/)(\S+))/i
+    def initialize(tag_name, markup, tokens)
+      super
+      if markup =~ IMAGE_URL_WITH_CLASS_AND_CAPTION_AND_LINK
+        @class   = $1
+        @url     = $3
+        @caption = $7
+        @link = $9
+      elsif markup =~ IMAGE_URL_WITH_CLASS_AND_CAPTION
+        @class   = $1
+        @url     = $3
+        @caption = $7
+      elsif markup =~ IMAGE_URL_WITH_CAPTION
+        @url     = $1
+        @caption = $5
+      elsif markup =~ IMAGE_URL_WITH_CLASS
+        @class = $1
+        @url   = $3
+      elsif markup =~ IMAGE_URL
+        @url = $1
+      end
+    end
+    def render(context)
+      if @class
+        source = &quot;&lt;figure class='#{@class}'&gt;&quot;
+      else
+        source = &quot;&lt;figure&gt;&quot;
+      end
+      if @link
+        source += &quot;&lt;a href=\&quot;#{@link}\&quot;&gt;&quot;
+      end
+      source += &quot;&lt;img src=\&quot;#{@url}\&quot;&gt;&quot;
+      if @link
+        source += &quot;&lt;/a&gt;&quot;
+      end
+      source += &quot;&lt;figcaption&gt;#{@caption}&lt;/figcaption&gt;&quot; if @caption
+      source += &quot;&lt;/figure&gt;&quot;
+      source
+    end
+  end
+end
+Liquid::Template.register_tag('image', Jekyll::ImageTag)
+</code></pre>
+
+<p>is written as this Hugo shortcode:</p>
+
+<pre><code>&lt;!-- image --&gt;
+&lt;figure {{ with .Get &quot;class&quot; }}class=&quot;{{.}}&quot;{{ end }}&gt;
+    {{ with .Get &quot;link&quot;}}&lt;a href=&quot;{{.}}&quot;&gt;{{ end }}
+        &lt;img src=&quot;{{ .Get &quot;src&quot; }}&quot; {{ if or (.Get &quot;alt&quot;) (.Get &quot;caption&quot;) }}alt=&quot;{{ with .Get &quot;alt&quot;}}{{.}}{{else}}{{ .Get &quot;caption&quot; }}{{ end }}&quot;{{ end }} /&gt;
+    {{ if .Get &quot;link&quot;}}&lt;/a&gt;{{ end }}
+    {{ if or (or (.Get &quot;title&quot;) (.Get &quot;caption&quot;)) (.Get &quot;attr&quot;)}}
+    &lt;figcaption&gt;{{ if isset .Params &quot;title&quot; }}
+        {{ .Get &quot;title&quot; }}{{ end }}
+        {{ if or (.Get &quot;caption&quot;) (.Get &quot;attr&quot;)}}&lt;p&gt;
+        {{ .Get &quot;caption&quot; }}
+        {{ with .Get &quot;attrlink&quot;}}&lt;a href=&quot;{{.}}&quot;&gt; {{ end }}
+            {{ .Get &quot;attr&quot; }}
+        {{ if .Get &quot;attrlink&quot;}}&lt;/a&gt; {{ end }}
+        &lt;/p&gt; {{ end }}
+    &lt;/figcaption&gt;
+    {{ end }}
+&lt;/figure&gt;
+&lt;!-- image --&gt;
+</code></pre>
+
+<h3 id="usage">Usage</h3>
+
+<p>I simply changed:</p>
+
+<pre><code>{% image full http://farm5.staticflickr.com/4136/4829260124_57712e570a_o_d.jpg &quot;One of my favorite touristy-type photos. I secretly waited for the good light while we were &quot;having fun&quot; and took this. Only regret: a stupid pole in the top-left corner of the frame I had to clumsily get rid of at post-processing.&quot; -&gt;http://www.flickr.com/photos/alexnormand/4829260124/in/set-72157624547713078/ %}
+</code></pre>
+
+<p>to this (this example uses a slightly extended version named <code>fig</code>, different than the built-in <code>figure</code>):</p>
+
+<pre><code>{{% fig class=&quot;full&quot; src=&quot;http://farm5.staticflickr.com/4136/4829260124_57712e570a_o_d.jpg&quot; title=&quot;One of my favorite touristy-type photos. I secretly waited for the good light while we were having fun and took this. Only regret: a stupid pole in the top-left corner of the frame I had to clumsily get rid of at post-processing.&quot; link=&quot;http://www.flickr.com/photos/alexnormand/4829260124/in/set-72157624547713078/&quot; %}}
+</code></pre>
+
+<p>As a bonus, the shortcode named parameters are, arguably, more readable.</p>
+
+<h2 id="finishing-touches">Finishing touches</h2>
+
+<h3 id="fix-content">Fix content</h3>
+
+<p>Depending on the amount of customization that was done with each post with Jekyll, this step will require more or less effort. There are no hard and fast rules here except that <code>hugo server --watch</code> is your friend. Test your changes and fix errors as needed.</p>
+
+<h3 id="clean-up">Clean up</h3>
+
+<p>You&rsquo;ll want to remove the Jekyll configuration at this point. If you have anything else that isn&rsquo;t used, delete it.</p>
+
+<h2 id="a-practical-example-in-a-diff">A practical example in a diff</h2>
+
+<p><a href="http://heyitsalex.net/">Hey, it&rsquo;s Alex</a> was migrated in less than a <em>father-with-kids day</em> from Jekyll to Hugo. You can see all the changes (and screw-ups) by looking at this <a href="https://github.com/alexandre-normand/alexandre-normand/compare/869d69435bd2665c3fbf5b5c78d4c22759d7613a...b7f6605b1265e83b4b81495423294208cc74d610">diff</a>.</p>
+<div class="edit-meta">
+Last updated on 2014-03-10
+
+
+<br>
+Published on 2014-03-10
+<br><a href="https://github.com/martinliu/elasticstack-workshop/edit/master/content/post/migrate-from-jekyll.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/post/creating-a-new-theme/" title="Creating a New Theme"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - Creating a New Theme</a>
+<a class="nav nav-next" href="/getting-started/" title="获得&amp;准备实验环境">Next - 获得&amp;准备实验环境 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+<nav>
+<ul>
+<li class=""><a href="http://elk-workshop.github.io">Home</a></li>
+
+<li class=""><a href="/getting-started/">获得&amp;准备实验环境</a>
+<ul class="">
+<li class=""><a href="/getting-started/installation/">本地安装</a></li>
+<li class=""><a href="/getting-started/1/">获得Elastic云环境</a></li>
+<li class=""><a href="/getting-started/configuration/">环境确认</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/sample/">测试数据&amp;文件</a>
+</li>
+
+<li class=""><a href="/chapter1/">L1 Elasticsearch基础</a>
+<ul class="">
+<li class=""><a href="/chapter1/1/">节点管理</a></li>
+<li class=""><a href="/chapter1/2/">数据管理</a></li>
+<li class=""><a href="/chapter1/3/">数据集管理</a></li>
+<li class=""><a href="/chapter1/4/">集群高级管理</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter2/">L2 Logstash实战</a>
+<ul class="">
+<li class=""><a href="/chapter2/1/">运行Logstash</a></li>
+<li class=""><a href="/chapter2/2/">测试首条流水线</a></li>
+<li class=""><a href="/chapter2/3/">插件管理</a></li>
+<li class=""><a href="/chapter2/4/">使用File input插件</a></li>
+<li class=""><a href="/chapter2/5/">使用JDBC input插件</a></li>
+<li class=""><a href="/chapter2/6/">使用ES output插件</a></li>
+<li class=""><a href="/chapter2/7/">使用csv output插件</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter3/">L3 Elasticsearch大数据实战</a>
+<ul class="">
+<li class=""><a href="/chapter3/1/">Bucket 聚合</a></li>
+<li class=""><a href="/chapter3/2/">Metric 聚合</a></li>
+<li class=""><a href="/chapter3/3/">Matrix 聚合</a></li>
+
+<li class=""><a href="/chapter3/chapter3-2/">实战案例1-Wifi服务</a>
+<ul class="">
+<li class=""><a href="/chapter3/chapter3-2/3/">Wifi使用率概况</a></li>
+<li class=""><a href="/chapter3/chapter3-2/7/">位置分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/5/">使用率分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/1/">导入测试数据</a></li>
+<li class=""><a href="/chapter3/chapter3-2/4/">排名分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/6/">用户模式分析</a></li>
+<li class=""><a href="/chapter3/chapter3-2/2/">确认导入结果</a></li>
+</ul>
+  
+</li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter4/">L4 Logstash数据清洗实战</a>
+<ul class="">
+<li class=""><a href="/chapter4/1/">CSV Filter解析csv文件</a></li>
+<li class=""><a href="/chapter4/2/">Mutate Filter处理字段</a></li>
+<li class=""><a href="/chapter4/3/">Grok Filter解析</a></li>
+<li class=""><a href="/chapter4/4/">Geoip Filter解释</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter5/">L5 Beats数据摄入实战</a>
+<ul class="">
+<li class=""><a href="/chapter5/1/">使用Filebeat采集日志</a></li>
+<li class=""><a href="/chapter5/2/">使用Metricbeat采集指标</a></li>
+<li class=""><a href="/chapter5/3/">使用Heartbeat</a></li>
+<li class=""><a href="/chapter5/4/">使用Packetbeat采集</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter6/">L6 Kibana数据可视化和分析实战</a>
+<ul class="">
+<li class=""><a href="/chapter6/1/">导入Apache日志</a></li>
+<li class=""><a href="/chapter6/2/">配置Index Pattern</a></li>
+<li class=""><a href="/chapter6/3/">浏览和搜索日志</a></li>
+<li class=""><a href="/chapter6/4/">使用Discover查询</a></li>
+<li class=""><a href="/chapter6/5/">复杂查询</a></li>
+<li class=""><a href="/chapter6/6/">DSL执行查询</a></li>
+<li class=""><a href="/chapter6/7/">Kibana查询管理</a></li>
+<li class=""><a href="/chapter6/8/">过滤器使用</a></li>
+<li class=""><a href="/chapter6/9/">数据可视化</a></li>
+<li class=""><a href="/chapter6/10/">网站分析实战</a></li>
+<li class=""><a href="/chapter6/11/">管理仪表板</a></li>
+<li class=""><a href="/chapter6/12/">Timeline时间序列分析</a></li>
+<li class=""><a href="/chapter6/13/">Kibana插件管理</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/chapter7/">L7 IoT应用案例实战</a>
+<ul class="">
+<li class=""><a href="/chapter7/1/">准备数据结构</a></li>
+<li class=""><a href="/chapter7/2/">数据库初始化</a></li>
+<li class=""><a href="/chapter7/3/">数据处理流水线</a></li>
+<li class=""><a href="/chapter7/4/">构建业务前端</a></li>
+</ul>
+  
+</li>
+
+
+
+
+
+
+
+
+
+
+</ul>
+</nav>
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>
