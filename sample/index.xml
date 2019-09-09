@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>测试数据&amp;文件 on ELK Workshop</title>
-    <link>http://elk-workshop.github.io/sample/</link>
+    <link>https://elk-workshop.github.io/sample/</link>
     <description>Recent content in 测试数据&amp;文件 on ELK Workshop</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 17 Oct 2017 15:26:15 +0000</lastBuildDate>
     
-	<atom:link href="http://elk-workshop.github.io/sample/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://elk-workshop.github.io/sample/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
