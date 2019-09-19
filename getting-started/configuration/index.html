@@ -26,91 +26,30 @@
 </header>
 
 <div class="content-container">
-<main><h1>环境确认</h1>
+<main><h1>环境确认</h1><p>在浏览器中访问 Kibana 控制台页面，在 Kibana 的开发者工具中输入如下查询命令，点击每一条命令之后的三角形执行按钮，查看并思考查询结果的含义。</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">GET</span> <span class="n">_search</span>
 
-<p>You may specify options in config.toml (or config.yaml/config.json) of your site to make use of this theme’s features.</p>
+<span class="n">GET</span> <span class="o">/</span>
 
-<p>For an example of <code>config.toml</code>, see <a href="https://github.com/thingsym/hugo-theme-techdoc/blob/master/exampleSite/config.toml">config.toml</a> in exampleSite.</p>
+<span class="n">GET</span> <span class="o">/</span><span class="n">_cluster</span><span class="o">/</span><span class="n">stats</span>
 
-<h2 id="params">Params</h2>
+<span class="n">GET</span> <span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">nodes</span><span class="err">?</span><span class="n">v</span>
 
-<pre><code># Souce Code repository section
-description = &quot;put your description&quot;
-github_repository = &quot;https://github.com/thingsym/hugo-theme-techdoc&quot;
-version = &quot;0.2.2&quot;
+<span class="n">GET</span> <span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">indices</span><span class="err">?</span><span class="n">v</span>
 
-# Documentation repository section
-# documentation repository (set edit link to documentation repository)
-github_doc_repository = &quot;https://github.com/thingsym/hugo-theme-techdoc&quot;
+<span class="n">GET</span> <span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">shards</span></code></pre></div>
+<p>删除掉黄色方块区域里的旧代码，复制以上代码，进行测试，输入光标移动到每一行之后，点击右边的三角形按钮。</p>
 
-# Analytic section
-google_analytics_id = &quot;&quot; # Your Google Analytics tracking id
-tag_manager_container_id = &quot;&quot; # Your Google Tag Manager container id
-google_site_verification = &quot;&quot; # Your Google Site Verification
+<p><img src="/media/15689026783274.jpg" alt="" /></p>
 
-# Theme settings section
-dateformat = &quot;&quot; # default &quot;2 Jan 2006&quot;
+<div class="panel panel-success"><div class="panel-header">
+<h3>成功</h3>
+</div><div class="panel-body">
+<p>Kibana 开发者工具能正常查询和使用，和周边的同学讨论每一行查询结果的含义。</p>
 
-# path name excluded from document menu
-menu_exclusion = [&quot;archives&quot;, &quot;blog&quot;, &quot;entry&quot;, &quot;post&quot;, &quot;posts&quot;]
-</code></pre>
+</div>
+</div>
 
-<h4 id="description"><code>description</code></h4>
-
-<p>The document summary</p>
-
-<p>default: <code>put your description</code></p>
-
-<h4 id="github-repository"><code>github_repository</code></h4>
-
-<p>URL of souce code repository</p>
-
-<p>default: <code>https://github.com/thingsym/hugo-theme-techdoc</code></p>
-
-<h4 id="version"><code>version</code></h4>
-
-<p>The version of souce code</p>
-
-<p>default: <code>0.2.2</code></p>
-
-<h4 id="github-doc-repository"><code>github_doc_repository</code></h4>
-
-<p>URL of documentation repository for editting</p>
-
-<p>default: <code>https://github.com/thingsym/hugo-theme-techdoc</code></p>
-
-<h4 id="google-analytics-id"><code>google_analytics_id</code></h4>
-
-<p>ID of Google Analytics</p>
-
-<p>default: <code>&quot;&quot;</code></p>
-
-<p>Container ID of Google Tag Manager</p>
-
-<h4 id="tag-manager-container-id"><code>tag_manager_container_id</code></h4>
-
-<p>default: <code>&quot;&quot;</code></p>
-
-<h4 id="google-site-verification"><code>google_site_verification</code></h4>
-
-<p>Content value in meta tag <code>google-site-verification</code> for Google Search Console</p>
-
-<pre><code>&lt;meta name=&quot;google-site-verification&quot; content=&quot;e7-viorjjfiihHIoowh8KLiowhbs&quot; /&gt;
-</code></pre>
-
-<p>default: <code>&quot;&quot;</code></p>
-
-<h4 id="dateformat"><code>dateformat</code></h4>
-
-<p>default: <code>&quot;&quot;</code> as <code>2 Jan 2006</code></p>
-
-<h4 id="menu-exclusion"><code>menu_exclusion</code></h4>
-
-<p>Path name excluded from documentation menu</p>
-
-<p>By default, we exclude commonly used folder names in blogs.</p>
-
-<p>default: <code>[&quot;archives&quot;, &quot;blog&quot;, &quot;entry&quot;, &quot;post&quot;, &quot;posts&quot;]</code></p>
 <div class="edit-meta">
 Last updated on 2017-10-17
 
@@ -118,7 +57,7 @@ Last updated on 2017-10-17
 <br>
 Published on 2017-10-17
 <br><a href="https://github.com/martinliu/elasticstack-workshop/edit/master/content/getting-started/configuration.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/getting-started/1/" title="获得Elastic云环境"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - 获得Elastic云环境</a>
-<a class="nav nav-next" href="/sample/" title="测试数据&amp;文件">Next - 测试数据&amp;文件 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+<a class="nav nav-next" href="/sample/" title="获取测试数据">Next - 获取测试数据 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
 </nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
 </footer>
 </main><div class="sidebar">
@@ -126,7 +65,7 @@ Published on 2017-10-17
 <ul>
 <li class=""><a href="https://elk-workshop.github.io/">Home</a></li>
 
-<li class="parent"><a href="/getting-started/">获得&amp;准备实验环境</a>
+<li class="parent"><a href="/getting-started/">准备实验环境</a>
 <ul class="sub-menu">
 <li class=""><a href="/getting-started/installation/">本地安装</a></li>
 <li class=""><a href="/getting-started/1/">获得Elastic云环境</a></li>
@@ -135,7 +74,7 @@ Published on 2017-10-17
   
 </li>
 
-<li class=""><a href="/sample/">测试数据&amp;文件</a>
+<li class=""><a href="/sample/">获取测试数据</a>
 </li>
 
 <li class=""><a href="/chapter1/">L1 Elasticsearch基础</a>
@@ -231,16 +170,6 @@ Published on 2017-10-17
 </ul>
   
 </li>
-
-
-
-
-
-
-
-
-
-
 </ul>
 </nav>
 

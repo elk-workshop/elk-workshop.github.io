@@ -53,23 +53,13 @@
   </url>
   
   <url>
-    <loc>https://elk-workshop.github.io/post/creating-a-new-theme/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/post/migrate-from-jekyll/</loc>
-    <lastmod>2014-03-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://elk-workshop.github.io/hello_world/</loc>
     <lastmod>2017-10-17T14:00:45+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://elk-workshop.github.io/posts/hello_world/</loc>
-    <lastmod>2017-10-17T14:00:45+00:00</lastmod>
+    <loc>https://elk-workshop.github.io/getting-started/configuration/</loc>
+    <lastmod>2017-10-17T15:26:15+00:00</lastmod>
   </url>
   
   <url>
@@ -273,41 +263,6 @@
   </url>
   
   <url>
-    <loc>https://elk-workshop.github.io/getting-started/configuration/</loc>
-    <lastmod>2017-10-17T15:26:15+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/archives/hello_world2/</loc>
-    <lastmod>2017-12-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/blog/hello_world2/</loc>
-    <lastmod>2017-12-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/entry/hello_world2/</loc>
-    <lastmod>2017-12-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/archives/hello_world1/</loc>
-    <lastmod>2017-11-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/blog/hello_world1/</loc>
-    <lastmod>2017-11-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/entry/hello_world1/</loc>
-    <lastmod>2017-11-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://elk-workshop.github.io/</loc>
     <lastmod>2018-12-08T15:26:15+00:00</lastmod>
   </url>
@@ -353,45 +308,8 @@
   </url>
   
   <url>
-    <loc>https://elk-workshop.github.io/archives/hello_world/</loc>
-    <lastmod>2017-10-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/blog/hello_world/</loc>
-    <lastmod>2017-10-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/entry/hello_world/</loc>
-    <lastmod>2017-10-17T14:00:45+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://elk-workshop.github.io/about/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/post/goisforlovers/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/post/hugoisforlovers/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/archives/</loc>
-    <lastmod>2017-12-17T14:00:45+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/blog/</loc>
-    <lastmod>2017-12-17T14:00:45+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -400,74 +318,7 @@
   </url>
   
   <url>
-    <loc>https://elk-workshop.github.io/categories/development/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/tags/development/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/entry/</loc>
-    <lastmod>2017-12-17T14:00:45+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/tags/go/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/categories/golang/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/tags/golang/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/tags/hugo/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/post/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/posts/</loc>
-    <lastmod>2017-10-17T14:00:45+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://elk-workshop.github.io/tags/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/tags/templates/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://elk-workshop.github.io/tags/themes/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

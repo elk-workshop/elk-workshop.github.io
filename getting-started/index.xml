@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>获得&amp;准备实验环境 on ELK Workshop</title>
+    <title>准备实验环境 on ELK Workshop</title>
     <link>https://elk-workshop.github.io/getting-started/</link>
-    <description>Recent content in 获得&amp;准备实验环境 on ELK Workshop</description>
+    <description>Recent content in 准备实验环境 on ELK Workshop</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 17 Oct 2017 15:26:15 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Tue, 17 Oct 2017 15:26:15 +0000</pubDate>
       
       <guid>https://elk-workshop.github.io/getting-started/installation/</guid>
-      <description>环境需求 笔记本电脑的软硬件需求如下。 建议的硬件配置： 4~8GB内存 2核以上CPU SSD硬盘 Wifi无线上网 软件配置需求： VirtualBox 用于运行实验环境的</description>
+      <description>环境需求 笔记本电脑的软硬件需求如下。 硬件配置： 8GB内存 2核以上CPU SSD硬盘 Wifi/有线网络，可以上Internet 软件配置： MacO</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Tue, 17 Oct 2017 15:26:15 +0000</pubDate>
       
       <guid>https://elk-workshop.github.io/getting-started/1/</guid>
-      <description>Download Hugo theme If you have git installed, you can do the following at the command-line-interface within the Hugo directory: cd themes git clone https://github.com/thingsym/hugo-theme-techdoc.git For more information read the Hugo documentation. Configure You may specify options in config.toml (or config.yaml/config.json) of your site to make use of this theme&amp;rsquo;s features. For an example of config.toml, see config.toml in exampleSite. See the Configuration documentation. Preview site To preview your site,</description>
+      <description>在浏览器中访问 elastic cloud 云服务 https://cloud.elastic.co 。 使用你的邮箱完成注册流程。 查看下面的视频完成创建实验环境的过程。 提示 尽量使用可以接受国外邮件的工作邮箱。 开通免费</description>
     </item>
     
     <item>
@@ -35,7 +35,7 @@
       <pubDate>Tue, 17 Oct 2017 15:26:15 +0000</pubDate>
       
       <guid>https://elk-workshop.github.io/getting-started/configuration/</guid>
-      <description>You may specify options in config.toml (or config.yaml/config.json) of your site to make use of this theme’s features. For an example of config.toml, see config.toml in exampleSite. Params # Souce Code repository section description = &amp;quot;put your description&amp;quot; github_repository = &amp;quot;https://github.com/thingsym/hugo-theme-techdoc&amp;quot; version = &amp;quot;0.2.2&amp;quot; # Documentation repository section # documentation repository (set edit link to documentation repository) github_doc_repository = &amp;quot;https://github.com/thingsym/hugo-theme-techdoc&amp;quot; # Analytic section google_analytics_id</description>
+      <description>在浏览器中访问 Kibana 控制台页面，在 Kibana 的开发者工具中输入如下查询命令，点击每一条命令之后的三角形执行按钮，查看并思考查询结果的含义。 GET _search GET / GET /_cluster/stats GET</description>
     </item>
     
   </channel>
