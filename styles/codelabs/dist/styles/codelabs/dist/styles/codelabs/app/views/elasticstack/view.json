@@ -1,0 +1,10 @@
+{
+  "title": "Elastic Stack",
+  "description": "Elastic Stack 包含 Elastic Stack、Logstash、Kibana 和 Beats 等组件，是一个非常流行的开源软件。它主要的应用场景包括：企业搜索/业务搜索、可观测性和信息安全管理。",
+  "logoUrl": "/elasticstack/ElasticStack.svg",
+  "tags": ["elasticstack"],
+  "exclude": [
+    ".*-about$",
+    "^lang-.*"
+  ]
+}
