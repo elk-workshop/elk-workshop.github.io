@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2020-10-30T10:26:28+08:00",
+  "id": "how-to-write-a-codelab",
+  "duration": 8,
+  "title": "贡献你的代码实验室",
+  "authors": "Zarin",
+  "summary": "参与社区代码实验室贡献",
+  "source": "how-to-write-a-codelab.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "sample"
+  ],
+  "tags": [
+    "pipeline"
+  ],
+  "feedback": "https://devopsmeetup.com",
+  "url": "how-to-write-a-codelab"
+}
