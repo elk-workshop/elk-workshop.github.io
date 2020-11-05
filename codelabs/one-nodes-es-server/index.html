@@ -1,0 +1,547 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>搭建单节点 Elasticsearch 集群服务</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-159133967-1"
+                  id="one-nodes-es-server"
+                  title="搭建单节点 Elasticsearch 集群服务"
+                  environment="web"
+                  feedback-link="https://martinliu.cn">
+    
+      <google-codelab-step label="概述" duration="1">
+        <h2 is-upgraded>学习收益</h2>
+<p>你将学习到以下技能：</p>
+<ol type="1">
+<li>下载并运行 Elasticsearch 服务器</li>
+<li>在服务器中索引一些文档（使用 _index API）</li>
+<li>体验搜索查询 （使用 _search API）</li>
+<li>尝试数据分析聚合 （使用 _search API）</li>
+<li>下载并运行 Kibana 服务器</li>
+</ol>
+<p>本课程的所有程序文件、软件包的下载地址如下：</p>
+<ul>
+<li>百度网盘 https://pan.baidu.com/s/1fqLLEanfkmLYBZJBrKhiYQ</li>
+<li>提取码：0kx6</li>
+</ul>
+<p>请在网盘文件加中，找到对应课程的目录，下载该目录中的所有文件到本机（macOS），或者上传到云主机中。</p>
+<h2 is-upgraded>参考信息</h2>
+<p>Elastic 官方参考文档：</p>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started.html" target="_blank">Getting started with Elasticsearch</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-settings.html" target="_blank">Discovery and cluster formation settings</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html#single-node-discovery" target="_blank">Bootstrap Checks</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-your-data.html" target="_blank">Search your data</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a></li>
+</ul>
+<p>Elastic Stack 包含了我们常说的 ELK 或者 ELKB。如下图所示： <img alt="9521567760281_.pic_hd" src="img/17da333e5e9ca6d6.jpg"></p>
+<p>ELK 是 Elasticsearch、Logstash和Kinina的首字母缩写，ELK Stack是elastic公司三大核心产品的组合方案。</p>
+<p class="image-container"><img alt="9521567760281_.pic_hd" src="img/df42341d371ed458.jpg"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="环境需求检查" duration="2">
+        <p>顺利完成本 Lab 的笔记本电脑的软硬件需求如下。</p>
+<aside class="special"><p>建议使用配置足够的笔记本电脑，在本机的命令行直接运行本 Lab 的相关操作，已获取最佳体验。</p>
+</aside>
+<h2 is-upgraded>硬件配置</h2>
+<ul>
+<li>4GB 内存或更多</li>
+<li>i5 及更高 CPU</li>
+<li>Wifi 或有线网络，能访问互联网。</li>
+</ul>
+<h2 is-upgraded>软件配置</h2>
+<ul>
+<li>MacOS、Windows 或者 Linux 操作系统都可以。</li>
+<li>终端命令行工具软件，例如： iTerm2、Terminal、 <a href="https://cmder.net/" target="_blank">cmder for Windows 10</a>。</li>
+<li>curl、wget 或者其他的图形化下载工具。</li>
+</ul>
+<aside class="warning"><p>打开命令行工具软件，进入一个准备好的空目录。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="运行 Elasticsearch 服务器" duration="5">
+        <aside class="special"><p>在实操练习的空目录中下载 Elasticsearch 服务器软件压缩包 tar.gz 版本（非 rpm 或 deb 安装包）。</p>
+</aside>
+<h2 is-upgraded>下载软件压缩包</h2>
+<p>下载符合你的操作系统类型的 Elasticsearch 软件包。</p>
+<p>Linux:  <a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-linux-x86_64.tar.gz" target="_blank">elasticsearch-7.9.3-linux-x86_64.tar.gz</a></p>
+<pre><code language="language-bash" class="language-bash">curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-linux-x86_64.tar.gz
+</code></pre>
+<p>macOS:  <a href="https://artifacts.elastic.co/downloads/elasticsearch/
+elasticsearch-7.9.3-darwin-x86_64.tar.gz" target="_blank">elasticsearch-7.9.3-darwin-x86_64.tar.gz</a></p>
+<pre><code language="language-bash" class="language-bash">curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-darwin-x86_64.tar.gz
+</code></pre>
+<p>Windows:</p>
+<p><a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-windows-x86_64.zip" target="_blank"><paper-button class="colored" raised>elasticsearch-7.9.3-windows-x86_64.zip</paper-button></a></p>
+<h2 is-upgraded>解压缩软件压缩包</h2>
+<p>进入下载软件包所在的目录中。解压缩 Elasticsearch 服务器端软件包。</p>
+<p>Linux:</p>
+<pre><code language="language-bash" class="language-bash">tar -xvf elasticsearch-7.9.3-linux-x86_64.tar.gz
+</code></pre>
+<p>macOS:</p>
+<pre><code language="language-bash" class="language-bash">tar -xvf elasticsearch-7.9.3-darwin-x86_64.tar.gz
+</code></pre>
+<p>Windows PowerShell:</p>
+<pre><code language="language-bash" class="language-bash">Expand-Archive elasticsearch-7.9.3-windows-x86_64.zip
+</code></pre>
+<h2 is-upgraded>启动 Elasticsearch 服务</h2>
+<p>进入加压缩后的目录，并在命令行启动 Elasticsearch 服务器。</p>
+<p>Linux 和 macOS:</p>
+<pre><code language="language-bash" class="language-bash">cd elasticsearch-7.9.3/bin
+./elasticsearch -Ecluster.name=1m-only -Ediscovery.type=single-node -Enode.name=node1
+</code></pre>
+<p>Windows:</p>
+<pre><code language="language-bash" class="language-bash">cd elasticsearch-7.9.3\bin
+.\elasticsearch.bat -E cluster.name=1m-only -E discovery.type=single-node -E node.name=node1
+</code></pre>
+<p>在启动日志停止滚动后，一个名为 <code>1m-only</code> 的单节点 Elasticsearch 集群就启动成功了。启动是参数说明如下：</p>
+<ul>
+<li>cluster.name ： 集群名称</li>
+<li>node.name : 节点名称</li>
+<li>discovery.type ：集群中节点间的发现方式，显式声明该集群中只有一个节点。</li>
+</ul>
+<p>在一个新的命令行窗口中用 <code>curl</code> 命令行工具测试 Elasticsearch 集群服务的状态。</p>
+<p>查看服务的基本信息。Linux 和 macOS:</p>
+<p><code>curl -X GET http://localhost:9200</code></p>
+<pre><code language="language-bash" class="language-bash">curl -X GET http://localhost:9200
+{
+  &#34;name&#34; : &#34;node1&#34;,
+  &#34;cluster_name&#34; : &#34;1m-only&#34;,
+  &#34;cluster_uuid&#34; : &#34;LvHOXakFTby0-uPwq_Ekiw&#34;,
+  &#34;version&#34; : {
+    &#34;number&#34; : &#34;7.9.3&#34;,
+    &#34;build_flavor&#34; : &#34;default&#34;,
+    &#34;build_type&#34; : &#34;tar&#34;,
+    &#34;build_hash&#34; : &#34;c4138e51121ef06a6404866cddc601906fe5c868&#34;,
+    &#34;build_date&#34; : &#34;2020-10-16T10:36:16.141335Z&#34;,
+    &#34;build_snapshot&#34; : false,
+    &#34;lucene_version&#34; : &#34;8.6.2&#34;,
+    &#34;minimum_wire_compatibility_version&#34; : &#34;6.8.0&#34;,
+    &#34;minimum_index_compatibility_version&#34; : &#34;6.0.0-beta1&#34;
+  },
+  &#34;tagline&#34; : &#34;You Know, for Search&#34;
+}
+
+</code></pre>
+<p>查看集群的状态信息。Linux 和 macOS:</p>
+<p><code>curl -X GET http://localhost:9200/_cat/nodes\?v</code></p>
+<pre><code language="language-bash" class="language-bash">curl -X GET http://localhost:9200/_cat/nodes\?v
+ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+127.0.0.1           17          97   7    2.05                  dilmrt    *      node1
+</code></pre>
+<p>上面的 <code>master</code> 那一列下面的值为 <code>*</code> 号，表明节点 <code>node1</code> 是主节点。</p>
+<p>在浏览器中验证 Elasticsearch 集群服务的状态，打开浏览器中访问这个网址 <code>http://localhost:9200</code> 。访问结果应如下图所示：</p>
+<p class="image-container"><img alt="2020-10-28_11-35-01" src="img/42317fb1250e878e.jpeg"></p>
+<p>然后尝试访问这个网址 <code>http://localhost:9200/_cat/nodes\?v</code> 。</p>
+<aside class="warning"><p>确保在命令行和浏览器中都能看到正确的集群名称、节点名称和软件版本号</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="索引一些文档" duration="8">
+        <aside class="special"><p>这个本地运行的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对文档的增删改查（CURD）等操作。</p>
+</aside>
+<h2 is-upgraded>索引单个和返回单个文档</h2>
+<p>索引一个文档，该文档只具有一个键值对数据 &#34;name&#34;: &#34;John Doe&#34; 。</p>
+<pre><code language="language-bash" class="language-bash">curl -X PUT &#34;localhost:9200/customer/_doc/1?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;name&#34;: &#34;John Doe&#34;
+}
+&#39;
+</code></pre>
+<p>注意：以上命令最后一行还有一个单引号。</p>
+<p>以上命令的返回结果如下：</p>
+<pre><code>{
+  &#34;_index&#34; : &#34;customer&#34;,
+  &#34;_type&#34; : &#34;_doc&#34;,
+  &#34;_id&#34; : &#34;1&#34;,
+  &#34;_version&#34; : 1,
+  &#34;result&#34; : &#34;created&#34;,
+  &#34;_shards&#34; : {
+    &#34;total&#34; : 2,
+    &#34;successful&#34; : 1,
+    &#34;failed&#34; : 0
+  },
+  &#34;_seq_no&#34; : 0,
+  &#34;_primary_term&#34; : 1
+}
+</code></pre>
+<p>以上的命令创建了名称为 <code>customer</code> 的新索引，并保存了第一个编号为 <code>1</code> 的文档。</p>
+<p>用下面的命令取回这个编号为 <code>1</code> 的文档。</p>
+<pre><code>curl -X GET &#34;localhost:9200/customer/_doc/1?pretty&#34;
+
+</code></pre>
+<p>返回的结果如下：</p>
+<pre><code>{
+  &#34;_index&#34; : &#34;customer&#34;,
+  &#34;_type&#34; : &#34;_doc&#34;,
+  &#34;_id&#34; : &#34;1&#34;,
+  &#34;_version&#34; : 1,
+  &#34;_seq_no&#34; : 0,
+  &#34;_primary_term&#34; : 1,
+  &#34;found&#34; : true,
+  &#34;_source&#34; : {
+    &#34;name&#34; : &#34;John Doe&#34;
+  }
+}
+
+</code></pre>
+<h2 is-upgraded>批量索引文档</h2>
+<p>在有大量文档的时候，可以使用 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docs-bulk.html" target="_blank">buck API</a> 进行批量索引（导入）的操作。</p>
+<p>下载测试数据文件 <a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank">accounts.json</a> ，这个文件中有一千条人工生成的数据</p>
+<p><a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank"><paper-button class="colored" raised>点此下载 account.json 文件</paper-button></a></p>
+<p>将 <code>account.json</code> 文件下载到测试目录中，用文本编辑器打开浏览确认。</p>
+<p>在命令行中，进入以上测试数据文件的目录中，运行下面的两条命令。</p>
+<pre><code>curl -H &#34;Content-Type: application/json&#34; -XPOST &#34;localhost:9200/bank/_bulk?pretty&amp;refresh&#34; --data-binary &#34;@accounts.json&#34;
+curl &#34;localhost:9200/_cat/indices?v&#34;
+</code></pre>
+<p>以上命令的结果，最后三行应该如下所示：</p>
+<pre><code>health status index    uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   bank     Q_yO2ErRSRSgCXHu6eac-g   1   1       1000            0    382.2kb        382.2kb
+yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0      3.8kb          3.8kb
+</code></pre>
+<p>上面的结果表明：当前的集群中已经创建了两个索引 <code>bank</code> 和 <code>customer</code> ; 名为 <code>bank</code> 的索引显示文档数为 1000，这就是刚才用 bulk API 导入的数据。</p>
+<p>如果在浏览器中访问这个网址 localhost:9200/_cat/indices?v 也可以看到如下相同结果。</p>
+<p class="image-container"><img alt="2020-10-28_12-58-30" src="img/fba2aff51dffabce.jpeg"></p>
+<aside class="warning"><p><code>_doc</code> 和 <code>_bulk</code> API 索引了单个和批量的数据文档。名为 <code>bank</code> 和 <code>customer</code> 的索引也在过程中被创建。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="测试搜索功能" duration="6">
+        <aside class="special"><p>使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
+</aside>
+<h2 is-upgraded>搜索 1</h2>
+<p>说明：</p>
+<ul>
+<li>目标 bank 索引</li>
+<li>搜索所有文档</li>
+<li>结果按 account_number 字段升序排列</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;query&#34;: { &#34;match_all&#34;: {} },
+  &#34;sort&#34;: [
+    { &#34;account_number&#34;: &#34;asc&#34; }
+  ]
+}
+&#39;
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>took – Elasticsearch 执行本次查询使用了多少毫秒</li>
+<li>timed_out – 是否查询超时</li>
+<li>_shards – 有多少个数据分片参与了本次搜索，按成功、略过和失败计数</li>
+<li>max_score – 找到的最相关文档的相关度分数</li>
+<li>hits.total.value - 找到了多少个相关文档</li>
+<li>hits.sort - 文档排序字段位置(在没有设置的时候用相关度分数排序)</li>
+<li>hits._score 文档的相关度分数（在 match_all 时不适用）</li>
+</ul>
+<p>以上命令返回了搜索结果的整体概述信息和第一页（前 10 条文档）的搜索结果。</p>
+<h2 is-upgraded>搜索 2</h2>
+<p>说明：</p>
+<ul>
+<li>目标 bank 索引</li>
+<li>搜索所有文档</li>
+<li>从返回结果中取出第 10 到 19 个文档。  <ul>
+<li>from 结果的起始位置</li>
+<li>size 返回的数据条数</li>
+</ul>
+</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;query&#34;: { &#34;match_all&#34;: {} },
+  &#34;sort&#34;: [
+    { &#34;account_number&#34;: &#34;asc&#34; }
+  ],
+  &#34;from&#34;: 10,
+  &#34;size&#34;: 10
+}
+&#39;
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>在 1000 个文档中成功的搜索到 10 个文档</li>
+<li>返回结果中 _id 从 10 滚动到 19</li>
+<li>工返回 10 个文档</li>
+</ul>
+<h2 is-upgraded>搜索 3</h2>
+<p>说明：</p>
+<ul>
+<li>目标 bank 索引</li>
+<li>搜索所有地址中还有 <code>mill</code> 和 <code>lane</code> 关键词的文档</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;query&#34;: { &#34;match&#34;: { &#34;address&#34;: &#34;mill lane&#34; } }
+}
+&#39;
+
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>在 1000 个文档中成功的搜索到 19 个文档</li>
+<li>返回结果中观察 <code>address</code> 这个字段的返回值</li>
+<li>默认只显示前 10 条数据</li>
+<li>文档相关性最高分是 9.507477</li>
+<li>相关性最高的文档，address 字段中同时包含了  <code>mill</code> 和 <code>lane</code> 两个关键词。</li>
+</ul>
+<h2 is-upgraded>搜索 4</h2>
+<p>说明：</p>
+<ul>
+<li>目标 bank 索引</li>
+<li>搜索所有年龄为 40 且不居住在 ‘ID&#39; 州的账号。</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;query&#34;: {
+    &#34;bool&#34;: {
+      &#34;must&#34;: [
+        { &#34;match&#34;: { &#34;age&#34;: &#34;40&#34; } }
+      ],
+      &#34;must_not&#34;: [
+        { &#34;match&#34;: { &#34;state&#34;: &#34;ID&#34; } }
+      ]
+    }
+  }
+}
+&#39;
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>在 1000 个文档中成功的搜索到 43 个文档</li>
+<li>返回结果中观察 <code>age</code> 这个字段的都是 <code>40</code></li>
+<li>返回结果中观察 <code>state</code> 这个字段的值都不是 <code>ID</code></li>
+</ul>
+<h2 is-upgraded>搜索 5</h2>
+<p>说明：</p>
+<ul>
+<li>目标 bank 索引</li>
+<li>搜索所有账号</li>
+<li>返回账户余额金额 <code>balance</code> 在 20000 到 30000 之间的数据</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;query&#34;: {
+    &#34;bool&#34;: {
+      &#34;must&#34;: { &#34;match_all&#34;: {} },
+      &#34;filter&#34;: {
+        &#34;range&#34;: {
+          &#34;balance&#34;: {
+            &#34;gte&#34;: 20000,
+            &#34;lte&#34;: 30000
+          }
+        }
+      }
+    }
+  }
+}
+&#39;
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>在 1000 个文档中成功的搜索到 217 个文档</li>
+<li>在返回结果中观察 <code>balance</code>  的数值是否满足搜索条件</li>
+</ul>
+<aside class="warning"><p>通过 <code>_search</code> API 成功的完成了 5 个目的不同的搜索操作，体会 Elasticsearch 的搜索能力。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="搜索结果的聚合分析" duration="6">
+        <aside class="special"><p>Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
+</aside>
+<h2 is-upgraded>聚合运算 1</h2>
+<p>说明：</p>
+<ul>
+<li>不是设置任何搜索条件，在所有文档中做聚合运算</li>
+<li>不返回任何文档 size = 0</li>
+<li>用 state 作为关键字分组查询结果</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;size&#34;: 0,
+  &#34;aggs&#34;: {
+    &#34;group_by_state&#34;: {
+      &#34;terms&#34;: {
+        &#34;field&#34;: &#34;state.keyword&#34;
+      }
+    }
+  }
+}
+&#39;
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>hits 总共搜索了 1000 个文档</li>
+<li>在 aggregations 查看每个州的银行账户总个数</li>
+</ul>
+<h2 is-upgraded>聚合运算 2</h2>
+<p>说明：</p>
+<ul>
+<li>不是设置任何搜索条件，在所有文档中做聚合运算</li>
+<li>不返回任何文档 size = 0</li>
+<li>用 state 作为关键字分组查询结果</li>
+<li>计算每个州银行账户里的余额的平均值</li>
+<li>默认以每个州的账户数量排序结果</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;size&#34;: 0,
+  &#34;aggs&#34;: {
+    &#34;group_by_state&#34;: {
+      &#34;terms&#34;: {
+        &#34;field&#34;: &#34;state.keyword&#34;
+      },
+      &#34;aggs&#34;: {
+        &#34;average_balance&#34;: {
+          &#34;avg&#34;: {
+            &#34;field&#34;: &#34;balance&#34;
+          }
+        }
+      }
+    }
+  }
+}
+&#39;
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>结果同上一个聚合</li>
+<li>另外增加了每个州的所有银行账户的余额求平均值运算</li>
+</ul>
+<h2 is-upgraded>聚合运算 3</h2>
+<p>说明：</p>
+<ul>
+<li>其它功能同上</li>
+<li>用每个州的平均账户余额从大到小排序结果</li>
+</ul>
+<p>在命令行执行下面的命令。</p>
+<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+{
+  &#34;size&#34;: 0,
+  &#34;aggs&#34;: {
+    &#34;group_by_state&#34;: {
+      &#34;terms&#34;: {
+        &#34;field&#34;: &#34;state.keyword&#34;,
+        &#34;order&#34;: {
+          &#34;average_balance&#34;: &#34;desc&#34;
+        }
+      },
+      &#34;aggs&#34;: {
+        &#34;average_balance&#34;: {
+          &#34;avg&#34;: {
+            &#34;field&#34;: &#34;balance&#34;
+          }
+        }
+      }
+    }
+  }
+}
+&#39;
+</code></pre>
+<p>执行结果解释：</p>
+<ul>
+<li>观察 bucket 里的聚合结果</li>
+<li>按每个州的所有银行账户的平均值倒排序</li>
+</ul>
+<aside class="warning"><p>通过 <code>_search</code> API 中的 <code>aggs</code> 运算成功的完成了 3 个目的不同的搜索结果聚合运算操作，体会 Elasticsearch 的数据搜索后的聚合运算分析能力。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="运行和使用 Kibana 服务器" duration="8">
+        <aside class="special"><p>下载并运行 Kibana 软件包，使用 Kibana 的图形界面搜索 bank 索引中的数据。</p>
+</aside>
+<h2 is-upgraded>下载后运行 Kibana</h2>
+<p>在 Linux 上运行下面的命令。</p>
+<pre><code>curl -O https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-linux-x86_64.tar.gz
+curl https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
+tar -xzf kibana-7.9.3-linux-x86_64.tar.gz
+cd kibana-7.9.3-linux-x86_64/
+</code></pre>
+<p>或者 macOS 上运行下面的命令。</p>
+<pre><code>curl -O https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-darwin-x86_64.tar.gz
+curl https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-darwin-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
+tar -xzf kibana-7.9.3-darwin-x86_64.tar.gz
+cd kibana-7.9.3-darwin-x86_64/
+</code></pre>
+<p>或者 Windows 上操作如下。</p>
+<p>下载 zip 压缩包。</p>
+<p><a href="https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-windows-x86_64.zip" target="_blank"><paper-button class="colored" raised>点此下载 kibana-7.9.3-windows-x86_64.zip </paper-button></a></p>
+<p>解压后进入 Kibana 运行目录，从命令行启动 Kibana 服务器。</p>
+<pre><code>CD c:\kibana-7.9.3-windows-x86_64
+.\bin\kibana.bat
+</code></pre>
+<h2 is-upgraded>登录 Kibana 控制台导入&amp;查看示例数据</h2>
+<p>到目前为止，Elasticsearch 集群运行在无密码的开发模式，因此无需输入用户名和密码。</p>
+<p>打开浏览器访问网址 <code>localhost:5601</code><img alt="2020-10-28_23-42-23" src="img/9beded45d1dd0cea.jpeg"></p>
+<p>在进入 Kibana 图形界面后，点击 <code>Load a data set and a Kibana dashboard</code> 链接。</p>
+<p class="image-container"><img alt="2020-10-28_23-43-26" src="img/9eae98193edf845e.jpeg"></p>
+<p>分别点击这三个按钮，导入三组示例数据。</p>
+<p class="image-container"><img alt="2020-10-28_23-44-23" src="img/58d8b71d301a2532.jpeg"></p>
+<p>点击 Dashboard 查看数据分析仪表板。</p>
+<h2 is-upgraded>创建 bank 索引模式&amp;查看数据</h2>
+<p>为了在图形界面中创建用于分析 bank 索引中所有数据的 <code>�</code>�引模式。</p>
+<p class="image-container"><img alt="2020-10-28_23-45-56" src="img/dec94ab188575062.jpeg"></p>
+<p>点击左上角的按钮打开左侧菜单，点击 Stack Management 菜单。</p>
+<p class="image-container"><img alt="2020-10-28_23-46-21" src="img/f505c15871728ed4.jpeg"></p>
+<p>在 Kibana 管理选项中，点击创建索引模式按钮。</p>
+<p class="image-container"><img alt="2020-10-28_23-48-38" src="img/13001b96d410479d.jpeg"></p>
+<p>在索引模式名称中输入 bank ， 点击先一步直到创建完成。</p>
+<p class="image-container"><img alt="2020-10-28_23-51-14" src="img/1374d328237742ba.jpeg"></p>
+<p>点击左上角的按钮，打开左侧菜单栏，点击 Kibana 部分的 Discover 链接。</p>
+<p class="image-container"><img alt="2020-10-28_23-51-53" src="img/8e1af133619afab8.jpeg"></p>
+<p>点击左侧的向下三角图标，打开索引选择菜单，选中刚才创建的 bank 索引模式。</p>
+<p class="image-container"><img alt="2020-10-28_23-54-33" src="img/9df60b0c4b57e172.jpeg"></p>
+<p>参考左侧的可用字段，这是 bank 索引的所有字段。点击第一条数据的向下按钮，查看该文档。</p>
+<aside class="warning"><p>成功的导入和查看了 Kibana 产品附带的三组示例数据。使用 Kibana 图形界面探索了批量导入的 bank 索引中的数据。</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
