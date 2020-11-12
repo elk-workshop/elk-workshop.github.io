@@ -75,7 +75,7 @@ Positive
 
 进入 AWS 中国区控制台 https://amazonaws.cn ； 在 EC2 服务中启动一个如下配置的实例，不低于以下配置
 
-* 镜像选择，在 Community AMI 中搜索
+* 镜像选择，在 Community AMI 中搜索 `ami-0e1382088b62cb38d` (北京区) 或者 `ami-0e5a0e294902966af` （宁夏区）
 * 实例类型选 `t3.medium`
 * 磁盘不低于 `8` GB
 * 启动后记录下该实例的 `共有 IP`
