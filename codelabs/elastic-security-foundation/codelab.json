@@ -4,12 +4,12 @@
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-749876-6",
   "updated": "2021-03-18T12:32:17Z",
-  "id": "elastic-observability-foundation-aws",
-  "duration": 170,
-  "title": "Elastic Stack 可观测性实战工作坊(中等-AWS)",
+  "id": "elastic-security-foundation",
+  "duration": 10,
+  "title": "Elastic 安全实战工作坊(中等)",
   "authors": "Martin Liu",
-  "summary": "Elastic Stack 可观测性实战工作坊(中等-AWS)",
-  "source": "codelabs/obv-foundation-aws.md",
+  "summary": "Elastic 安全实战工作坊(中等)",
+  "source": "codelabs/security-vm.md",
   "theme": "",
   "status": [
     "published"
@@ -18,12 +18,12 @@
     "elasticsearch",
     "beats",
     "kibana",
-    "observability"
+    "security"
   ],
   "tags": [
     "elasticstack"
   ],
   "feedback": "https://martinliu.cn",
   "ga": "UA-159133967-1",
-  "url": "elastic-observability-foundation-aws"
+  "url": "elastic-security-foundation"
 }

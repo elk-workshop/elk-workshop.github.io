@@ -1,0 +1,73 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Elastic 安全实战工作坊(中等)</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-749876-6"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-159133967-1"
+                  id="elastic-security-foundation"
+                  title="Elastic 安全实战工作坊(中等)"
+                  environment="web"
+                  feedback-link="https://martinliu.cn">
+    
+      <google-codelab-step label="概述" duration="10">
+        <p>在本课程中您将会学到：</p>
+<ol type="1">
+<li>搭建单节点 Elasticsearch + Kibana 服务，完成准备工作。</li>
+<li>学习使用 Elastic Stack 做安全管理的基本概念和方案架构。</li>
+<li>搭建和配置服务健康检查的探针</li>
+<li>部署采集操作系统性能监控指标的流程</li>
+<li>配置操作系统日志的采集和分析工具</li>
+<li>搭建用于 APM 追踪分析的后台服务</li>
+<li>运行一个多层架构的宠物商店应用，对各个子服务进行 APM 监控埋点</li>
+<li>配置常用的服务质量监控大屏</li>
+</ol>
+<h2 is-upgraded>演示应用</h2>
+<p class="image-container"><img src="img/4bb1f3e7d3c000fa.jpeg"></p>
+<p>Elastic Stack 的基本状况：</p>
+<ul>
+<li>版本 7.</li>
+<li>组件 Elasticsearch、Kibana、Packetbeat、Filebeat、Metricbeat 和 Winlogbeat。</li>
+<li>所有组件都部署在同一个虚拟机上。</li>
+</ul>
+<h2 is-upgraded>安全管理旅程的四个阶段</h2>
+<p>可观测性依赖于应用系统自身和监控工具平台的配合实现。</p>
+<p class="image-container"><img alt="2021-03-18_17-30-58" src="img/aff285cf086d408.png"></p>
+<p>分阶段的开展安全管理的推荐过程如下：</p>
+<ol type="1">
+<li>STEP0：使用 Beats 按需收集各种安全事件</li>
+<li>STEP1：使用 SIEM 提供的功能开展 SOC 日常安全运维</li>
+<li>STEP2：基于内置的安全监测规则，进行自动化的安全分析</li>
+<li>STEP3：与外部系统集成，集成更多数据源和系统</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
