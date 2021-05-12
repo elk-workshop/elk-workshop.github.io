@@ -54,7 +54,7 @@
 </ul>
 <p>Elastic Stack 的基本状况：</p>
 <ul>
-<li>版本 7.10.1</li>
+<li>版本 7.10.0</li>
 <li>Elastic Stack 的相关组件包括 Elasticsearch、Kibana、APM、Filebeat、Metricbeat 和 Heartbeat。</li>
 <li>宠物诊所应用、Elastic APM Server 和 Heartbeat 探针服务都部署在同一个虚拟机上。</li>
 </ul>
@@ -118,7 +118,7 @@
 <li>等待集群的创建</li>
 </ul>
 <p>在等待了 5 到 10 分钟之后，新集群完成了整个创建过程，所有的数据节点都是绿色。</p>
-<h2 is-upgraded>记录集群的基础信息</h2>
+<h2 is-upgraded>记录 ES 集群的基础信息</h2>
 <p>在集群创建后，下面收集和记录几个重要的配置信息。</p>
 <p class="image-container"><img alt="2021-05-11_23-13-45" src="img/b592f747f5b196a6.png"></p>
 <ul>
@@ -143,6 +143,11 @@
 <p>点击左侧的开发者工具图标，在 <code>Console</code> 的代码输入区域中输入以上代码片段，将光标移动到 <code>PUT</code> 这一行，点击哪一行右侧的三角形播放按钮，等待右侧出现 <code>true</code> 的执行结果即可。</p>
 <h2 is-upgraded>虚拟机环境基础配置</h2>
 <p>在于 Elasticsearch 集群相同网段的 VPC 中创建一台 CentOS 7.6 虚拟机，内存不低于 4GB。创建成功后，进行如下的初始化配置。</p>
+<ul>
+<li>本虚拟机用于安装所有 Beats 采集软件</li>
+<li>本虚拟机用于部署 Elastic APM 服务器</li>
+<li>本虚拟机用于安装和运行测试所需要的宠物医院应用</li>
+</ul>
 <p>安装必要的软件包，命令如下：</p>
 <pre><code>yum install -y java-11-openjdk.x86_64 nodejs git nginx
 </code></pre>
@@ -153,7 +158,39 @@ cd petclinic/frontend/
 npm install
 </code></pre>
 <p>在以上命令中， <code>git clone</code> 和 <code>npm install</code> 可能需要花费 5 到 10 分钟不等。请确保以上几条命令都正常执行完毕。</p>
-<aside class="warning"><p>检查点：已经正常登陆了 Kibana 图形界面。已经 SSH 登陆了CentOS 虚拟机。在虚拟机中可以 ping 通 Elasticsearch 集群的内网访问地址。</p>
+<p>在命令行测试 ES 服务的用户名和密码是否可用。</p>
+<pre><code language="language-sh" class="language-sh">root@beats-o11y01 elastic-labs-qq]# curl --user elastic:Elastic@1234# http://es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com:9200
+{
+  &#34;name&#34; : &#34;es-cn-7pp264vmi001cwjvc-ffe98471-0001&#34;,
+  &#34;cluster_name&#34; : &#34;es-cn-7pp264vmi001cwjvc&#34;,
+  &#34;cluster_uuid&#34; : &#34;mMUYIFY6RO6laDqeTcRJlg&#34;,
+  &#34;version&#34; : {
+    &#34;number&#34; : &#34;7.10.0&#34;,
+    &#34;build_flavor&#34; : &#34;default&#34;,
+    &#34;build_type&#34; : &#34;tar&#34;,
+    &#34;build_hash&#34; : &#34;d082f55a020f1e7bd055121866af4b6df936a790&#34;,
+    &#34;build_date&#34; : &#34;2021-02-03T07:22:28.597814Z&#34;,
+    &#34;build_snapshot&#34; : false,
+    &#34;lucene_version&#34; : &#34;8.7.0&#34;,
+    &#34;minimum_wire_compatibility_version&#34; : &#34;6.8.0&#34;,
+    &#34;minimum_index_compatibility_version&#34; : &#34;6.0.0-beta1&#34;
+  },
+  &#34;tagline&#34; : &#34;You Know, for Search&#34;
+}
+</code></pre>
+<p>参数说明：</p>
+<ul>
+<li>curl 用于测试 ES 登录的命令行工具</li>
+<li>–user elastic:Elastic@1234#  登录 ES 服务的用户名和密码，请使用你自己的密码登录</li>
+<li>最后的网址是 ES 集群的私网地址</li>
+</ul>
+<p>如果看到以上正常的 Elasticsearch 版本信息的输出，这就说明：</p>
+<ul>
+<li>centos 虚拟机到 ES 集群的网络畅通</li>
+<li>用户名和密码正确</li>
+<li>所记录待用的 Elasticsearch集群私网地址 正确无误</li>
+</ul>
+<aside class="warning"><p>检查点：已经正常登陆了 Kibana 图形界面。已经 SSH 登陆了CentOS 虚拟机。在虚拟机中可以正常登陆 Elasticsearch 集群的私网访问地址。</p>
 </aside>
 
 
@@ -170,13 +207,13 @@ npm install
 <li>在 Kibana 中查看 Uptime app 中的数据</li>
 </ol>
 <h2 is-upgraded>运行 Heartbeat 服务</h2>
-<p>SSH 登录 CentOS 虚拟机后，安装 Heartbeat 软件包。</p>
-<pre><code>yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/heartbeat-7.10.1-x86_64.rpm
+<p>SSH 登录 CentOS 虚拟机后，安装 Heartbeat 软件包，Beats 软件包的版本和 ES 集群的版本保持一致，本文所使用的版本都是 <code>7.10.0</code> 。</p>
+<pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.0/heartbeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>进入 heartbeat 的配置文件目录中，<code>cd /etc/heartbeat/</code>。</p>
 <h2 is-upgraded>编辑主配置文件</h2>
-<p>修改名为 heartbeat.yml 的配置文件，确保其中的内容至少包括：</p>
-<pre><code>heartbeat.config.monitors:
+<p>在 Git Clone 下来的演示应用的根目录下，找到并修改修改名为 heartbeat.yml 的配置文件，确保其中的内容至少包括：</p>
+<pre><code language="language-yaml" class="language-yaml">heartbeat.config.monitors:
   path: ${path.config}/monitors.d/*.yml
   reload.enabled: true
   reload.period: 5s
@@ -184,14 +221,14 @@ heartbeat.monitors:
 - type: http
   id: my-monitor
   name: my-kibana-service
-  urls: [&#34;https://es-fz4grqsr.kibana.tencentelasticsearch.com:5601/&#34;]
+  urls: [&#34;https://es-cn-7pp264vmi001cwjvc.kibana.elasticsearch.aliyuncs.com:5601/&#34;]
   schedule: &#39;@every 5s&#39;
 setup.template.settings:
   index.number_of_shards: 1
   index.codec: best_compression
 setup.kibana:
 output.elasticsearch:
-  hosts: [&#34;172.21.16.16:9200&#34;]
+  hosts: [&#34;es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com&#34;]
   username: &#34;elastic&#34;
   password: &#34;Elastic@1234#&#34;
 processors:
@@ -204,15 +241,15 @@ processors:
 <p>参数配置简要介绍：</p>
 <ul>
 <li>每 5 秒钟检查 <code>monitors.d</code> 目录中是否有服务探针配置文件更新</li>
-<li>默认启动一个名为 my-monitor 的 http 探针，检查目标 Kibana 服务的状态</li>
-<li>将服务健康检查的数据输出索引到以上创建的 Elasticsearch 集群服务，即 172.21.16.16:9200</li>
+<li>默认启动一个名为 my-monitor 的 http 探针，检查当前 ES 集群的 Kibana 服务的状态 （通过 Kibana 的公网地址探测）</li>
+<li>将服务健康检查的数据输出到一个 Elasticsearch 集群服务，这里使用 ES 集群的内网访问地址：https://es-cn-7pp264vmi001cwjvc.kibana.elasticsearch.aliyuncs.com:5601/</li>
 <li>在 output.elasticsearch 的部分使用 elastic 账号的密码</li>
-<li>为本健康检查服务器配置可观测性地域元数据，名称为 China-BJ 的经纬度</li>
+<li>为本健康检查服务器配置可观测性地域元数据，名称为 China-BJ 的经纬度， 请使用你所创建的 CentOS 虚拟机所在的可用区的地理信息。</li>
 </ul>
 <h2 is-upgraded>初始化和运行 Heartbeat 服务</h2>
 <p>运行下面的命令初始化 Heartbeat 服务，并在命令行中验证 Heartbeat 访问是否能正常工作。</p>
 <p>命令如下：</p>
-<pre><code language="language-shell" class="language-shell">heartbeat test confg
+<pre><code language="language-shell" class="language-shell">heartbeat test config
 heartbeat test output
 
 heartbeat setup
@@ -220,7 +257,7 @@ heartbeat -e
 </code></pre>
 <p>命令参数解释：</p>
 <ul>
-<li>test 命令是检查配置文件的语法和与 Elasticsearch 服务的连接和认证是否正常</li>
+<li>两条 test 命令是检查配置文件的语法和与 Elasticsearch 服务的连接和认证是否正常</li>
 <li>setup 的作用是初始化 Heartbeat 的索引，导入相关的数据管理策略</li>
 <li>-e 启动 Heartbeat 服务，将服务运行的日志显示在控制台</li>
 </ul>
@@ -228,8 +265,8 @@ heartbeat -e
 <h2 is-upgraded>查看 Uptime 应用</h2>
 <p>进入 Kibana 页面，点击左上角的菜单，在左侧菜单中点击 Uptime 链接。</p>
 <p class="image-container"><img alt="14001608085341_.pic_hd" src="img/346f3200553d23a2.jpg"></p>
-<p>点击这个名为 ‘my-kibana-service&#39; 的连接查看，这个采集点的监控结果。</p>
-<p>最后在命令行里按 <code>ctrl + c</code> 终止 ‘heartbeat -e&#39; 命令。然后运行一下命令，启动 heartbeat 后台服务。</p>
+<p>点击这个名为 ‘my-kibana-service&#39; 的连接查看，这个采集点的监控结果。以上表明 heartbeat 的配置和工作一切正常。</p>
+<p>最后在命令行里按 <code>ctrl + c</code> 终止 <code>heartbeat -e</code> 命令。然后运行下面的三条命令，启动 heartbeat 后台服务。</p>
 <pre><code>systemctl start heartbeat-elastic.service
 systemctl enable  heartbeat-elastic.service 
 systemctl status  heartbeat-elastic.service 
@@ -244,35 +281,34 @@ systemctl status  heartbeat-elastic.service
         <aside class="special"><p>操作系统和各个应用模块的指标高低，以及网络流量的状态，是基础的运维分析数据，要处于无形部署，按需使用的程度。</p>
 </aside>
 <h2 is-upgraded>安装 Metricbeat</h2>
-<p>通过网络安装 Metricbeat 软件包。</p>
-<p>命令如下：</p>
-<pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/metricbeat-7.10.1-x86_64.rpm
+<p>通过网络安装 Metricbeat 软件包。命令如下：</p>
+<pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.0/metricbeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>进入 Metricbeat 的配置文件目录<code>cd /etc/metricbeat/</code>，查看 Metricbeat 的配置目录，熟悉目录中的结构和文件。</p>
 <h2 is-upgraded>初始化 Metricbeat 服务</h2>
 <p>在命令行下运行下面的两条命令，在执行前根据下面的参数解释，替换其中的三个参数。</p>
 <pre><code language="language-sh" class="language-sh">metricbeat setup -e   --index-management   --dashboards \
-  -E output.elasticsearch.hosts=[&#39;172.21.16.16:9200&#39;]   \
+  -E output.elasticsearch.hosts=[&#39;es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com&#39;]   \
   -E output.elasticsearch.username=elastic   \
   -E output.elasticsearch.password=Elastic@1234#   \
-  -E setup.kibana.host=es-fz4grqsr.internal.kibana.tencentelasticsearch.com:5601
+  -E setup.kibana.host=https://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601
 </code></pre>
 <p>命令参数解释：</p>
 <ul>
 <li>setup 命令会初始化相关索引和配套的管理策略 ， 这个步骤可能会持续 2~3 分钟。</li>
-<li>elasticsearch.hosts Elasticsearch 集群的内网服务地址</li>
+<li>elasticsearch.hosts Elasticsearch 集群的内网服务地址 https://https://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601</li>
 <li>elasticsearch.password 账号 elastic 的密码</li>
 <li>setup.kibana.host 内网 Kibana 的访问地址</li>
 </ul>
 <p>等待该命令的执行结束后，会输出类似如下的信息。</p>
-<pre><code>template metricbeat-7.10.1 to Elasticsearch
-2020-12-16T15:55:02.537+0800    INFO    template/load.go:101    template with name &#39;metricbeat-7.10.1&#39; loaded.
+<pre><code>template metricbeat-7.10.0 to Elasticsearch
+2020-12-16T15:55:02.537+0800    INFO    template/load.go:101    template with name &#39;metricbeat-7.10.0&#39; loaded.
 2020-12-16T15:55:02.538+0800    INFO    [index-management]      idxmgmt/std.go:293      Loaded index template.
 2020-12-16T15:55:03.092+0800    INFO    [index-management]      idxmgmt/std.go:304      Write alias successfully generated.
 Index setup finished.
 Loading dashboards (Kibana must be running and reachable)
-2020-12-16T15:55:03.092+0800    INFO    kibana/client.go:117    Kibana url: http://es-fz4grqsr.internal.kibana.tencentelasticsearch.com:5601
-2020-12-16T15:55:03.620+0800    INFO    kibana/client.go:117    Kibana url: http://es-fz4grqsr.internal.kibana.tencentelasticsearch.com:5601
+2020-12-16T15:55:03.092+0800    INFO    kibana/client.go:117    Kibana url: http://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601
+2020-12-16T15:55:03.620+0800    INFO    kibana/client.go:117    Kibana url: http://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601
 2020-12-16T15:55:04.838+0800    INFO    add_cloud_metadata/add_cloud_metadata.go:89     add_cloud_metadata: hosting provider type not detected.
 2020-12-16T15:57:25.194+0800    INFO    instance/beat.go:780    Kibana dashboards successfully loaded.
 Loaded dashboards
@@ -280,8 +316,8 @@ Loaded dashboards
 <p>在 Kibana 中查看 metricbeat 的索引、索引管理策略和相关的仪表板。</p>
 <ul>
 <li>点击左侧 <code>Dashboard</code> 图标，查看 Metricbeat 相关的仪表板。</li>
-<li>点击左侧 <code>Management</code> 图标，点击 Elasticsearch –&gt; Index Lifecycle Policies 选项，在策略清单中选中 ‘metricbeat-7.10.1&#39;， 在页面的底部，找到 Delete phase 部分，点击激活删除策略，在 ‘Timing for delete phase&#39; 中输入 <code>120</code> 这意味着，rollover 之后的数据文件中，超过了 <code>120</code> 天的数据就会被删除。目前这个演示系统并没有使用 热-温-冷 等复杂的索引数据生命周期管理策略。</li>
-<li>点击 ‘heartbeat-7.10.1&#39; 的策略，也设置同样的这个 120 天删除的策略。后续的索引初始化配置完毕之后，也在这里做相同的操作。从而熟悉掌握这个配置。</li>
+<li>点击左侧 <code>Management</code> 图标，点击 Elasticsearch –&gt; Index Lifecycle Policies 选项，在策略清单中选中 ‘metricbeat-7.10.0&#39;， 在页面的底部，找到 Delete phase 部分，点击激活删除策略，在 ‘Timing for delete phase&#39; 中输入 <code>120</code> 这意味着，rollover 之后的数据文件中，超过了 <code>120</code> 天的数据就会被删除。目前这个演示系统并没有使用 热-温-冷 等复杂的索引数据生命周期管理策略。</li>
+<li>点击 ‘heartbeat-7.10.0&#39; 的策略，也设置同样的这个 120 天删除的策略。后续的索引初始化配置完毕之后，也在这里做相同的操作。从而熟悉掌握这个配置。</li>
 </ul>
 <h2 is-upgraded>编辑主配置文件</h2>
 <p>备份和查看默认的主配置文件 <code>metricbeat.yml</code>；并将其替换为以下内容。</p>
@@ -293,7 +329,7 @@ metricbeat.config.modules:
 
 #=========================== Elasticsearch output =============================
 output.elasticsearch:
-  hosts: [&#34;172.21.16.16:9200&#34;]
+  hosts: [&#34;es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com&#34;]
   username: &#34;elastic&#34;
   password: &#34;Elastic@1234#&#34;
 
@@ -398,34 +434,34 @@ curl localhost/server-status
 </aside>
 <h2 is-upgraded>安装 Filebeat</h2>
 <p>通过网络安装 Filebeat 软件包。命令如下：</p>
-<pre><code>yum install -y https://mirrors.tencent.com/elasticstack/7.x/yum/7.10.1/filebeat-7.10.1-x86_64.rpm
+<pre><code>yum install -y https://mirrors.tencent.com/elasticstack/7.x/yum/7.10.0/filebeat-7.10.0-x86_64.rpm
 </code></pre>
-<p>进入 <code>cd /etc/metricbeat/</code> 目录，熟悉 Filebeat 配置文件的目录结构和内容。</p>
+<p>进入 <code>cd /etc/filebeat/</code> 目录，熟悉 Filebeat 配置文件的目录结构和内容。</p>
 <h2 is-upgraded>初始化 Filebeat 服务</h2>
 <p>在命令行下运行下面的两条命令，在执行前根据下面的参数解释，替换其中的四个参数。</p>
 <pre><code>filebeat setup -e   --index-management   --dashboards \
-  -E output.elasticsearch.hosts=[&#39;172.21.16.16:9200&#39;]   \
+  -E output.elasticsearch.hosts=[&#39;es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com&#39;]   \
   -E output.elasticsearch.username=elastic   \
   -E output.elasticsearch.password=Elastic@1234#   \
-  -E setup.kibana.host=es-fz4grqsr.internal.kibana.tencentelasticsearch.com:5601
+  -E setup.kibana.host=https://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601
 </code></pre>
 <p>命令参数解释：</p>
 <ul>
 <li>setup 命令会初始化相关索引和配套的管理策略 ， 这个步骤可能会持续 2~3 分钟。</li>
 <li>elasticsearch.hosts Elasticsearch 集群的内网服务地址</li>
 <li>elasticsearch.password 账号 elastic 的密码</li>
-<li>setup.kibana.host 内网 Kibana 的访问地址</li>
+<li>setup.kibana.host 内网 Kibana 的私网访问地址</li>
 </ul>
 <p>等待该命令的执行结束后，会输出类似如下的信息。</p>
 <pre><code>2020-12-16T22:01:36.164+0800    INFO    template/load.go:169    Existing template will be overwritten, as overwrite is enabled.
-2020-12-16T22:01:36.343+0800    INFO    template/load.go:109    Try loading template filebeat-7.10.1 to Elasticsearch
-2020-12-16T22:01:36.535+0800    INFO    template/load.go:101    template with name &#39;filebeat-7.10.1&#39; loaded.
+2020-12-16T22:01:36.343+0800    INFO    template/load.go:109    Try loading template filebeat-7.10.0 to Elasticsearch
+2020-12-16T22:01:36.535+0800    INFO    template/load.go:101    template with name &#39;filebeat-7.10.0&#39; loaded.
 2020-12-16T22:01:36.535+0800    INFO    [index-management]      idxmgmt/std.go:293      Loaded index template.
 2020-12-16T22:01:36.806+0800    INFO    [index-management]      idxmgmt/std.go:304      Write alias successfully generated.
 Index setup finished.
 Loading dashboards (Kibana must be running and reachable)
-2020-12-16T22:01:36.806+0800    INFO    kibana/client.go:117    Kibana url: http://es-fz4grqsr.internal.kibana.tencentelasticsearch.com:5601
-2020-12-16T22:01:37.217+0800    INFO    kibana/client.go:117    Kibana url: http://es-fz4grqsr.internal.kibana.tencentelasticsearch.com:5601
+2020-12-16T22:01:36.806+0800    INFO    kibana/client.go:117    Kibana url: http://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601
+2020-12-16T22:01:37.217+0800    INFO    kibana/client.go:117    Kibana url: http://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601
 2020-12-16T22:01:39.076+0800    INFO    add_cloud_metadata/add_cloud_metadata.go:89     add_cloud_metadata: hosting provider type not detected.
 2020-12-16T22:02:30.008+0800    INFO    instance/beat.go:780    Kibana dashboards successfully loaded.
 Loaded dashboards
@@ -433,7 +469,7 @@ Loaded dashboards
 <p>在 Kibana 中查看 filebeat 的索引、索引管理策略和相关的仪表板。</p>
 <ul>
 <li>点击左侧 <code>Dashboard</code> 图标，查看 Filebeat 相关的仪表板。</li>
-<li>点击左侧 <code>Management</code> 图标，点击 Elasticsearch –&gt; Index Lifecycle Policies 选项，在策略清单中选中 ‘filebeat-7.10.1&#39;， 在页面的底部，找到 Delete phase 部分，点击激活删除策略，在 ‘Timing for delete phase&#39; 中输入 <code>120</code> 这意味着，rollover 之后的数据文件中，超过了 <code>120</code> 天的数据就会被删除。目前这个演示系统并没有使用 热-温-冷 等复杂的索引数据生命周期管理策略。</li>
+<li>点击左侧 <code>Management</code> 图标，点击 Elasticsearch –&gt; Index Lifecycle Policies 选项，在策略清单中选中 ‘filebeat-7.10.0&#39;， 在页面的底部，找到 Delete phase 部分，点击激活删除策略，在 ‘Timing for delete phase&#39; 中输入 <code>120</code> 这意味着，rollover 之后的数据文件中，超过了 <code>120</code> 天的数据就会被删除。目前这个演示系统并没有使用 热-温-冷 等复杂的索引数据生命周期管理策略。</li>
 </ul>
 <p>本步骤是一次性的，在后续的其它被管理节点上就不需要再次执行 Beats 的任何 setup 命令了。</p>
 <h2 is-upgraded>编辑主配置文件</h2>
@@ -441,7 +477,7 @@ Loaded dashboards
 <pre><code>#=========================== Filebeat inputs =============================
 filebeat.inputs:
 - type: log
-  enabled: true
+  enabled: false
   paths:
     - /var/log/*.log
 
@@ -453,7 +489,7 @@ filebeat.config.modules:
 
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
-  hosts: [&#34;172.21.16.16:9200&#34;]
+  hosts: [&#34;es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com&#34;]
   username: &#34;elastic&#34;
   password: &#34;Elastic@1234#&#34;
 
@@ -496,7 +532,7 @@ monitoring.enabled: true
 filebeat test output
 filebeat -e
 </code></pre>
-<p>如果以上命令不报错的话，继续下面的步骤启用 Filebeat 模块和启动 Filebeat 服务。</p>
+<p>如果以上命令不报错的话，说明配置参数一切正常。继续下面的步骤启用 Filebeat 模块和启动 Filebeat 服务。</p>
 <p>Filebeat 的 processors 处理器机制可以实现丰富的日志字段丰富和处理，基于 Elastic ECS 通用数据定义的日志元数据丰富在本课程中不作讲解。请大家课后深入学习。另外应用程序和日志采集工具的配合也不在此做深入讨论，请开发者在设计程序的日志输出机制时，同时考虑到后期的日志采集工具。</p>
 <h2 is-upgraded>初始化和运行 Filebeat 服务</h2>
 <p>启用 Filebeat 的系统日志采集和 Nginx 服务日志采集。</p>
@@ -549,7 +585,7 @@ systemctl status  filebeat
 <aside class="special"><p>APM 追踪听起来有点难，但是先做的人总是先得到意外的惊喜；最重要的是做 APM、日志和指标三个维度数据的关联分析。</p>
 </aside>
 <p>安装 APM Server 软件。</p>
-<pre><code>yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/apm-server-7.10.1-x86_64.rpm
+<pre><code>yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.0/apm-server-7.10.0-x86_64.rpm
 cd /etc/apm-server/
 </code></pre>
 <p>在 APM 服务器的配置目录中，查看主配置文件 <code>apm-server.yml</code> 的默认内容，确保其中的内容至少包含以下内容。</p>
@@ -558,7 +594,7 @@ cd /etc/apm-server/
   rum:
     enabled: true
 output.elasticsearch:
-  hosts: [&#34;172.21.16.16:9200&#34;]
+  hosts: [&#34;es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com:9200&#34;]
   username: &#34;elastic&#34;
   password: &#34;Elastic@1234#&#34;
 </code></pre>
@@ -570,7 +606,8 @@ output.elasticsearch:
 <li>指向运行在本机的 Elasticsearch 服务</li>
 </ul>
 <p>在命令行下初始化 APM 服务器。命令相同。</p>
-<pre><code>apm-server test config
+<pre><code>chown root /etc/apm-server/apm-server.yml
+apm-server test config
 apm-server test output
 
 apm-server setup
@@ -621,8 +658,8 @@ OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.8+10, mixed mode)
 </code></pre>
 <p>进入前端应用的目录 <code>cd /root/elastic-labs-qq/petclinic/frontend</code> ，查看该应用的配置文件 <code>config.js</code> ，修改前两个参数为 CentOS 虚拟机的本地 IP 地址 和 公网 IP 地址，其内容如下：</p>
 <pre><code>var config = {
-  apm_server: process.env.ELASTIC_APM_SERVER_URL || &#39;http://172.16.0.15:8200&#39;,
-  apm_server_js: process.env.ELASTIC_APM_SERVER_JS_URL || &#39;http://188.131.151.204:8200&#39;,
+  apm_server: process.env.ELASTIC_APM_SERVER_URL || &#39;http://192.168.0.153:8200&#39;,
+  apm_server_js: process.env.ELASTIC_APM_SERVER_JS_URL || &#39;http://188.131:8200&#39;,
   apm_service_name: process.env.ELASTIC_APM_SERVICE_NAME || &#39;petclinic-node&#39;,
   apm_client_service_name: process.env.ELASTIC_APM_CLIENT_SERVICE_NAME || &#39;petclinic-react&#39;,
   apm_service_version: process.env.ELASTIC_APM_SERVICE_VERSION || &#39;1.2.0&#39;,
@@ -634,10 +671,8 @@ OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.8+10, mixed mode)
 </code></pre>
 <p>重要配置参数讲解：</p>
 <ul>
-<li>node.js 服务的名称和版本</li>
-<li>前端应用服务器的地址和端口</li>
-<li>apm_server   node.js 应用服务器端连接 APM 服务器的网址</li>
-<li>apm_server_js node.js 应用客户端（远程用户浏览器）连接 APM 服务器的网址</li>
+<li>apm_server: process.env.ELASTIC_APM_SERVER_URL  : 这里使用 APM 服务器的私网地址，也就是 CentOS 虚拟机的私网 IP 地址，node.js 后台服务器的埋点监控数据通过内网发送回 APM 服务器。</li>
+<li>apm_server_js: process.env.ELASTIC_APM_SERVER_JS_URL ：这里使用 APM 服务器的公网地址，也就是 CengOS 虚拟机的公网 IP 地址，用于浏览器中前端 JavaScript 的埋点，监测数据从外网发送回 APM 服务器。</li>
 </ul>
 <p>这个应用前端的代码中已经进行了 Elastic APM 对 Node.js 应用的无痛埋点配置，在进行一个简单的依赖包安装命令后，启动该应用。</p>
 <pre><code>npm start
@@ -671,18 +706,18 @@ systemctl status nginx
 <h2 is-upgraded>增加宠物诊所应用系统的健康检查探针</h2>
 <p>在宠物诊所系统正常运行的状态下，在 Heartbeat 的健康检查系统中增加一个新的用于检查改服务前端的探针。</p>
 <p>进入 <code>/etc/heartbeat/monitors.d</code> 目录。添加一个名为 <code>petclinic.yml</code> 内容如下的配置文件。</p>
-<pre><code>- type: http
+<pre><code language="language-yaml" class="language-yaml">- type: http
   id: Petclinic-100
   name: Petclinic-Svc
   schedule: &#39;@every 5s&#39; 
-  hosts: [&#34;http://188.131.151.204/&#34;]
+  hosts: [&#34;http://39.101.179.3/&#34;]
   ipv4: true
   ipv6: true
   mode: any
 </code></pre>
 <p>等待5 秒后，观察 Uptime 的界面，名为<code>Petclinic-Svc</code> 的服务应该出现，该探针将持续监控前端服务的 4000 端口，并返回健康检查的结果到 Uptime 应用中。有可能需要重启一下 heartbeat 服务。</p>
 <p>再添加一个名为 <code>ext-svc.yml</code> 内容如下的配置文件。</p>
-<pre><code>- type: http
+<pre><code language="language-yaml" class="language-yaml">- type: http
   id: Elastic-100
   name: Elastic-cloud
   schedule: &#39;@every 5s&#39; 
@@ -738,10 +773,17 @@ systemctl status nginx
 <p class="image-container"><img alt="2020-12-23_10-50-29" src="img/9822b5e4d29d1230.jpeg"></p>
 <p>点击每个图表右下角的三角图表，以上每个数据显示控件的大小都可以调整，位置都可以拖动。</p>
 <p>在点击日历图标之后，选择需要查看的监控时段，点击刷新按钮，更新这个仪表板中所有控件的数据。</p>
+<h2 is-upgraded>导入 SLO 监控大屏</h2>
 <p>下面这是一个自选练习，是一个 SLO 监控大屏示例。</p>
+<p>这个效果是通过 Kibana 中的 Canva 画布功能实现的。</p>
 <p class="image-container"><img alt="2020-11-05_00-13-06" src="img/6a4c7412bbf82e5f.jpeg"></p>
-<p>下载名为 <a href="canvas-workpad-petclinic.json" target="_blank">canvas-workpad-petclinic.json</a> 的示例文件。</p>
-<p>在 Kibana 左侧的菜单里选择 <code>Canvas</code> 画布菜单，点击 <code>Import workpad JSON file</code> 按钮，导入后既可以看到名为 <code>宠物商店：SLO管理监控大屏</code> 的监控画布。</p>
+<p>操作方式：</p>
+<ul>
+<li>下载名为 <a href="canvas-workpad-petclinic.json" target="_blank">canvas-workpad-petclinic.json</a> 的示例文件。</li>
+<li>在 Kibana 左侧的菜单里选择 <code>Canvas</code> 画布菜单，点击 <code>Import workpad JSON file</code> 按钮，导入后既可以看到名为 <code>宠物商店：SLO管理监控大屏</code> 的监控画布。</li>
+<li>如果右侧的错误预算没有正常显示，请导入所有 Kibana 示例数据。</li>
+</ul>
+<p>这个SLO演示画布想告诉大家，可观测性的建设是一个先实现信息过载，然后在通过金字塔模型，逐级的锁定有价值的数据指标，金字塔的塔尖上可能就是少量的几个 SLI ，如何筛查 SLI 请查看 SRE 相关书籍。</p>
 <aside class="warning"><p>本课程完成了 Elastic Stack 技术栈的所有主要功能模块的配置和使用。讲解了针对宠物医院这个多层次应用的可观测性构建，采集到了四个方面的可关联分析的时序数据流。还参考 SRE 的管理方法，创建了 SLI 的可视化数据指标监控图标，并为 SLI 设定了 SLO管理目标。最后将宠物诊所应用的所有 SLI/SLO 管理监控图表都集成到了一个统一的仪表板中。</p>
 </aside>
 
