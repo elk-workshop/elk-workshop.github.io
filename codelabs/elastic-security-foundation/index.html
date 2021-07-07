@@ -334,42 +334,42 @@ output.elasticsearch:
 
 processors:
   - add_host_metadata:
-    netinfo.enabled: false
-    geo:
-      location: 35.5528, 116.2360
-      continent_name: Asia
-      country_iso_code: CN
-      region_name: Beijing
-      region_iso_code: CN-BJ
-      city_name: Beijing
-      name: myCyberSecLab
+      netinfo.enabled: false
+      geo:
+        location: 35.5528, 116.2360
+        continent_name: Asia
+        country_iso_code: CN
+        region_name: Beijing
+        region_iso_code: CN-BJ
+        city_name: Beijing
+        name: myCyberSecLab
   - add_locale: ~
   - add_fields:
-    when.network.source.ip: private
-    fields:
-      source.geo.location:
-        lat: 35.5528
-        lon: 116.2360
-      source.geo.continent_name: Asia
-      source.geo.country_iso_code: CN
-      source.geo.region_name: Beijing
-      source.geo.region_iso_code: CN-BJ
-      source.geo.city_name: Beijing
-      source.geo.name: myCyberSecLab
-    target: &#39;&#39;
+      when.network.source.ip: private
+      fields:
+        source.geo.location:
+          lat: 35.5528
+          lon: 116.2360
+        source.geo.continent_name: Asia
+        source.geo.country_iso_code: CN
+        source.geo.region_name: Beijing
+        source.geo.region_iso_code: CN-BJ
+        source.geo.city_name: Beijing
+        source.geo.name: myCyberSecLab
+      target: &#39;&#39;
   - add_fields:
-    when.network.destination.ip: private
-    fields:
-      destination.geo.location:
-        lat: 35.5528
-        lon: 116.2360
-      destination.geo.continent_name: Asia
-      destination.geo.country_iso_code: CN
-      destination.geo.region_name: Beijing
-      destination.geo.region_iso_code: CN-BJ
-      destination.geo.city_name: Beijing
-      destination.geo.name: myCyberSecLab
-    target: &#39;&#39;
+      when.network.destination.ip: private
+      fields:
+        destination.geo.location:
+          lat: 35.5528
+          lon: 116.2360
+        destination.geo.continent_name: Asia
+        destination.geo.country_iso_code: CN
+        destination.geo.region_name: Beijing
+        destination.geo.region_iso_code: CN-BJ
+        destination.geo.city_name: Beijing
+        destination.geo.name: myCyberSecLab
+      target: &#39;&#39;
 
 setup.ilm.check_exists: false
 logging.level: error

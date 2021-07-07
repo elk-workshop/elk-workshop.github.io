@@ -30,7 +30,7 @@
       <google-codelab-step label="课程概述" duration="10">
         <p>在本课程中您将会学到：</p>
 <ol type="1">
-<li>在阿里云创建 Elasticsearch 集群，Kibana 图形管理界面的基本使用。</li>
+<li>在阿里云创建 Elasticsearch 群集，Kibana 图形管理界面的基本使用。</li>
 <li>学习可观测性的基本概念和实施步骤</li>
 <li>搭建和配置服务健康检查的探针（Heartbeat）</li>
 <li>部署采集操作系统性能监控指标的流程 （Metricbeat）</li>
@@ -92,13 +92,13 @@
 <li>TCP 22    0.0.0.0/0</li>
 </ul>
 <p>创建虚拟机用于本次培训的所有测试。</p>
-<h2 is-upgraded>创建一个 Elasticsearch 集群</h2>
-<p>登录阿里云控制台，搜索 Elasticsearch Service 产品，进入该产品控制台，点击 &#34;新建&#34; 集群按钮。</p>
+<h2 is-upgraded>创建一个 Elasticsearch 群集</h2>
+<p>登录阿里云控制台，搜索 Elasticsearch Service 产品，进入该产品控制台，点击 &#34;新建&#34; 群集按钮。</p>
 <p>在选择 Elasticsearch 版本的时候请选择最新的版本，本教程尽量和最新的版本保护一致，也适用于相近的旧版本。</p>
 <p class="image-container"><img alt="2021-05-11_22-53-42" src="img/9b55f065251a0b56.png"></p>
 <ul>
 <li>上面选择 &#34;通用商业版&#34; - 这是 Elastic 白金版的意思</li>
-<li>点击下一步，集群配置</li>
+<li>点击下一步，群集配置</li>
 </ul>
 <p class="image-container"><img alt="2021-05-11_22-53-51" src="img/ea26fbf8afd59f3.png"></p>
 <ul>
@@ -108,18 +108,18 @@
 <p class="image-container"><img alt="2021-05-11_22-53-59" src="img/f737556f613855fe.png"></p>
 <ul>
 <li>专用网络和交换机选择和本练习所需虚拟机相同的设置</li>
-<li>设置集群的示例名称和登录密码，以上密码和本练习中的所有示例命令和配置文件中的相同</li>
+<li>设置群集的示例名称和登录密码，以上密码和本练习中的所有示例命令和配置文件中的相同</li>
 <li>点击先一步，确认订单</li>
 </ul>
 <p class="image-container"><img alt="2021-05-11_22-54-10" src="img/fa7e70d4e37c88f5.png"></p>
 <ul>
 <li>最后确认以上所有配置</li>
 <li>点击 &#34;立即购买&#34;</li>
-<li>等待集群的创建</li>
+<li>等待群集的创建</li>
 </ul>
-<p>在等待了 5 到 10 分钟之后，新集群完成了整个创建过程，所有的数据节点都是绿色。</p>
-<h2 is-upgraded>记录 ES 集群的基础信息</h2>
-<p>在集群创建后，下面收集和记录几个重要的配置信息。</p>
+<p>在等待了 5 到 10 分钟之后，新群集完成了整个创建过程，所有的数据节点都是绿色。</p>
+<h2 is-upgraded>记录 ES 群集的基础信息</h2>
+<p>在群集创建后，下面收集和记录几个重要的配置信息。</p>
 <p class="image-container"><img alt="2021-05-11_23-13-45" src="img/b592f747f5b196a6.png"></p>
 <ul>
 <li>记录上图所示的 &#34;私网地址&#34; ，这里是 <code>es-cn-7pp264vmi001cwjvc.elasticsearch.aliyuncs.com</code></li>
@@ -132,8 +132,8 @@
 <li>启用 Kibana 私网访问，并记录私网地址；为了测试方便，将白名单设置为 0.0.0.0/0</li>
 <li>打开浏览器，访问Kibana 的公网地址，使用以上所设置的 Elastic 用户名和密码登录，验证登录是否成功。</li>
 </ul>
-<p>注意：以上备注的 Elasticsearch 集群的内网访问地址，和 Kibana 的内网访问地址会在下面的配置操作中使用到。</p>
-<p>最后，需要在 Kibana 的首页的右上角点击 Dev tools 图标，进入 开发者工具界面，建议不调整一个集群参数（此参数仅供测试目的）。</p>
+<p>注意：以上备注的 Elasticsearch 群集的内网访问地址，和 Kibana 的内网访问地址会在下面的配置操作中使用到。</p>
+<p>最后，需要在 Kibana 的首页的右上角点击 Dev tools 图标，进入 开发者工具界面，建议不调整一个群集参数（此参数仅供测试目的）。</p>
 <pre><code>PUT _all/_settings
   {
     &#34;refresh_interval&#34;: &#34;1s&#34;
@@ -142,7 +142,7 @@
 <p class="image-container"><img alt="14021608105456_.pic_hd" src="img/a608388c0e313c6c.jpg"></p>
 <p>点击左侧的开发者工具图标，在 <code>Console</code> 的代码输入区域中输入以上代码片段，将光标移动到 <code>PUT</code> 这一行，点击哪一行右侧的三角形播放按钮，等待右侧出现 <code>true</code> 的执行结果即可。</p>
 <h2 is-upgraded>虚拟机环境基础配置</h2>
-<p>在于 Elasticsearch 集群相同网段的 VPC 中创建一台 CentOS 7.6 虚拟机，内存不低于 4GB。创建成功后，进行如下的初始化配置。</p>
+<p>在于 Elasticsearch 群集相同网段的 VPC 中创建一台 CentOS 7.6 虚拟机，内存不低于 4GB。创建成功后，进行如下的初始化配置。</p>
 <ul>
 <li>本虚拟机用于安装所有 Beats 采集软件</li>
 <li>本虚拟机用于部署 Elastic APM 服务器</li>
@@ -182,15 +182,15 @@ npm install
 <ul>
 <li>curl 用于测试 ES 登录的命令行工具</li>
 <li>–user elastic:Elastic@1234#  登录 ES 服务的用户名和密码，请使用你自己的密码登录</li>
-<li>最后的网址是 ES 集群的私网地址</li>
+<li>最后的网址是 ES 群集的私网地址</li>
 </ul>
 <p>如果看到以上正常的 Elasticsearch 版本信息的输出，这就说明：</p>
 <ul>
-<li>centos 虚拟机到 ES 集群的网络畅通</li>
+<li>centos 虚拟机到 ES 群集的网络畅通</li>
 <li>用户名和密码正确</li>
-<li>所记录待用的 Elasticsearch集群私网地址 正确无误</li>
+<li>所记录待用的 Elasticsearch群集私网地址 正确无误</li>
 </ul>
-<aside class="warning"><p>检查点：已经正常登陆了 Kibana 图形界面。已经 SSH 登陆了CentOS 虚拟机。在虚拟机中可以正常登陆 Elasticsearch 集群的私网访问地址。</p>
+<aside class="warning"><p>检查点：已经正常登陆了 Kibana 图形界面。已经 SSH 登陆了CentOS 虚拟机。在虚拟机中可以正常登陆 Elasticsearch 群集的私网访问地址。</p>
 </aside>
 
 
@@ -207,8 +207,8 @@ npm install
 <li>在 Kibana 中查看 Uptime app 中的数据</li>
 </ol>
 <h2 is-upgraded>运行 Heartbeat 服务</h2>
-<p>SSH 登录 CentOS 虚拟机后，安装 Heartbeat 软件包，Beats 软件包的版本和 ES 集群的版本保持一致，本文所使用的版本都是 <code>7.10.0</code> 。</p>
-<pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.0/heartbeat-7.10.0-x86_64.rpm
+<p>SSH 登录 CentOS 虚拟机后，安装 Heartbeat 软件包，Beats 软件包的版本和 ES 群集的版本保持一致，本文所使用的版本都是 <code>7.10.0</code> 。</p>
+<pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.tuna.tsinghua.edu.cn/elasticstack/7.x/yum/7.10.0/heartbeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>进入 heartbeat 的配置文件目录中，<code>cd /etc/heartbeat/</code>。</p>
 <h2 is-upgraded>编辑主配置文件</h2>
@@ -241,8 +241,8 @@ processors:
 <p>参数配置简要介绍：</p>
 <ul>
 <li>每 5 秒钟检查 <code>monitors.d</code> 目录中是否有服务探针配置文件更新</li>
-<li>默认启动一个名为 my-monitor 的 http 探针，检查当前 ES 集群的 Kibana 服务的状态 （通过 Kibana 的公网地址探测）</li>
-<li>将服务健康检查的数据输出到一个 Elasticsearch 集群服务，这里使用 ES 集群的内网访问地址：https://es-cn-7pp264vmi001cwjvc.kibana.elasticsearch.aliyuncs.com:5601/</li>
+<li>默认启动一个名为 my-monitor 的 http 探针，检查当前 ES 群集的 Kibana 服务的状态 （通过 Kibana 的公网地址探测）</li>
+<li>将服务健康检查的数据输出到一个 Elasticsearch 群集服务，这里使用 ES 群集的内网访问地址：https://es-cn-7pp264vmi001cwjvc.kibana.elasticsearch.aliyuncs.com:5601/</li>
 <li>在 output.elasticsearch 的部分使用 elastic 账号的密码</li>
 <li>为本健康检查服务器配置可观测性地域元数据，名称为 China-BJ 的经纬度， 请使用你所创建的 CentOS 虚拟机所在的可用区的地理信息。</li>
 </ul>
@@ -282,7 +282,7 @@ systemctl status  heartbeat-elastic.service
 </aside>
 <h2 is-upgraded>安装 Metricbeat</h2>
 <p>通过网络安装 Metricbeat 软件包。命令如下：</p>
-<pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.0/metricbeat-7.10.0-x86_64.rpm
+<pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.tuna.tsinghua.edu.cn/elasticstack/7.x/yum/7.10.0/metricbeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>进入 Metricbeat 的配置文件目录<code>cd /etc/metricbeat/</code>，查看 Metricbeat 的配置目录，熟悉目录中的结构和文件。</p>
 <h2 is-upgraded>初始化 Metricbeat 服务</h2>
@@ -296,7 +296,7 @@ systemctl status  heartbeat-elastic.service
 <p>命令参数解释：</p>
 <ul>
 <li>setup 命令会初始化相关索引和配套的管理策略 ， 这个步骤可能会持续 2~3 分钟。</li>
-<li>elasticsearch.hosts Elasticsearch 集群的内网服务地址 https://https://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601</li>
+<li>elasticsearch.hosts Elasticsearch 群集的内网服务地址 https://https://es-cn-7pp264vmi001cwjvc-kibana.internal.elasticsearch.aliyuncs.com:5601</li>
 <li>elasticsearch.password 账号 elastic 的密码</li>
 <li>setup.kibana.host 内网 Kibana 的访问地址</li>
 </ul>
@@ -363,7 +363,7 @@ monitoring.enabled: true
 </code></pre>
 <p>以上个别参数解释：</p>
 <ul>
-<li>output.elasticsearch 部分配置了，Elasticsearch 集群的内网访问地址，elastic 的账户密码</li>
+<li>output.elasticsearch 部分配置了，Elasticsearch 群集的内网访问地址，elastic 的账户密码</li>
 <li>netinfo.enabled: true 收集所有网卡的配置信息</li>
 <li>service.name 和 service.id 设定运行在本操作系统上的应用系统的名字，用于丰富每一个指标采集点的元数据</li>
 <li>setup.ilm.check_exists: false 禁用索引 ilm 策略检查，避免无用动作</li>
@@ -434,7 +434,7 @@ curl localhost/server-status
 </aside>
 <h2 is-upgraded>安装 Filebeat</h2>
 <p>通过网络安装 Filebeat 软件包。命令如下：</p>
-<pre><code>yum install -y https://mirrors.tencent.com/elasticstack/7.x/yum/7.10.0/filebeat-7.10.0-x86_64.rpm
+<pre><code>yum install -y https://mirrors.tuna.tsinghua.edu.cn/elasticstack/7.x/yum/7.10.0/filebeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>进入 <code>cd /etc/filebeat/</code> 目录，熟悉 Filebeat 配置文件的目录结构和内容。</p>
 <h2 is-upgraded>初始化 Filebeat 服务</h2>
@@ -448,7 +448,7 @@ curl localhost/server-status
 <p>命令参数解释：</p>
 <ul>
 <li>setup 命令会初始化相关索引和配套的管理策略 ， 这个步骤可能会持续 2~3 分钟。</li>
-<li>elasticsearch.hosts Elasticsearch 集群的内网服务地址</li>
+<li>elasticsearch.hosts Elasticsearch 群集的内网服务地址</li>
 <li>elasticsearch.password 账号 elastic 的密码</li>
 <li>setup.kibana.host 内网 Kibana 的私网访问地址</li>
 </ul>
@@ -525,7 +525,7 @@ monitoring.enabled: true
 <ul>
 <li>netinfo.enabled: true 收集所有网卡的配置信息</li>
 <li>service.name 和 service.id 是运行在本操作系统上的应用系统的名字</li>
-<li>以上配置信息中的 <code>output.elasticsearch</code> 需要修改为你的 Elasticsearch 集群的 elastic 账号信息。</li>
+<li>以上配置信息中的 <code>output.elasticsearch</code> 需要修改为你的 Elasticsearch 群集的 elastic 账号信息。</li>
 </ul>
 <p>测试配置文件是否语法正确。在提示 <code>OK</code> 的情况下，启用并开启 filebeat 的日志采集服务。</p>
 <pre><code>filebeat test config
@@ -585,7 +585,7 @@ systemctl status  filebeat
 <aside class="special"><p>APM 追踪听起来有点难，但是先做的人总是先得到意外的惊喜；最重要的是做 APM、日志和指标三个维度数据的关联分析。</p>
 </aside>
 <p>安装 APM Server 软件。</p>
-<pre><code>yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.0/apm-server-7.10.0-x86_64.rpm
+<pre><code>yum install -y https://mirrors.tuna.tsinghua.edu.cn/elasticstack/7.x/yum/7.10.0/apm-server-7.10.0-x86_64.rpm
 cd /etc/apm-server/
 </code></pre>
 <p>在 APM 服务器的配置目录中，查看主配置文件 <code>apm-server.yml</code> 的默认内容，确保其中的内容至少包含以下内容。</p>
