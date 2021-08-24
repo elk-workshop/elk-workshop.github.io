@@ -1,11 +1,69 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>MacOS 本地安装 - Elastic Stack Workshop</title><meta name=description content="一个开放免费的技术栈，实现搜索、观测、保护三大解决方案，这里提供了各种教程，欢迎一起学习和共建。"><meta name=generator content="Hugo 0.85.0"><link href=https://elastic.martinliu.cn//index.xml rel=alternate type=application/rss+xml><link rel=canonical href=https://elastic.martinliu.cn/getting-started/local/installation-macos/><link rel=stylesheet href=https://elastic.martinliu.cn/css/theme.min.css><script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script><link rel=stylesheet href=https://elastic.martinliu.cn/css/chroma.min.css><script src=https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js></script><script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script><script src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script><script src=https://elastic.martinliu.cn/js/bundle.js></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-749876-6"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-749876-6')</script><style>:root{--custom-background-color:rgb(0,191,179)}</style><meta property="og:title" content="MacOS 本地安装"><meta property="og:description" content="对于 MacOS 和 Linux 操作系统而言，使用 .tar.gz 格式的安装包是最简单的，适合于测试/开发环境的搭建。 下载 Elasticsearch 软件包 在目标测试目录中，使用 wget 在命令行里下载 ，或者使"><meta property="og:type" content="article"><meta property="og:url" content="https://elastic.martinliu.cn/getting-started/local/installation-macos/"><meta property="og:image" content="https://elastic.martinliu.cn/images/og-image.png"><meta property="article:section" content="getting-started"><meta property="article:published_time" content="2020-05-31T15:26:15+00:00"><meta property="article:modified_time" content="2020-05-31T15:26:15+00:00"><meta property="og:site_name" content="Elastic Stack Workshop"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://elastic.martinliu.cn/images/og-image.png"><meta name=twitter:title content="MacOS 本地安装"><meta name=twitter:description content="对于 MacOS 和 Linux 操作系统而言，使用 .tar.gz 格式的安装包是最简单的，适合于测试/开发环境的搭建。 下载 Elasticsearch 软件包 在目标测试目录中，使用 wget 在命令行里下载 ，或者使"><meta itemprop=name content="MacOS 本地安装"><meta itemprop=description content="对于 MacOS 和 Linux 操作系统而言，使用 .tar.gz 格式的安装包是最简单的，适合于测试/开发环境的搭建。 下载 Elasticsearch 软件包 在目标测试目录中，使用 wget 在命令行里下载 ，或者使"><meta itemprop=datePublished content="2020-05-31T15:26:15+00:00"><meta itemprop=dateModified content="2020-05-31T15:26:15+00:00"><meta itemprop=wordCount content="1529"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png"><meta itemprop=keywords content></head><body><div class=container><header><h1>Elastic Stack Workshop</h1><span class=version>Version 0.1.2</span><a href=https://github.com/martinliu/elasticstack-workshop class=github><i class="fab fa-github"></i></a><p class=description>一个开放免费的技术栈，实现搜索、观测、保护三大解决方案，这里提供了各种教程，欢迎一起学习和共建。</p></header><div class=global-menu><nav><ul><li><a href=/>首页</a></li><li><a href=/workshop/>教程</a></li><li><a href=/contribution/>贡献</a></li></ul></nav></div><div class=content-container><main><h1>MacOS 本地安装</h1><p>对于 MacOS 和 Linux 操作系统而言，使用 <code>.tar.gz</code> 格式的安装包是最简单的，适合于测试/开发环境的搭建。</p><h2 id=下载-elasticsearch-软件包>下载 Elasticsearch 软件包</h2><p>在目标测试目录中，使用 wget 在命令行里下载 ，或者使用图形化下载工具。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.13.0-darwin-x86_64.tar.gz
+<!doctype html><html lang=zh-cn>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>MacOS 本地安装 - Elastic Stack Workshop</title>
+<meta name=description content="一个开放免费的技术栈，实现搜索、观测、保护三大解决方案，这里提供了各种教程，欢迎一起学习和共建。">
+<meta name=generator content="Hugo 0.87.0">
+<link href=https://elastic.martinliu.cn//index.xml rel=alternate type=application/rss+xml>
+<link rel=canonical href=https://elastic.martinliu.cn/getting-started/local/installation-macos/>
+<link rel=stylesheet href=https://elastic.martinliu.cn/css/theme.min.css>
+<script src=https://use.fontawesome.com/releases/v5.0.6/js/all.js></script>
+<link rel=stylesheet href=https://elastic.martinliu.cn/css/chroma.min.css>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script>
+<script src=https://elastic.martinliu.cn/js/bundle.js></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-749876-6"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-749876-6')</script>
+<style>:root{--custom-background-color:rgb(0,191,179)}</style>
+<meta property="og:title" content="MacOS 本地安装">
+<meta property="og:description" content="对于 MacOS 和 Linux 操作系统而言，使用 .tar.gz 格式的安装包是最简单的，适合于测试/开发环境的搭建。 下载 Elasticsearch 软件包 在目标测试目录中，使用 wget 在命令行里下载 ，或者使">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://elastic.martinliu.cn/getting-started/local/installation-macos/"><meta property="og:image" content="https://elastic.martinliu.cn/images/og-image.png"><meta property="article:section" content="getting-started">
+<meta property="article:published_time" content="2020-05-31T15:26:15+00:00">
+<meta property="article:modified_time" content="2020-05-31T15:26:15+00:00"><meta property="og:site_name" content="Elastic Stack Workshop">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://elastic.martinliu.cn/images/og-image.png">
+<meta name=twitter:title content="MacOS 本地安装">
+<meta name=twitter:description content="对于 MacOS 和 Linux 操作系统而言，使用 .tar.gz 格式的安装包是最简单的，适合于测试/开发环境的搭建。 下载 Elasticsearch 软件包 在目标测试目录中，使用 wget 在命令行里下载 ，或者使">
+<meta itemprop=name content="MacOS 本地安装">
+<meta itemprop=description content="对于 MacOS 和 Linux 操作系统而言，使用 .tar.gz 格式的安装包是最简单的，适合于测试/开发环境的搭建。 下载 Elasticsearch 软件包 在目标测试目录中，使用 wget 在命令行里下载 ，或者使"><meta itemprop=datePublished content="2020-05-31T15:26:15+00:00">
+<meta itemprop=dateModified content="2020-05-31T15:26:15+00:00">
+<meta itemprop=wordCount content="1529"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
+<meta itemprop=keywords content></head>
+<body><div class=container><header>
+<h1>Elastic Stack Workshop</h1><span class=version>Version 0.1.2</span><a href=https://github.com/martinliu/elasticstack-workshop class=github><i class="fab fa-github"></i></a>
+<p class=description>一个开放免费的技术栈，实现搜索、观测、保护三大解决方案，这里提供了各种教程，欢迎一起学习和共建。</p>
+</header>
+<div class=global-menu>
+<nav>
+<ul>
+<li><a href=/>首页</a></li>
+<li><a href=/workshop/>教程</a></li>
+<li><a href=/contribution/>贡献</a></li></ul>
+</nav>
+</div>
+<div class=content-container>
+<main><h1>MacOS 本地安装</h1>
+<p>对于 MacOS 和 Linux 操作系统而言，使用 <code>.tar.gz</code> 格式的安装包是最简单的，适合于测试/开发环境的搭建。</p>
+<h2 id=下载-elasticsearch-软件包>下载 Elasticsearch 软件包</h2>
+<p>在目标测试目录中，使用 wget 在命令行里下载 ，或者使用图形化下载工具。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.13.0-darwin-x86_64.tar.gz
 tar -xzf elasticsearch-7.13.0-darwin-x86_64.tar.gz
 cd elasticsearch-7.13.0/
-</code></pre></div><p>查看 Elasticsearch 的目录结构。</p><h2 id=下载-kibana-软件包>下载 Kibana 软件包</h2><p>返回上级目录。下载 Kibana 软件。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>wget https://artifacts.elastic.co/downloads/kibana/kibana-7.13.0-linux-x86_64.tar.gz
+</code></pre></div><p>查看 Elasticsearch 的目录结构。</p>
+<h2 id=下载-kibana-软件包>下载 Kibana 软件包</h2>
+<p>返回上级目录。下载 Kibana 软件。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>wget https://artifacts.elastic.co/downloads/kibana/kibana-7.13.0-linux-x86_64.tar.gz
 tar -xzf kibana-7.13.0-linux-x86_64.tar.gz
 cd kibana-7.13.0-linux-x86_64/ 
-</code></pre></div><p>查看 Kibana 的目录结构。</p><h2 id=启动-elasticsearch-服务器>启动 Elasticsearch 服务器</h2><p>进入 <code>elasticsearch-7.13.0</code> 目录中，执行下面的命令。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh> ./bin/elasticsearch
-</code></pre></div><p>以上命令的输出如下：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>[</span>2021-05-31T21:54:47,942<span style=color:#f92672>][</span>INFO <span style=color:#f92672>][</span>o.e.n.Node               <span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> version<span style=color:#f92672>[</span>7.13.0<span style=color:#f92672>]</span>, pid<span style=color:#f92672>[</span>68215<span style=color:#f92672>]</span>, build<span style=color:#f92672>[</span>default/tar/5ca8591c6fcdb1260ce95b08a8e023559635c6f3/2021-05-19T22:22:26.081971330Z<span style=color:#f92672>]</span>, OS<span style=color:#f92672>[</span>Mac OS X/10.15.7/x86_64<span style=color:#f92672>]</span>, JVM<span style=color:#f92672>[</span>AdoptOpenJDK/OpenJDK 64-Bit Server VM/16/16+36<span style=color:#f92672>]</span>
+</code></pre></div><p>查看 Kibana 的目录结构。</p>
+<h2 id=启动-elasticsearch-服务器>启动 Elasticsearch 服务器</h2>
+<p>进入 <code>elasticsearch-7.13.0</code> 目录中，执行下面的命令。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh> ./bin/elasticsearch
+</code></pre></div><p>以上命令的输出如下：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>[</span>2021-05-31T21:54:47,942<span style=color:#f92672>][</span>INFO <span style=color:#f92672>][</span>o.e.n.Node               <span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> version<span style=color:#f92672>[</span>7.13.0<span style=color:#f92672>]</span>, pid<span style=color:#f92672>[</span>68215<span style=color:#f92672>]</span>, build<span style=color:#f92672>[</span>default/tar/5ca8591c6fcdb1260ce95b08a8e023559635c6f3/2021-05-19T22:22:26.081971330Z<span style=color:#f92672>]</span>, OS<span style=color:#f92672>[</span>Mac OS X/10.15.7/x86_64<span style=color:#f92672>]</span>, JVM<span style=color:#f92672>[</span>AdoptOpenJDK/OpenJDK 64-Bit Server VM/16/16+36<span style=color:#f92672>]</span>
 <span style=color:#f92672>[</span>2021-05-31T21:54:47,945<span style=color:#f92672>][</span>INFO <span style=color:#f92672>][</span>o.e.n.Node               <span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> JVM home <span style=color:#f92672>[</span>/Users/martin/Downloads/elk/workshop/elasticsearch-7.13.0/jdk.app/Contents/Home<span style=color:#f92672>]</span>, using bundled JDK <span style=color:#f92672>[</span>true<span style=color:#f92672>]</span>
 <span style=color:#f92672>[</span>2021-05-31T21:54:47,945<span style=color:#f92672>][</span>INFO <span style=color:#f92672>][</span>o.e.n.Node               <span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> JVM arguments <span style=color:#f92672>[</span>-Xshare:auto, -Des.networkaddress.cache.ttl<span style=color:#f92672>=</span>60, -Des.networkaddress.cache.negative.ttl<span style=color:#f92672>=</span>10, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless<span style=color:#f92672>=</span>true, -Dfile.encoding<span style=color:#f92672>=</span>UTF-8, -Djna.nosys<span style=color:#f92672>=</span>true, -XX:-OmitStackTraceInFastThrow, -XX:+ShowCodeDetailsInExceptionMessages, -Dio.netty.noUnsafe<span style=color:#f92672>=</span>true, -Dio.netty.noKeySetOptimization<span style=color:#f92672>=</span>true, -Dio.netty.recycler.maxCapacityPerThread<span style=color:#f92672>=</span>0, -Dio.netty.allocator.numDirectArenas<span style=color:#f92672>=</span>0, -Dlog4j.shutdownHookEnabled<span style=color:#f92672>=</span>false, -Dlog4j2.disable.jmx<span style=color:#f92672>=</span>true, -Djava.locale.providers<span style=color:#f92672>=</span>SPI,COMPAT, --add-opens<span style=color:#f92672>=</span>java.base/java.io<span style=color:#f92672>=</span>ALL-UNNAMED, -XX:+UseG1GC, -Djava.io.tmpdir<span style=color:#f92672>=</span>/var/folders/t5/mrnyyq9n10v5k_g0hbv1lxfc0000gn/T/elasticsearch-5756711792284881036, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath<span style=color:#f92672>=</span>data, -XX:ErrorFile<span style=color:#f92672>=</span>logs/hs_err_pid%p.log, -Xlog:gc*,gc+age<span style=color:#f92672>=</span>trace,safepoint:file<span style=color:#f92672>=</span>logs/gc.log:utctime,pid,tags:filecount<span style=color:#f92672>=</span>32,filesize<span style=color:#f92672>=</span>64m, -Xms16384m, -Xmx16384m, -XX:MaxDirectMemorySize<span style=color:#f92672>=</span>8589934592, -XX:InitiatingHeapOccupancyPercent<span style=color:#f92672>=</span>30, -XX:G1ReservePercent<span style=color:#f92672>=</span>25, -Des.path.home<span style=color:#f92672>=</span>/Users/martin/Downloads/elk/workshop/elasticsearch-7.13.0, -Des.path.conf<span style=color:#f92672>=</span>/Users/martin/Downloads/elk/workshop/elasticsearch-7.13.0/config, -Des.distribution.flavor<span style=color:#f92672>=</span>default, -Des.distribution.type<span style=color:#f92672>=</span>tar, -Des.bundled_jdk<span style=color:#f92672>=</span>true<span style=color:#f92672>]</span>
 <span style=color:#f92672>[</span>2021-05-31T21:54:50,661<span style=color:#f92672>][</span>INFO <span style=color:#f92672>][</span>o.e.p.PluginsService     <span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> loaded module <span style=color:#f92672>[</span>aggs-matrix-stats<span style=color:#f92672>]</span>
@@ -125,7 +183,9 @@ cd kibana-7.13.0-linux-x86_64/
 <span style=color:#f92672>[</span>2021-05-31T21:55:06,690<span style=color:#f92672>][</span>INFO <span style=color:#f92672>][</span>o.e.l.LicenseService     <span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> license <span style=color:#f92672>[</span>8959c6a8-faee-4010-ac6c-1478729ae20c<span style=color:#f92672>]</span> mode <span style=color:#f92672>[</span>basic<span style=color:#f92672>]</span> - valid
 <span style=color:#f92672>[</span>2021-05-31T21:55:06,691<span style=color:#f92672>][</span>INFO <span style=color:#f92672>][</span>o.e.x.s.s.SecurityStatusChangeListener<span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> Active license is now <span style=color:#f92672>[</span>BASIC<span style=color:#f92672>]</span>; Security is disabled
 <span style=color:#f92672>[</span>2021-05-31T21:55:06,692<span style=color:#f92672>][</span>WARN <span style=color:#f92672>][</span>o.e.x.s.s.SecurityStatusChangeListener<span style=color:#f92672>]</span> <span style=color:#f92672>[</span>mbp.local<span style=color:#f92672>]</span> Elasticsearch built-in security features are not enabled. Without authentication, your cluster could be accessible to anyone. See https://www.elastic.co/guide/en/elasticsearch/reference/7.13/security-minimal-setup.html to enable security.
-</code></pre></div><p>不要退出和关闭以上命令行。保持 Elasticsearch 服务器的正常运行。</p><p>打开一个新的命令窗口，用 curl 命令验证， Elasticsearch 服务的状态。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>➜  ~ curl http://localhost:9200
+</code></pre></div><p>不要退出和关闭以上命令行。保持 Elasticsearch 服务器的正常运行。</p>
+<p>打开一个新的命令窗口，用 curl 命令验证， Elasticsearch 服务的状态。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>➜  ~ curl http://localhost:9200
 <span style=color:#f92672>{</span>
   <span style=color:#e6db74>&#34;name&#34;</span> : <span style=color:#e6db74>&#34;mbp.local&#34;</span>,
   <span style=color:#e6db74>&#34;cluster_name&#34;</span> : <span style=color:#e6db74>&#34;elasticsearch&#34;</span>,
@@ -144,7 +204,120 @@ cd kibana-7.13.0-linux-x86_64/
   <span style=color:#e6db74>&#34;tagline&#34;</span> : <span style=color:#e6db74>&#34;You Know, for Search&#34;</span>
 <span style=color:#f92672>}</span>
 
-</code></pre></div><h2 id=启动-kibana-服务器>启动 Kibana 服务器</h2><p>打开一个新的命令窗口，进入 Kibana 的目录中，运行下面的命令。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh> ./bin/kibana
-</code></pre></div><p>在以上命令输出结果停止的时候，不要退出，保持 Kibana 服务器持续运行。</p><p>在浏览器中，输入网址：http://localhost:5601 ，将看到如下的界面。</p><p><img src=https://elasticstack-1300734579.cos.ap-nanjing.myqcloud.com/2021-05-31-2021-05-31_22-14-01.png alt></p><hr><p>注释：</p><ul><li>参考 Elasticsearch 7.13 <a href=https://www.elastic.co/guide/en/elasticsearch/reference/7.13/targz.html>官方文档</a></li><li>参考 Kibana 7.13 <a href=https://www.elastic.co/guide/en/kibana/7.13/targz.html>官方文档</a></li></ul><div class=edit-meta>Last updated on 2020-05-31<br>Published on 2020-05-31<br><a href=https://github.com/martinliu/elasticstack-workshop/edit/master/content/getting-started/local/installation-macos.md class=edit-page><i class="fas fa-pen-square"></i>&nbsp;Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=https://elastic.martinliu.cn/getting-started/local/ title=本地安装><i class="fas fa-arrow-left" aria-hidden=true></i>&nbsp;Prev - 本地安装</a>
-<a class="nav nav-next" href=https://elastic.martinliu.cn/getting-started/local/installation-linux/ title="Linux 本地安装">Next - Linux 本地安装 <i class="fas fa-arrow-right" aria-hidden=true></i></a></nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p></footer></main><div class=sidebar><nav class=slide-menu><ul><li><a href=https://elastic.martinliu.cn/>Home</a></li><li class="parent has-sub-menu"><a href=https://elastic.martinliu.cn/getting-started/>新手入门<span class="mark opened">-</span></a><ul class=sub-menu><li><a href=https://elastic.martinliu.cn/getting-started/configuration/>Configuration</a></li><li><a href=https://elastic.martinliu.cn/getting-started/screenshot/>Screenshot</a></li><li class="parent has-sub-menu"><a href=https://elastic.martinliu.cn/getting-started/local/>本地安装<span class="mark opened">-</span></a><ul class=sub-menu><li class=active><a href=https://elastic.martinliu.cn/getting-started/local/installation-macos/>MacOS 本地安装</a></li><li><a href=https://elastic.martinliu.cn/getting-started/local/installation-linux/>Linux 本地安装</a></li><li><a href=https://elastic.martinliu.cn/getting-started/local/installation-win/>Windows 本地安装</a></li></ul></li></ul></li><li class=has-sub-menu><a href=https://elastic.martinliu.cn/sample/>Sample Document<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://elastic.martinliu.cn/sample/markdown-syntax/>Markdown Syntax</a></li><li><a href=https://elastic.martinliu.cn/sample/build-in-shortcodes/>Build-in Shortcodes</a></li><li><a href=https://elastic.martinliu.cn/sample/custom-shortcodes/>Custom Shortcodes</a></li><li><a href=https://elastic.martinliu.cn/sample/table-of-contents/>Table of Contents</a></li><li><a href=https://elastic.martinliu.cn/sample/search-shortcode/>Search Shortcode</a></li></ul></li><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter1/>Chapter 1<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://elastic.martinliu.cn/chapter1/1/>Chapter 1-1</a></li><li><a href=https://elastic.martinliu.cn/chapter1/2/>Chapter 1-2</a></li><li><a href=https://elastic.martinliu.cn/chapter1/3/>Chapter 1-3</a></li><li><a href=https://elastic.martinliu.cn/chapter1/4/>Chapter 1-4</a></li></ul></li><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter2/>Chapter 2 (weighted)<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://elastic.martinliu.cn/chapter2/3/>Chapter 2-3 (weight: 10)</a></li><li><a href=https://elastic.martinliu.cn/chapter2/4/>Chapter 2-4 (weight: 20)</a></li><li><a href=https://elastic.martinliu.cn/chapter2/2/>Chapter 2-2 (weight: 30)</a></li><li><a href=https://elastic.martinliu.cn/chapter2/1/>Chapter 2-1 (weight: 40)</a></li><li><a href=https://elastic.martinliu.cn/chapter2/5/>Chapter 2-0 (weight: no set)</a></li></ul></li><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter3/>Chapter 3 (hierarchized)<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://elastic.martinliu.cn/chapter3/1/>Chapter 3-1</a></li><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/>Chapter 3-2<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/1/>Chapter 3-2-1</a></li><li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/2/>Chapter 3-2-2</a></li><li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/3/>Chapter 3-2-3</a></li><li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/4/>Chapter 3-2-4</a></li></ul></li><li><a href=https://elastic.martinliu.cn/chapter3/3/>Chapter 3-3</a></li><li><a href=https://elastic.martinliu.cn/chapter3/4/>Chapter 3-4</a></li></ul></li><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/>Chapter 4 (unlimited levels)<span class="mark closed">+</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/>Chapter 4-1<span class="mark closed">+</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/>Chapter 4-1-1<span class="mark closed">+</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/>Chapter 4-1-1-1<span class="mark closed">+</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/chapter4-1-1-1-1/>Chapter 4-1-1-1-1<span class="mark closed">+</span></a><ul class=sub-menu><li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/chapter4-1-1-1-1/chapter4-1-1-1-1-1/>Chapter 4-1-1-1-1-1<span class="mark closed">+</span></a><ul class=sub-menu><li><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/chapter4-1-1-1-1/chapter4-1-1-1-1-1/chapter4-1-1-1-1-1-1/>Chapter 4-1-1-1-1-1-1</a></li></ul></li></ul></li></ul></li></ul></li></ul></li></ul></li></ul></nav><div class=sidebar-footer></div></div></div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20><span class="fa-layers fa-fw"><i class="fas fa-circle"></i>
-<i class="fas fa-arrow-circle-up"></i></span></a></div></body></html>
+</code></pre></div><h2 id=启动-kibana-服务器>启动 Kibana 服务器</h2>
+<p>打开一个新的命令窗口，进入 Kibana 的目录中，运行下面的命令。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh> ./bin/kibana
+</code></pre></div><p>在以上命令输出结果停止的时候，不要退出，保持 Kibana 服务器持续运行。</p>
+<p>在浏览器中，输入网址：http://localhost:5601 ，将看到如下的界面。</p>
+<p><img src=https://elasticstack-1300734579.cos.ap-nanjing.myqcloud.com/2021-05-31-2021-05-31_22-14-01.png alt></p>
+<hr>
+<p>注释：</p>
+<ul>
+<li>参考 Elasticsearch 7.13 <a href=https://www.elastic.co/guide/en/elasticsearch/reference/7.13/targz.html>官方文档</a></li>
+<li>参考 Kibana 7.13 <a href=https://www.elastic.co/guide/en/kibana/7.13/targz.html>官方文档</a></li>
+</ul>
+<div class=edit-meta>
+Last updated on 2020-05-31
+<br>
+Published on 2020-05-31
+<br><a href=https://github.com/martinliu/elasticstack-workshop/edit/master/content/getting-started/local/installation-macos.md class=edit-page><i class="fas fa-pen-square"></i>&nbsp;Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=https://elastic.martinliu.cn/getting-started/local/ title=本地安装><i class="fas fa-arrow-left" aria-hidden=true></i>&nbsp;Prev - 本地安装</a>
+<a class="nav nav-next" href=https://elastic.martinliu.cn/getting-started/local/installation-linux/ title="Linux 本地安装">Next - Linux 本地安装 <i class="fas fa-arrow-right" aria-hidden=true></i></a>
+</nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p>
+</footer>
+</main>
+<div class=sidebar>
+<nav class=slide-menu>
+<ul>
+<li><a href=https://elastic.martinliu.cn/>Home</a></li>
+<li class="parent has-sub-menu"><a href=https://elastic.martinliu.cn/getting-started/>新手入门<span class="mark opened">-</span></a>
+<ul class=sub-menu>
+<li><a href=https://elastic.martinliu.cn/getting-started/configuration/>Configuration</a></li>
+<li><a href=https://elastic.martinliu.cn/getting-started/screenshot/>Screenshot</a></li>
+<li class="parent has-sub-menu"><a href=https://elastic.martinliu.cn/getting-started/local/>本地安装<span class="mark opened">-</span></a>
+<ul class=sub-menu>
+<li class=active><a href=https://elastic.martinliu.cn/getting-started/local/installation-macos/>MacOS 本地安装</a></li>
+<li><a href=https://elastic.martinliu.cn/getting-started/local/installation-linux/>Linux 本地安装</a></li>
+<li><a href=https://elastic.martinliu.cn/getting-started/local/installation-win/>Windows 本地安装</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/sample/>Sample Document<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li><a href=https://elastic.martinliu.cn/sample/markdown-syntax/>Markdown Syntax</a></li>
+<li><a href=https://elastic.martinliu.cn/sample/build-in-shortcodes/>Build-in Shortcodes</a></li>
+<li><a href=https://elastic.martinliu.cn/sample/custom-shortcodes/>Custom Shortcodes</a></li>
+<li><a href=https://elastic.martinliu.cn/sample/table-of-contents/>Table of Contents</a></li>
+<li><a href=https://elastic.martinliu.cn/sample/search-shortcode/>Search Shortcode</a></li>
+</ul>
+</li>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter1/>Chapter 1<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li><a href=https://elastic.martinliu.cn/chapter1/1/>Chapter 1-1</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter1/2/>Chapter 1-2</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter1/3/>Chapter 1-3</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter1/4/>Chapter 1-4</a></li>
+</ul>
+</li>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter2/>Chapter 2 (weighted)<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li><a href=https://elastic.martinliu.cn/chapter2/3/>Chapter 2-3 (weight: 10)</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter2/4/>Chapter 2-4 (weight: 20)</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter2/2/>Chapter 2-2 (weight: 30)</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter2/1/>Chapter 2-1 (weight: 40)</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter2/5/>Chapter 2-0 (weight: no set)</a></li>
+</ul>
+</li>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter3/>Chapter 3 (hierarchized)<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li><a href=https://elastic.martinliu.cn/chapter3/1/>Chapter 3-1</a></li>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/>Chapter 3-2<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/1/>Chapter 3-2-1</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/2/>Chapter 3-2-2</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/3/>Chapter 3-2-3</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter3/chapter3-2/4/>Chapter 3-2-4</a></li>
+</ul>
+</li>
+<li><a href=https://elastic.martinliu.cn/chapter3/3/>Chapter 3-3</a></li>
+<li><a href=https://elastic.martinliu.cn/chapter3/4/>Chapter 3-4</a></li>
+</ul>
+</li>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/>Chapter 4 (unlimited levels)<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/>Chapter 4-1<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/>Chapter 4-1-1<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/>Chapter 4-1-1-1<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/chapter4-1-1-1-1/>Chapter 4-1-1-1-1<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li class=has-sub-menu><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/chapter4-1-1-1-1/chapter4-1-1-1-1-1/>Chapter 4-1-1-1-1-1<span class="mark closed">+</span></a>
+<ul class=sub-menu>
+<li><a href=https://elastic.martinliu.cn/chapter4/chapter4-1/chapter4-1-1/chapter4-1-1-1/chapter4-1-1-1-1/chapter4-1-1-1-1-1/chapter4-1-1-1-1-1-1/>Chapter 4-1-1-1-1-1-1</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<div class=sidebar-footer></div>
+</div>
+</div><a href=# id=backtothetop-fixed class=backtothetop data-backtothetop-duration=600 data-backtothetop-easing=easeOutQuart data-backtothetop-fixed-fadein=1000 data-backtothetop-fixed-fadeout=1000 data-backtothetop-fixed-bottom=10 data-backtothetop-fixed-right=20>
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>
