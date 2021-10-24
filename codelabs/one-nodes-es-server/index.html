@@ -64,7 +64,7 @@
         <p>顺利完成本 Lab 的笔记本电脑的软硬件需求如下。</p>
 <aside class="special"><p>建议使用配置足够的笔记本电脑，在本机的命令行直接运行本 Lab 的相关操作，已获取最佳体验。或者使用一个本地运行的虚拟机，效果更佳。</p>
 </aside>
-<h2 is-upgraded>笔记本电脑或者虚拟机硬件配置</h2>
+<h2 is-upgraded>笔记本电脑</h2>
 <ul>
 <li>8GB 内存或更多</li>
 <li>i5 及更高 CPU</li>
@@ -78,13 +78,26 @@
 <li>虚拟机运行软件 Virutalbox 或者 VMWare Workstation。</li>
 <li>创建一个 Linux 虚拟机，内存不小于 4GB，确保虚拟机关闭防火墙软件，所有端口都可以和本机正常通讯。</li>
 </ul>
-<aside class="warning"><p>打开命令行工具软件，进入一个准备好的空目录。或者SSH登陆准备好的虚拟机。</p>
+<h2 is-upgraded>虚拟机</h2>
+<p>本实战练习需要一台 CentOS 虚拟机，配置需求如下：</p>
+<ul>
+<li>版本： CentOS 7 或者 8</li>
+<li>CPU： 2 vCPU</li>
+<li>内存：最低 4GB， 最好 8 GB</li>
+<li>磁盘：最低20 GB</li>
+<li>网络：  <ul>
+<li>本地虚拟机：可以被笔记本电脑访问，同时虚拟机也可以访问互联网下载和安装Yum源中的软件</li>
+<li>云主机：可以从YUM下载安装包，具备公网IP地址，防火墙设置公网可以访问这些端口：TCP9200， TCP5601</li>
+</ul>
+</li>
+</ul>
+<aside class="warning"><p>打开命令行工具软件，使用SSH登陆准备好的CentOS虚拟机。</p>
 </aside>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="运行 Elasticsearch 服务器" duration="5">
+      <google-codelab-step label="安装 Elasticsearch 服务器" duration="5">
         <aside class="special"><p>远程下载安装 Elasticsearch 服务器软件。</p>
 </aside>
 <p>使用清华大学的YUM镜像源安装。</p>
@@ -201,8 +214,8 @@ Changed password for user [elastic]
 
       </google-codelab-step>
     
-      <google-codelab-step label="索引一些文档「可选实践lab」" duration="8">
-        <aside class="special"><p>这个本地运行的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对文档的增删改查（CURD）等操作。</p>
+      <google-codelab-step label="索引一些文档「可选实践」" duration="8">
+        <aside class="special"><p>【这一部分练习可以略过】这个本地运行的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对文档的增删改查（CURD）等操作。</p>
 </aside>
 <h2 is-upgraded>索引单个和返回单个文档</h2>
 <p>索引一个文档，该文档只具有一个键值对数据 &#34;name&#34;: &#34;John Doe&#34; 。</p>
@@ -275,8 +288,8 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 
       </google-codelab-step>
     
-      <google-codelab-step label="测试搜索功能「可选实践lab」" duration="6">
-        <aside class="special"><p>使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
+      <google-codelab-step label="测试搜索功能「可选实践」" duration="6">
+        <aside class="special"><p>【这一部分练习可以略过】使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
 </aside>
 <h2 is-upgraded>搜索 1</h2>
 <p>说明：</p>
@@ -422,8 +435,8 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 
       </google-codelab-step>
     
-      <google-codelab-step label="搜索结果的聚合分析「可选实践lab」" duration="6">
-        <aside class="special"><p>Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
+      <google-codelab-step label="搜索结果的聚合分析「可选实践」" duration="6">
+        <aside class="special"><p>【这一部分练习可以略过】Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
 </aside>
 <h2 is-upgraded>聚合运算 1</h2>
 <p>说明：</p>
@@ -565,8 +578,8 @@ systemctl status   kibana.service
 <p>分别点击这三个按钮「添加数据」，导入三组示例数据。</p>
 <p class="image-container"><img alt="2020-10-28_23-44-23" src="img/58d8b71d301a2532.jpeg"></p>
 <p>点击 Dashboard 查看数据分析仪表板。</p>
-<h2 is-upgraded>创建 bank 索引模式&amp;查看数据</h2>
-<p>为了在图形界面中创建用于分析 bank 索引中所有数据的&#34;索引模式&#34;。</p>
+<h2 is-upgraded>创建 bank 索引模式&amp;查看数据【可选实践】</h2>
+<p>【这一部分练习可以略过】 为了在图形界面中创建用于分析 bank 索引中所有数据的&#34;索引模式&#34;。</p>
 <p class="image-container"><img alt="2020-10-28_23-45-56" src="img/dec94ab188575062.jpeg"></p>
 <p>点击左上角的按钮打开左侧菜单，点击 Stack Management 菜单。</p>
 <p class="image-container"><img alt="2020-10-28_23-46-21" src="img/f505c15871728ed4.jpeg"></p>
