@@ -1,0 +1,29 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-749876-6",
+  "updated": "2021-12-08T07:58:05Z",
+  "id": "entprise-search-foundation",
+  "duration": 95,
+  "title": "Elastic 企业搜索工作坊(中等)",
+  "authors": "Martin Liu",
+  "summary": "Elastic 企业搜索(中等)",
+  "source": "codelabs/ent-search-vm.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "elasticsearch",
+    "appsearch",
+    "kibana",
+    "workplace"
+  ],
+  "tags": [
+    "elasticstack"
+  ],
+  "feedback": "https://martinliu.cn",
+  "ga": "UA-159133967-1",
+  "url": "entprise-search-foundation"
+}

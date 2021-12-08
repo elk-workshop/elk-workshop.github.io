@@ -39,11 +39,11 @@
 </ol>
 <p>本课程的所有程序文件、软件包的下载地址如下：</p>
 <ul>
-<li>百度网盘 https://pan.baidu.com/s/1fqLLEanfkmLYBZJBrKhiYQ</li>
-<li>提取码：0kx6</li>
+<li>国内的YUM源服务器1：https://mirror.tuna.tsinghua.edu.cn/elasticstack/</li>
+<li>国内的YUM源服务器2：https://mirrors.cloud.tencent.com/elasticstack/</li>
+<li>国内的YUM源服务器3：https://mirrors.aliyun.com/elasticstack/</li>
+<li>Elastic 标准YUM源：https://artifacts.elastic.co/downloads/elasticsearch/</li>
 </ul>
-<p>请在网盘文件加中，找到对应课程的目录【名为：workshop只需要下载本文件夹】，下载该目录中的两个文件到本机（macOS），或者上传到云主机中。</p>
-<p>已经下载并且准备好的情况下，忽略本课程中提到的任何下载命令。</p>
 <h2 is-upgraded>参考信息</h2>
 <p>Elastic 官方参考文档：</p>
 <ul>
@@ -64,7 +64,7 @@
         <p>顺利完成本 Lab 的笔记本电脑的软硬件需求如下。</p>
 <aside class="special"><p>建议使用配置足够的笔记本电脑，在本机的命令行直接运行本 Lab 的相关操作，已获取最佳体验。或者使用一个本地运行的虚拟机，效果更佳。</p>
 </aside>
-<h2 is-upgraded>笔记本电脑硬件配置</h2>
+<h2 is-upgraded>笔记本电脑</h2>
 <ul>
 <li>8GB 内存或更多</li>
 <li>i5 及更高 CPU</li>
@@ -78,57 +78,108 @@
 <li>虚拟机运行软件 Virutalbox 或者 VMWare Workstation。</li>
 <li>创建一个 Linux 虚拟机，内存不小于 4GB，确保虚拟机关闭防火墙软件，所有端口都可以和本机正常通讯。</li>
 </ul>
-<aside class="warning"><p>打开命令行工具软件，进入一个准备好的空目录。或者SSH登陆准备好的虚拟机。</p>
+<h2 is-upgraded>虚拟机</h2>
+<p>本实战练习需要一台 CentOS 虚拟机，配置需求如下：</p>
+<ul>
+<li>版本： CentOS 7 或者 8</li>
+<li>CPU： 2 vCPU</li>
+<li>内存：最低 4GB， 最好 8 GB</li>
+<li>磁盘：最低20 GB</li>
+<li>网络：  <ul>
+<li>本地虚拟机：可以被笔记本电脑访问，同时虚拟机也可以访问互联网下载和安装Yum源中的软件</li>
+<li>云主机：可以从YUM下载安装包，具备公网IP地址，防火墙设置公网可以访问这些端口：TCP9200， TCP5601</li>
+</ul>
+</li>
+</ul>
+<aside class="warning"><p>打开命令行工具软件，使用SSH登陆准备好的CentOS虚拟机。</p>
 </aside>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="运行 Elasticsearch 服务器" duration="5">
-        <aside class="special"><p>在实操练习的空目录中下载 Elasticsearch 服务器软件压缩包 tar.gz 版本（非 rpm 或 deb 安装包）。</p>
+      <google-codelab-step label="安装 Elasticsearch 服务器" duration="5">
+        <aside class="special"><p>远程下载安装 Elasticsearch 服务器软件。</p>
 </aside>
-<h2 is-upgraded>下载软件压缩包</h2>
-<p>下载符合你的操作系统类型的 Elasticsearch 软件包。</p>
-<p>Linux:  <a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-linux-x86_64.tar.gz" target="_blank">elasticsearch-7.9.3-linux-x86_64.tar.gz</a></p>
-<pre><code language="language-bash" class="language-bash">curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-linux-x86_64.tar.gz
+<p>使用清华大学的YUM镜像源安装。</p>
+<pre><code language="language-shell" class="language-shell">sudo yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.15.1/elasticsearch-7.15.1-x86_64.rpm
 </code></pre>
-<p>macOS:  <a href="https://artifacts.elastic.co/downloads/elasticsearch/\nelasticsearch-7.9.3-darwin-x86_64.tar.gz" target="_blank">elasticsearch-7.9.3-darwin-x86_64.tar.gz</a></p>
-<pre><code language="language-bash" class="language-bash">curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-darwin-x86_64.tar.gz
+<p>在启动 Elasticsearch 服务之前，创建启用安全选项所需的 TLS 数字证书，运行证书创建工具如下所示：</p>
+<pre><code language="language-shell" class="language-shell">sudo /usr/share/elasticsearch/bin/elasticsearch-certutil cert -out /etc/elasticsearch/elastic-certificates.p12 -pass &#34;&#34;
+sudo chmod 660 /etc/elasticsearch/elastic-certificates.p12
+sudo ls -l /etc/elasticsearch/elastic-certificates.p12
 </code></pre>
-<p>Windows:</p>
-<p><a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.3-windows-x86_64.zip" target="_blank"><paper-button class="colored" raised>elasticsearch-7.9.3-windows-x86_64.zip</paper-button></a></p>
-<h2 is-upgraded>解压缩软件压缩包</h2>
-<p>进入下载软件包所在的目录中。解压缩 Elasticsearch 服务器端软件包。</p>
-<p>Linux:</p>
-<pre><code language="language-bash" class="language-bash">tar -xvf elasticsearch-7.9.3-linux-x86_64.tar.gz
+<p>将 Elasticsearch 默认的配置文件内容更新为如下内容。</p>
+<pre><code language="language-yaml" class="language-yaml"># ---------------------------------- Cluster -----------------------------------
+cluster.name: elk-es01
+
+# ----------------------------------- Paths ------------------------------------
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+
+# ---------------------------------- Network -----------------------------------
+network.host: 0.0.0.0
+
+# --------------------------------- Discovery ----------------------------------
+discovery.type: single-node
+
+# ------------------------------- TLS and Cert ---------------------------------
+xpack.security.enabled: true
+
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+
+# ------------------------------- Security ---------------------------------
+xpack.security.authc.api_key.enabled: true
+xpack:
+  security:
+    authc:
+      realms:
+        native:
+          native1:
+            order: 0
+
+#  ------------------------------- App Search ---------------------------------
+action.auto_create_index: &#34;.app-search-*-logs-*,-.app-search-*,+*&#34;
 </code></pre>
-<p>macOS:</p>
-<pre><code language="language-bash" class="language-bash">tar -xvf elasticsearch-7.9.3-darwin-x86_64.tar.gz
+<p>用以上配置内容，创建名为 ‘sec.yml&#39; 的配置文件，替换默认 ‘elasticsearch.yml&#39; 配置文件的内容（下面用 cp 命令覆盖默认配置文件的方式更新默认配置文件，后续的所有配置更新都会使用这个方式）。然后启动 Elasticsearch 服务。</p>
+<pre><code language="language-sh" class="language-sh">sudo cp sec.yml /etc/elasticsearch/elasticsearch.yml
+sudo systemctl daemon-reload
+sudo systemctl enable elasticsearch.service
+sudo systemctl start elasticsearch.service
+sudo systemctl status elasticsearch
 </code></pre>
-<p>Windows PowerShell:</p>
-<pre><code language="language-bash" class="language-bash">Expand-Archive elasticsearch-7.9.3-windows-x86_64.zip
+<p>使用 <code>sudo tail -f /var/log/elasticsearch/elk-es01.log</code> 命令查看当前 Elasticsearch 服务的日志。</p>
+<p>初始化 ES 服务器内建用户的密码。</p>
+<pre><code language="language-shell" class="language-shell">sudo /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive -b
 </code></pre>
-<h2 is-upgraded>启动 Elasticsearch 服务</h2>
-<p>进入加压缩后的目录，并在命令行启动 Elasticsearch 服务器。</p>
-<p>Linux 和 macOS:</p>
-<pre><code language="language-bash" class="language-bash">cd elasticsearch-7.9.3/bin
-./elasticsearch -Ecluster.name=1m-only -Ediscovery.type=single-node -Enode.name=node1 -Enetwork.host=0.0.0.0
+<p>将本练习所使用的默认密码  <code>security123</code> 复制到剪切板，这条命令的每一个提示符出现的位置，用快捷键粘贴输入这个密码之后，按回车输入该密码，用这个方式给所有系统内置账号设置了相同的密码（纯粹测试目的，并不建议这么做）。以上命令的输出如下：</p>
+<pre><code language="language-shell" class="language-shell">Enter password for [elastic]:
+Reenter password for [elastic]:
+Enter password for [apm_system]:
+Reenter password for [apm_system]:
+Enter password for [kibana_system]:
+Reenter password for [kibana_system]:
+Enter password for [logstash_system]:
+Reenter password for [logstash_system]:
+Enter password for [beats_system]:
+Reenter password for [beats_system]:
+Enter password for [remote_monitoring_user]:
+Reenter password for [remote_monitoring_user]:
+Changed password for user [apm_system]
+Changed password for user [kibana_system]
+Changed password for user [kibana]
+Changed password for user [logstash_system]
+Changed password for user [beats_system]
+Changed password for user [remote_monitoring_user]
+Changed password for user [elastic]
 </code></pre>
-<p>Windows:</p>
-<pre><code language="language-bash" class="language-bash">cd elasticsearch-7.9.3\bin
-.\elasticsearch.bat -E cluster.name=1m-only -E discovery.type=single-node -E node.name=node1
-</code></pre>
-<p>在启动日志停止滚动后，一个名为 <code>1m-only</code> 的单节点 Elasticsearch 集群就启动成功了。启动是参数说明如下：</p>
-<ul>
-<li>cluster.name ： 集群名称</li>
-<li>node.name : 节点名称</li>
-<li>discovery.type ：集群中节点间的发现方式，显式声明该集群中只有一个节点。</li>
-</ul>
-<p>在一个新的命令行窗口中用 <code>curl</code> 命令行工具测试 Elasticsearch 集群服务的状态。</p>
-<p>查看服务的基本信息。Linux (SSH 登陆之后)和 macOS:</p>
-<p><code>curl -X GET http://localhost:9200</code></p>
-<pre><code language="language-bash" class="language-bash">curl -X GET http://localhost:9200
-{
+<p>在浏览器中访问 http://IP-address:9200/ ，测试 Elasticsearch 服务是否正常，确认上面配置的 elastic 用户的密码 <code>security123</code> 登录。</p>
+<p>ssh 等了到Linux操作系统，在一个新的命令行窗口中用 <code>curl</code> 命令行工具测试 Elasticsearch 集群服务的状态。</p>
+<p>使用下面的命令查看Elasticsearch服务的基本信息。</p>
+<p><code>curl --user elastic:security123 -X GET http://localhost:9200</code></p>
+<pre><code language="language-bash" class="language-bash">{
   &#34;name&#34; : &#34;node1&#34;,
   &#34;cluster_name&#34; : &#34;1m-only&#34;,
   &#34;cluster_uuid&#34; : &#34;LvHOXakFTby0-uPwq_Ekiw&#34;,
@@ -148,27 +199,27 @@
 
 </code></pre>
 <p>查看集群的状态信息。Linux (SSH 登陆之后) 和 macOS:</p>
-<p><code>curl -X GET http://localhost:9200/_cat/nodes\?v</code></p>
-<pre><code language="language-bash" class="language-bash">curl -X GET http://localhost:9200/_cat/nodes\?v
-ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+<p><code>curl --user elastic:security123 -X GET http://localhost:9200/_cat/nodes\?v</code></p>
+<p>应该看到类似于下面的输出。</p>
+<pre><code language="language-bash" class="language-bash">ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
 127.0.0.1           17          97   7    2.05                  dilmrt    *      node1
 </code></pre>
 <p>上面的 <code>master</code> 那一列下面的值为 <code>*</code> 号，表明节点 <code>node1</code> 是主节点。</p>
-<p>在浏览器中验证 Elasticsearch 集群服务的状态，打开浏览器中访问这个网址 <code>http://localhost:9200</code> 。或者访问本地虚拟机的 IP 地址，例如：<code>http://192.168.50.11:9200</code> ，访问结果应如下图所示：</p>
+<p>在浏览器中验证 Elasticsearch 集群服务的状态，打开浏览器中访问这个网址 <code>http://IP_ADDRESS:9200</code> 。或者访问本地虚拟机的 IP 地址，或者云主机的公网IP地址，例如：<code>http://192.168.50.11:9200</code> ，访问结果应如下图所示：</p>
 <p class="image-container"><img alt="2020-10-28_11-35-01" src="img/42317fb1250e878e.jpeg"></p>
-<p>然后尝试访问这个网址 <code>http://localhost:9200/_cat/nodes\?v</code> 。</p>
-<aside class="warning"><p>确保在命令行和浏览器中都能看到正确的集群名称、节点名称和软件版本号；Elasticsearch 服务器已经正常工作。</p>
+<p>然后尝试访问这个网址 <code>http://IP_address:9200/_cat/nodes\?v</code> 。</p>
+<aside class="warning"><p>注意：请确保将 Elasticsearch 服务运行正常，可以在网页浏览器中登录/验证 elastic 用户的密码 security123。</p>
 </aside>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="索引一些文档" duration="8">
-        <aside class="special"><p>这个本地运行的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对文档的增删改查（CURD）等操作。</p>
+      <google-codelab-step label="索引一些文档「可选实践」" duration="8">
+        <aside class="special"><p>【这一部分练习可以略过】这个本地运行的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对文档的增删改查（CURD）等操作。</p>
 </aside>
 <h2 is-upgraded>索引单个和返回单个文档</h2>
 <p>索引一个文档，该文档只具有一个键值对数据 &#34;name&#34;: &#34;John Doe&#34; 。</p>
-<pre><code language="language-bash" class="language-bash">curl -X PUT &#34;localhost:9200/customer/_doc/1?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-bash" class="language-bash">curl --user elastic:security123 -X PUT &#34;localhost:9200/customer/_doc/1?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;name&#34;: &#34;John Doe&#34;
 }
@@ -193,7 +244,7 @@ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master
 </code></pre>
 <p>以上的命令创建了名称为 <code>customer</code> 的新索引，并保存了第一个编号为 <code>1</code> 的文档。</p>
 <p>用下面的命令取回这个编号为 <code>1</code> 的文档。</p>
-<pre><code>curl -X GET &#34;localhost:9200/customer/_doc/1?pretty&#34;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123  -X GET &#34;localhost:9200/customer/_doc/1?pretty&#34;
 
 </code></pre>
 <p>返回的结果如下：</p>
@@ -214,12 +265,14 @@ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master
 <h2 is-upgraded>批量索引文档</h2>
 <p>在有大量文档的时候，可以使用 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docs-bulk.html" target="_blank">buck API</a> 进行批量索引（导入）的操作。</p>
 <p>确认软件包目录下有一个名为 <code>account.json</code> 的文件。否则根据下面的提示下载该文件。</p>
-<p>下载测试数据文件 <a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank">accounts.json</a> ，这个文件中有一千条人工生成的数据</p>
+<p>下载测试数据文件 <a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank">accounts.json</a> ，这个文件中有一千条人工生成的数据。</p>
 <p><a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank"><paper-button class="colored" raised>点此下载 account.json 文件</paper-button></a></p>
+<p>或者在Linux 的操作系统中使用命令下载该文件。</p>
+<p>curl -O https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json</p>
 <p>将 <code>account.json</code> 文件下载到测试目录中，用文本编辑器打开浏览确认，或者在 Linux 系统中执行命令 <code>cat account.json</code>。这个文件中有一千条数据记录。</p>
 <p>在命令行中，进入以上测试数据文件的目录中，运行下面的两条命令。</p>
-<pre><code>curl -H &#34;Content-Type: application/json&#34; -XPOST &#34;localhost:9200/bank/_bulk?pretty&amp;refresh&#34; --data-binary &#34;@accounts.json&#34;
-curl &#34;localhost:9200/_cat/indices?v&#34;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -H &#34;Content-Type: application/json&#34; -XPOST &#34;localhost:9200/bank/_bulk?pretty&amp;refresh&#34; --data-binary &#34;@accounts.json&#34;
+curl --user elastic:security123 &#34;localhost:9200/_cat/indices?v&#34;
 </code></pre>
 <p>以上命令的结果，最后三行应该如下所示：</p>
 <pre><code>health status index    uuid                   pri rep docs.count docs.deleted store.size pri.store.size
@@ -227,7 +280,7 @@ yellow open   bank     Q_yO2ErRSRSgCXHu6eac-g   1   1       1000            0   
 yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0      3.8kb          3.8kb
 </code></pre>
 <p>上面的结果表明：当前的集群中已经创建了两个索引 <code>bank</code> 和 <code>customer</code> ; 名为 <code>bank</code> 的索引显示文档数为 1000，这就是刚才用 bulk API 导入的数据。</p>
-<p>如果在浏览器中访问这个网址 localhost:9200/_cat/indices?v 也可以看到如下相同结果。</p>
+<p>如果在浏览器中访问这个网址 http://IP_ADDRESS:9200/_cat/indices?v 也可以看到如下相同结果。</p>
 <p class="image-container"><img alt="2020-10-28_12-58-30" src="img/fba2aff51dffabce.jpeg"></p>
 <aside class="warning"><p><code>_doc</code> 和 <code>_bulk</code> API 索引了单个和批量的数据文档。名为 <code>bank</code> 和 <code>customer</code> 的索引也在过程中被创建。</p>
 </aside>
@@ -235,8 +288,8 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 
       </google-codelab-step>
     
-      <google-codelab-step label="测试搜索功能" duration="6">
-        <aside class="special"><p>使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
+      <google-codelab-step label="测试搜索功能「可选实践」" duration="6">
+        <aside class="special"><p>【这一部分练习可以略过】使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
 </aside>
 <h2 is-upgraded>搜索 1</h2>
 <p>说明：</p>
@@ -246,7 +299,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>结果按 account_number 字段升序排列</li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;query&#34;: { &#34;match_all&#34;: {} },
   &#34;sort&#34;: [
@@ -278,7 +331,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 </li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;query&#34;: { &#34;match_all&#34;: {} },
   &#34;sort&#34;: [
@@ -302,7 +355,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>搜索所有地址中还有 <code>mill</code> 和 <code>lane</code> 关键词的文档</li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;query&#34;: { &#34;match&#34;: { &#34;address&#34;: &#34;mill lane&#34; } }
 }
@@ -324,7 +377,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>搜索所有年龄为 40 且不居住在 ‘ID&#39; 州的账号。</li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123  -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;query&#34;: {
     &#34;bool&#34;: {
@@ -353,7 +406,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>返回账户余额金额 <code>balance</code> 在 20000 到 30000 之间的数据</li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;query&#34;: {
     &#34;bool&#34;: {
@@ -382,8 +435,8 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 
       </google-codelab-step>
     
-      <google-codelab-step label="搜索结果的聚合分析" duration="6">
-        <aside class="special"><p>Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
+      <google-codelab-step label="搜索结果的聚合分析「可选实践」" duration="6">
+        <aside class="special"><p>【这一部分练习可以略过】Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
 </aside>
 <h2 is-upgraded>聚合运算 1</h2>
 <p>说明：</p>
@@ -393,7 +446,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>用 state 作为关键字分组查询结果</li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;size&#34;: 0,
   &#34;aggs&#34;: {
@@ -421,7 +474,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>默认以每个州的账户数量排序结果</li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;size&#34;: 0,
   &#34;aggs&#34;: {
@@ -453,7 +506,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>用每个州的平均账户余额从大到小排序结果</li>
 </ul>
 <p>在命令行执行下面的命令。</p>
-<pre><code>curl -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
+<pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -X GET &#34;localhost:9200/bank/_search?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
 {
   &#34;size&#34;: 0,
   &#34;aggs&#34;: {
@@ -488,44 +541,49 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
       </google-codelab-step>
     
       <google-codelab-step label="运行和使用 Kibana 服务器" duration="8">
-        <aside class="special"><p>下载并运行 Kibana 软件包，使用 Kibana 的图形界面搜索 bank 索引中的数据。</p>
+        <p>执行 Kibana 安装命令，如下所示：</p>
+<pre><code language="language-shell" class="language-shell">sudo yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.15.0/kibana-7.15.0-x86_64.rpm
+</code></pre>
+<p>准备预配置的 Kibana 的配置文件，如下：</p>
+<pre><code language="language-yaml" class="language-yaml">server.host: &#34;0.0.0.0&#34;
+elasticsearch.hosts: [&#34;http://localhost:9200&#34;]
+elasticsearch.username: &#34;kibana_system&#34;
+elasticsearch.password: security123
+enterpriseSearch.host: &#39;http://localhost:3002&#39;
+i18n.locale: zh-CN
+xpack.security.enabled: true
+xpack.security.encryptionKey: &#34;fhjskloppd678ehkdfdlliverpoolfcr&#34;
+xpack.encryptedSavedObjects.encryptionKey: &#34;Si0gjCjujZ0LghDiApKJfGhGeVJ8JwxrY1z7rOpBva&#34;
+</code></pre>
+<p>上见示例配置文件 kb.yml。如果你使用的其它自定义的 IP 地址，请注意在后续的所有操作中替换它。</p>
+<p>更新默认配置文件，用以上示例配置文件覆盖 Kibana 默认配置文件，然后启动 Kibana 服务。</p>
+<pre><code language="language-shell" class="language-shell">cp /etc/kibana/kibana.yml /etc/kibana/kibana.yml.bk
+cp kb.yml /etc/kibana/kibana.yml 
+systemctl start  kibana.service 
+systemctl status   kibana.service
+</code></pre>
+<p>查看 Kibana 服务的日志是否正常。</p>
+<pre><code language="language-shell" class="language-shell">sudo tail -f /var/log/messages
+</code></pre>
+<p>在浏览器里测试登录 Kibana 的IP地址  http://192.168.50.11:5601 ，使用 elastic 用户名和密码 security123。点击主页上的&#34;安全&#34;的链接，你应该看到如下的界面。</p>
+<p class="image-container"><img alt="2021-03-25_15-07-47" src="img/54178de9ef74f38d.jpg"></p>
+<h2 is-upgraded>启用企业版许可 30 天试用</h2>
+<p>点击 Kibana 左上角菜单中点击 &#34;Stack Management&#34; –&gt; &#34;许可管理&#34;，点击 &#34;开始试用&#34; 按钮，启用 30 天的高级功能的试用期。</p>
+<aside class="warning"><p>注意：至此完成了 Elastic Stack 的基础准备工作，Elasticsearch + Kibana 的服务都处于正常运行状态，启用了企业版功能的试用。</p>
 </aside>
-<h2 is-upgraded>下载后运行 Kibana</h2>
-<p>已经在本机下载好所有软件包文件的，请忽略 curl 下载命令，直接执行解压缩和。</p>
-<p>在 Linux 上运行下面的命令。</p>
-<pre><code>curl -O https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-linux-x86_64.tar.gz
-curl https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
-tar -xzf kibana-7.9.3-linux-x86_64.tar.gz
-cd kibana-7.9.3-linux-x86_64/
-bin/kibana  --server.host=0.0.0.0
-</code></pre>
-<p>或者 macOS 上运行下面的命令。</p>
-<pre><code>curl -O https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-darwin-x86_64.tar.gz
-curl https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-darwin-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
-tar -xzf kibana-7.9.3-darwin-x86_64.tar.gz
-cd kibana-7.9.3-darwin-x86_64/
-</code></pre>
-<p>或者 Windows 上操作如下。</p>
-<p>下载 zip 压缩包。</p>
-<p><a href="https://artifacts.elastic.co/downloads/kibana/kibana-7.9.3-windows-x86_64.zip" target="_blank"><paper-button class="colored" raised>点此下载 kibana-7.9.3-windows-x86_64.zip </paper-button></a></p>
-<p>解压后进入 Kibana 运行目录，从命令行启动 Kibana 服务器。</p>
-<pre><code>CD c:\kibana-7.9.3-windows-x86_64
-.\bin\kibana.bat
-</code></pre>
 <h2 is-upgraded>登录 Kibana 控制台导入&amp;查看示例数据</h2>
 <p>到目前为止，Elasticsearch 集群运行在无密码的开发模式，因此无需输入用户名和密码。</p>
-<p>打开浏览器访问网址 <code>localhost:5601</code> 或者虚拟机的 IP 地址，例如  <code>192.168.50.11:5601</code><img alt="2020-10-28_23-42-23" src="img/9beded45d1dd0cea.jpeg"></p>
-<p>在进入 Kibana 图形界面后，点击 <code>Load a data set and a Kibana dashboard</code> 链接。</p>
+<p>打开浏览器访问网址 <code>localhost:5601</code> 或者虚拟机的 IP 地址，例如  <code>192.168.50.11:5601</code>； 登陆后点击&#34;添加数据&#34;按钮。然后点击页面中的&#34;样例数据&#34;标签页，进入样例数据导入界面。</p>
 <p class="image-container"><img alt="2020-10-28_23-43-26" src="img/9eae98193edf845e.jpeg"></p>
-<p>分别点击这三个按钮，导入三组示例数据。</p>
+<p>分别点击这三个按钮「添加数据」，导入三组示例数据。</p>
 <p class="image-container"><img alt="2020-10-28_23-44-23" src="img/58d8b71d301a2532.jpeg"></p>
 <p>点击 Dashboard 查看数据分析仪表板。</p>
-<h2 is-upgraded>创建 bank 索引模式&amp;查看数据</h2>
-<p>为了在图形界面中创建用于分析 bank 索引中所有数据的&#34;索引模式&#34;。</p>
+<h2 is-upgraded>创建 bank 索引模式&amp;查看数据【可选实践】</h2>
+<p>【这一部分练习可以略过】 为了在图形界面中创建用于分析 bank 索引中所有数据的&#34;索引模式&#34;。</p>
 <p class="image-container"><img alt="2020-10-28_23-45-56" src="img/dec94ab188575062.jpeg"></p>
 <p>点击左上角的按钮打开左侧菜单，点击 Stack Management 菜单。</p>
 <p class="image-container"><img alt="2020-10-28_23-46-21" src="img/f505c15871728ed4.jpeg"></p>
-<p>在 Kibana 管理选项中，点击创建索引模式按钮。</p>
+<p>在 Kibana 管理选项中，点击创建【索引模式】按钮。</p>
 <p class="image-container"><img alt="2020-10-28_23-48-38" src="img/13001b96d410479d.jpeg"></p>
 <p>在索引模式名称中输入 bank ， 点击先一步直到创建完成。</p>
 <p class="image-container"><img alt="2020-10-28_23-51-14" src="img/1374d328237742ba.jpeg"></p>
