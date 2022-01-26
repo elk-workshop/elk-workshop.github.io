@@ -2,9 +2,9 @@
 <head><meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Chapter 1-1 - Elastic Stack Workshop</title>
+<title>在CentOS上安装 Elastic Stack 7.16 - Elastic Stack Workshop</title>
 <meta name=description content="一个开放免费的技术栈，实现搜索、观测、保护三大解决方案，这里提供了各种教程，欢迎一起学习和共建。">
-<meta name=generator content="Hugo 0.89.4">
+<meta name=generator content="Hugo 0.92.0">
 <link href=https://elastic.martinliu.cn//index.xml rel=alternate type=application/rss+xml>
 <link rel=canonical href=https://elastic.martinliu.cn/chapter1/1/>
 <link rel=stylesheet href=https://elastic.martinliu.cn/css/theme.min.css>
@@ -17,20 +17,20 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-749876-6"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-749876-6')</script>
 <style>:root{--custom-background-color:rgb(0,191,179)}</style>
-<meta property="og:title" content="Chapter 1-1">
-<meta property="og:description" content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.">
+<meta property="og:title" content="在CentOS上安装 Elastic Stack 7.16">
+<meta property="og:description" content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括： 虚拟机1 Elasticsearch Kibana 虚拟机2 Logstash MetricBeat 安装 Elasticsearch 系统准备 SSH 登陆虚拟机1，执行下面的命令。 hostnamectl set-hostname elk-1 systemctl status firewalld systemctl stop firewalld ping 192.168.1.132">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://elastic.martinliu.cn/chapter1/1/"><meta property="og:image" content="https://elastic.martinliu.cn/images/og-image.png"><meta property="article:section" content="chapter1">
 <meta property="article:published_time" content="2017-10-17T15:26:15+00:00">
 <meta property="article:modified_time" content="2017-10-17T15:26:15+00:00"><meta property="og:site_name" content="Elastic Stack Workshop">
 <meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://elastic.martinliu.cn/images/og-image.png">
-<meta name=twitter:title content="Chapter 1-1">
-<meta name=twitter:description content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.">
-<meta itemprop=name content="Chapter 1-1">
-<meta itemprop=description content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."><meta itemprop=datePublished content="2017-10-17T15:26:15+00:00">
+<meta name=twitter:title content="在CentOS上安装 Elastic Stack 7.16">
+<meta name=twitter:description content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括： 虚拟机1 Elasticsearch Kibana 虚拟机2 Logstash MetricBeat 安装 Elasticsearch 系统准备 SSH 登陆虚拟机1，执行下面的命令。 hostnamectl set-hostname elk-1 systemctl status firewalld systemctl stop firewalld ping 192.168.1.132">
+<meta itemprop=name content="在CentOS上安装 Elastic Stack 7.16">
+<meta itemprop=description content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括： 虚拟机1 Elasticsearch Kibana 虚拟机2 Logstash MetricBeat 安装 Elasticsearch 系统准备 SSH 登陆虚拟机1，执行下面的命令。 hostnamectl set-hostname elk-1 systemctl status firewalld systemctl stop firewalld ping 192.168.1.132"><meta itemprop=datePublished content="2017-10-17T15:26:15+00:00">
 <meta itemprop=dateModified content="2017-10-17T15:26:15+00:00">
-<meta itemprop=wordCount content="69"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
+<meta itemprop=wordCount content="1252"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
 <meta itemprop=keywords content></head>
 <body><div class=container><header>
 <h1>Elastic Stack Workshop</h1><span class=version>Version 0.1.2</span><a href=https://github.com/martinliu/elasticstack-workshop class=github><i class="fab fa-github"></i></a>
@@ -45,13 +45,197 @@
 </nav>
 </div>
 <div class=content-container>
-<main><h1>Chapter 1-1</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<main><h1>在CentOS上安装 Elastic Stack 7.16</h1>
+<p>本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括：</p>
+<ul>
+<li>
+<p>虚拟机1</p>
+<ul>
+<li>Elasticsearch</li>
+<li>Kibana</li>
+</ul>
+</li>
+<li>
+<p>虚拟机2</p>
+<ul>
+<li>Logstash</li>
+<li>MetricBeat</li>
+</ul>
+</li>
+</ul>
+<h2 id=安装-elasticsearch>安装 Elasticsearch</h2>
+<h3 id=系统准备>系统准备</h3>
+<p>SSH 登陆虚拟机1，执行下面的命令。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>hostnamectl set-hostname elk-1
+systemctl status firewalld
+systemctl stop firewalld
+ping 192.168.1.132
+</code></pre></div><p>SSH 登陆虚拟机2，执行下面的命令，安装 Logstash 所需要的 JDK。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>hostnamectl set-hostname beat-1
+systemctl status firewalld
+systemctl stop firewalld
+ping 192.168.1.141
+yum install -y java-1.8.0-openjdk
+java --version
+</code></pre></div><h3 id=选择最优-yum-repo>选择最优 YUM repo</h3>
+<p>Elastic 官方网站</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>[</span>elasticsearch<span style=color:#f92672>]</span>
+name<span style=color:#f92672>=</span>Elasticsearch repository <span style=color:#66d9ef>for</span> 7.x packages
+baseurl<span style=color:#f92672>=</span>https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+gpgkey<span style=color:#f92672>=</span>https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>
+autorefresh<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+type<span style=color:#f92672>=</span>rpm-md
+</code></pre></div><p>本文使用清华的镜像站点： <a href=https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/>https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/</a></p>
+<p>国内各大云厂商的开源镜像网站上都可以找到 Elastic Stack 的 yum 安装源。</p>
+<h3 id=安装-elasticsearch-1>安装 Elasticsearch</h3>
+<p>执行安装命令：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/elasticsearch-7.16.3-x86_64.rpm
+</code></pre></div><p>查看默认的 Elasticsearch 配置文件，在最后增加一下四行：</p>
+<pre tabindex=0><code>cluster.name: elk101
+network.host: 0.0.0.0
+discovery.type: single-node
+xpack.security.enabled: true
+</code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>vi /etc/elasticsearch/elasticsearch.yml
+</code></pre></div><p>启动服务：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl daemon-reload
+systemctl enable elasticsearch
+systemctl start elasticsearch
+systemctl status elasticsearch
+</code></pre></div><p>检查服务的状态和日志：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>ls /var/log/elasticsearch/
+tail -f /var/log/elasticsearch/elk101.log
+journalctl --unit elasticsearch
+
+</code></pre></div><p>给 Elasticsearch 系统的所有内置账户设置统一密码 <code>elastic101</code> 「仅限测试目的」</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>[</span>root@elk-1 ~<span style=color:#f92672>]</span><span style=color:#75715e># /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive -b</span>
+Enter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>elastic<span style=color:#f92672>]</span>:
+Reenter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>elastic<span style=color:#f92672>]</span>:
+Enter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>apm_system<span style=color:#f92672>]</span>:
+Reenter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>apm_system<span style=color:#f92672>]</span>:
+Enter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>kibana_system<span style=color:#f92672>]</span>:
+Reenter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>kibana_system<span style=color:#f92672>]</span>:
+Enter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>logstash_system<span style=color:#f92672>]</span>:
+Reenter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>logstash_system<span style=color:#f92672>]</span>:
+Enter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>beats_system<span style=color:#f92672>]</span>:
+Reenter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>beats_system<span style=color:#f92672>]</span>:
+Enter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>remote_monitoring_user<span style=color:#f92672>]</span>:
+Reenter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>remote_monitoring_user<span style=color:#f92672>]</span>:
+Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>apm_system<span style=color:#f92672>]</span>
+Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>kibana_system<span style=color:#f92672>]</span>
+Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>kibana<span style=color:#f92672>]</span>
+Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>logstash_system<span style=color:#f92672>]</span>
+Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>beats_system<span style=color:#f92672>]</span>
+Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>remote_monitoring_user<span style=color:#f92672>]</span>
+Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>elastic<span style=color:#f92672>]</span>
+<span style=color:#f92672>[</span>root@elk-1 ~<span style=color:#f92672>]</span>
+</code></pre></div><p>在浏览器里访问网址： <code>http://192.168.1.141:9200</code>；使用用户名密码【elastic / elastic101】登陆，应该能够看到下面的结果：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>{</span>
+  <span style=color:#e6db74>&#34;name&#34;</span> : <span style=color:#e6db74>&#34;elk-1&#34;</span>,
+  <span style=color:#e6db74>&#34;cluster_name&#34;</span> : <span style=color:#e6db74>&#34;elk101&#34;</span>,
+  <span style=color:#e6db74>&#34;cluster_uuid&#34;</span> : <span style=color:#e6db74>&#34;dI50FfQtTlq13wlLI93fCw&#34;</span>,
+  <span style=color:#e6db74>&#34;version&#34;</span> : <span style=color:#f92672>{</span>
+    <span style=color:#e6db74>&#34;number&#34;</span> : <span style=color:#e6db74>&#34;7.16.3&#34;</span>,
+    <span style=color:#e6db74>&#34;build_flavor&#34;</span> : <span style=color:#e6db74>&#34;default&#34;</span>,
+    <span style=color:#e6db74>&#34;build_type&#34;</span> : <span style=color:#e6db74>&#34;rpm&#34;</span>,
+    <span style=color:#e6db74>&#34;build_hash&#34;</span> : <span style=color:#e6db74>&#34;4e6e4eab2297e949ec994e688dad46290d018022&#34;</span>,
+    <span style=color:#e6db74>&#34;build_date&#34;</span> : <span style=color:#e6db74>&#34;2022-01-06T23:43:02.825887787Z&#34;</span>,
+    <span style=color:#e6db74>&#34;build_snapshot&#34;</span> : false,
+    <span style=color:#e6db74>&#34;lucene_version&#34;</span> : <span style=color:#e6db74>&#34;8.10.1&#34;</span>,
+    <span style=color:#e6db74>&#34;minimum_wire_compatibility_version&#34;</span> : <span style=color:#e6db74>&#34;6.8.0&#34;</span>,
+    <span style=color:#e6db74>&#34;minimum_index_compatibility_version&#34;</span> : <span style=color:#e6db74>&#34;6.0.0-beta1&#34;</span>
+  <span style=color:#f92672>}</span>,
+  <span style=color:#e6db74>&#34;tagline&#34;</span> : <span style=color:#e6db74>&#34;You Know, for Search&#34;</span>
+<span style=color:#f92672>}</span>
+</code></pre></div><h2 id=安装-kibana>安装 Kibana</h2>
+<p>在虚拟机1上，使用 Elasticserach 的选择的yum安装源服务器，执行如下安装命令：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/kibana-7.16.3-x86_64.rpm
+</code></pre></div><p>从上到下的查看 kibana 配置文件，并在最后增加下面的内容：</p>
+<pre tabindex=0><code>server.host: &quot;0.0.0.0&quot;
+elasticsearch.hosts: [&quot;http://localhost:9200&quot;]
+elasticsearch.username: elastic
+elasticsearch.password: elastic101
+i18n.locale: zh-CN
+server.publicBaseUrl: http://192.168.1.141:5601
+</code></pre><p>启动 Kibana 服务：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl daemon-reload
+systemctl enable kibana
+systemctl start kibana
+</code></pre></div><p>使用下面的命令检查 Kibana 的状态和日志：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl status kibana
+tail -f /var/log/messages
+</code></pre></div><p>在浏览器里访问网址： <code>http://192.168.1.141:5601</code>；使用用户名密码【elastic / elastic101】登陆，应该能够看到 Kibana 登陆后的中文界面。点击 “自己浏览” 按钮进入界面。</p>
+<p>点击 “试用样例数据” 链接，添加并且查看三组样例数据。</p>
+<h2 id=安装-logstash>安装 Logstash</h2>
+<p>SSh 登陆虚拟机2。先安装 Logstash。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/logstash-7.16.3-x86_64.rpm
+</code></pre></div><p>Check the dir layout</p>
+<p>Start the service</p>
+<p>Check the logs and running status
+Create a mapping for importing a cvs file
+Create a sample cvm importing pipeline
+Explore the cvs data in kibana</p>
+<h2 id=安装-metricbeat>安装 Metricbeat</h2>
+<p>ssh 登陆到虚拟机2，安装 Metricbeat 采集这个服务器上的性能指标。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/metricbeat-7.16.3-x86_64.rpm
+</code></pre></div><p>进入 Metricbeat 的配置文件目录cd /etc/metricbeat/，查看 Metricbeat 的配置目录，熟悉目录中的结构和文件。</p>
+<p>初始化 Metricbeat 索引，在命令行下运行下面的命令，在执行前根据下面的参数解释，替换其中的相关参数。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat setup -e  --index-management   --dashboards <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>  -E output.elasticsearch.hosts<span style=color:#f92672>=[</span><span style=color:#e6db74>&#39;192.168.1.141:9200&#39;</span><span style=color:#f92672>]</span>   <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>  -E output.elasticsearch.username<span style=color:#f92672>=</span>elastic   <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>  -E output.elasticsearch.password<span style=color:#f92672>=</span>elastic101   <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>  -E setup.kibana.host<span style=color:#f92672>=</span>192.168.1.141:5601
+</code></pre></div><p>查看 Metricbeat 的采集模块，并启用 logstash 模块。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat modules list
+</code></pre></div><p>从上到下的查看 /etc/metricbeat/metricbeat.yml 配置文件内容。</p>
+<p>在当前目录下创建名为 mb.yml 的文件，内容如下：</p>
+<pre tabindex=0><code>metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: true
+  reload.period: 10s
+
+output.elasticsearch:
+  hosts: [&quot;192.168.1.141:9200&quot;]
+  username: &quot;elastic&quot;
+  password: &quot;elastic101&quot;
+
+setup.ilm.check_exists: false
+logging.level: error
+queue.spool: ~
+monitoring.enabled: true
+</code></pre><p>备份默认配置文件，并用以上配置文件替换默认文件。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>mv /etc/metricbeat/metricbeat.yml /etc/metricbeat/metricbeat.yml.bk
+cp mb.yml /etc/metricbeat/metricbeat.yml
+</code></pre></div><p>测试配置文件的正确性</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat test config
+metricbeat test output
+</code></pre></div><p>启动并查看 metricbeat 服务的状态。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl enable  metricbeat
+systemctl start  metricbeat
+systemctl status  metricbeat
+</code></pre></div><p>查看 Metricbeat 的相关仪表板：</p>
+<ul>
+<li>打开 Kibana 界面</li>
+<li>打开左侧菜单栏，点击 ‘Dashboard' 选项</li>
+<li>在页面的搜索框中输入 system 后，查看 Metricbeat 自带的仪表板，它们是 setup 命令导入的。</li>
+<li>点击查看名为 &ldquo;[Metricbeat System] Overview ECS&rdquo; 的仪表板。
+在 System Overview 和 Host Overview 的两个视图中切换查看</li>
+</ul>
+<h2 id=管理-elastic-stack>管理 Elastic Stack</h2>
+<p>登陆 Kibana ，在 Management 菜单中点击 “堆栈监测”， 并点击 ok 按钮确认，查看集群的监控信息。</p>
+<p>在 Stack Management 菜单中查看如下选项：</p>
+<ul>
+<li>索引管理</li>
+<li>用户</li>
+<li>角色</li>
+<li>索引模式</li>
+</ul>
 <div class=edit-meta>
 Last updated on 2017-10-17
 <br>
 Published on 2017-10-17
-<br><a href=https://github.com/martinliu/elasticstack-workshop/edit/master/chapter1/1.md class=edit-page><i class="fas fa-pen-square"></i>&nbsp;Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=https://elastic.martinliu.cn/chapter1/ title="Chapter 1"><i class="fas fa-arrow-left" aria-hidden=true></i>&nbsp;Prev - Chapter 1</a>
+<br><a href=https://github.com/martinliu/elasticstack-workshop/edit/master/chapter1/1.md class=edit-page><i class="fas fa-pen-square"></i>&nbsp;Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=https://elastic.martinliu.cn/chapter1/ title="新手 100 系列"><i class="fas fa-arrow-left" aria-hidden=true></i>&nbsp;Prev - 新手 100 系列</a>
 <a class="nav nav-next" href=https://elastic.martinliu.cn/chapter1/2/ title="Chapter 1-2">Next - Chapter 1-2 <i class="fas fa-arrow-right" aria-hidden=true></i></a>
 </nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p>
 </footer>
@@ -73,9 +257,9 @@ Published on 2017-10-17
 </li>
 </ul>
 </li>
-<li class="parent has-sub-menu"><a href=https://elastic.martinliu.cn/chapter1/>Chapter 1<span class="mark opened">-</span></a>
+<li class="parent has-sub-menu"><a href=https://elastic.martinliu.cn/chapter1/>新手 100 系列<span class="mark opened">-</span></a>
 <ul class=sub-menu>
-<li class=active><a href=https://elastic.martinliu.cn/chapter1/1/>Chapter 1-1</a></li>
+<li class=active><a href=https://elastic.martinliu.cn/chapter1/1/>在CentOS上安装 Elastic Stack 7.16</a></li>
 <li><a href=https://elastic.martinliu.cn/chapter1/2/>Chapter 1-2</a></li>
 <li><a href=https://elastic.martinliu.cn/chapter1/3/>Chapter 1-3</a></li>
 <li><a href=https://elastic.martinliu.cn/chapter1/4/>Chapter 1-4</a></li>
