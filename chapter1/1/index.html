@@ -30,7 +30,7 @@
 <meta itemprop=name content="在CentOS上安装 Elastic Stack 7.16">
 <meta itemprop=description content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括： 虚拟机1 Elasticsearch Kibana 虚拟机2 Logstash MetricBeat 安装 Elasticsearch 系统准备 SSH 登陆虚拟机1，执行下面的命令。 hostnamectl set-hostname elk-1 systemctl status firewalld systemctl stop firewalld ping 192.168.1.132"><meta itemprop=datePublished content="2017-10-17T15:26:15+00:00">
 <meta itemprop=dateModified content="2017-10-17T15:26:15+00:00">
-<meta itemprop=wordCount content="1252"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
+<meta itemprop=wordCount content="1471"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
 <meta itemprop=keywords content></head>
 <body><div class=container><header>
 <h1>Elastic Stack Workshop</h1><span class=version>Version 0.1.2</span><a href=https://github.com/martinliu/elasticstack-workshop class=github><i class="fab fa-github"></i></a>
@@ -170,12 +170,46 @@ tail -f /var/log/messages
 <h2 id=安装-logstash>安装 Logstash</h2>
 <p>SSh 登陆虚拟机2。先安装 Logstash。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/logstash-7.16.3-x86_64.rpm
-</code></pre></div><p>Check the dir layout</p>
-<p>Start the service</p>
-<p>Check the logs and running status
-Create a mapping for importing a cvs file
-Create a sample cvm importing pipeline
-Explore the cvs data in kibana</p>
+</code></pre></div><p>用 vi 命令在 /tmp 下创建内容如下名为 mtgoxusd.csv 的数据文件。</p>
+<pre tabindex=0><code>Date,Open,High,Low,Close,Volume (BTC),Volume (Currency),Weighted Price
+2014-02-25,173.2,173.84343,101.62872,135.0,29886.7532397,3667985.39624,122.729470372
+2014-02-24,314.99996,316.78999,131.72093,173.871,94594.0225893,17590531.0124,185.958166604
+2014-02-23,260.70495,348.98,220.1,309.99971,38395.103758,11051773.3535,287.843299581
+2014-02-22,111.0,290.52557,96.6345,255.53,71861.2880229,11632970.1851,161.88090285
+2014-02-21,111.61995,160.0,91.5,111.4,82102.9295521,9798282.70207,119.341450488
+</code></pre><p>用 vi 命令创建 <code>vi /etc/logstash/conf.d/csv-loading.conf</code>
+内容如下的 logstash 流水线配置文件：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>input <span style=color:#f92672>{</span>
+  file <span style=color:#f92672>{</span>
+    path <span style=color:#f92672>=</span>&gt; <span style=color:#e6db74>&#34;/tmp/bitcon/*.csv&#34;</span>
+    start_position <span style=color:#f92672>=</span>&gt; <span style=color:#e6db74>&#34;beginning&#34;</span>
+  <span style=color:#f92672>}</span>
+<span style=color:#f92672>}</span>
+filter <span style=color:#f92672>{</span>
+  csv <span style=color:#f92672>{</span>
+      separator <span style=color:#f92672>=</span>&gt; <span style=color:#e6db74>&#34;,&#34;</span>
+<span style=color:#75715e>#Date,Open,High,Low,Close,Volume (BTC),Volume (Currency),Weighted Price</span>
+     columns <span style=color:#f92672>=</span>&gt; <span style=color:#f92672>[</span><span style=color:#e6db74>&#34;Date&#34;</span>,<span style=color:#e6db74>&#34;Open&#34;</span>,<span style=color:#e6db74>&#34;High&#34;</span>,<span style=color:#e6db74>&#34;Low&#34;</span>,<span style=color:#e6db74>&#34;Close&#34;</span>,<span style=color:#e6db74>&#34;Volume (BTC)&#34;</span>, <span style=color:#e6db74>&#34;Volume (Currency)&#34;</span> ,<span style=color:#e6db74>&#34;Weighted Price&#34;</span><span style=color:#f92672>]</span>
+  <span style=color:#f92672>}</span>
+<span style=color:#f92672>}</span>
+output <span style=color:#f92672>{</span>
+  elasticsearch <span style=color:#f92672>{</span>
+     hosts <span style=color:#f92672>=</span>&gt; <span style=color:#e6db74>&#34;http://192.168.1.141:9200&#34;</span>
+     user  <span style=color:#f92672>=</span>&gt; elastic
+     password <span style=color:#f92672>=</span>&gt; elastic101
+     index <span style=color:#f92672>=</span>&gt; <span style=color:#e6db74>&#34;bitcoin-prices&#34;</span>
+  <span style=color:#f92672>}</span>
+<span style=color:#f92672>}</span>
+</code></pre></div><p>启动 Logstash 服务。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl enable logstash
+systemctl start logstash
+</code></pre></div><p>使用命令 <code>tail -f /var/log/logstash/logstash-plain.log</code> 查看 Logstash 服务的输出文件。</p>
+<p>在Kibana中执行一下流程，查看导入的数据：</p>
+<ul>
+<li>在 ‘索引管理’ 中确认名为‘bitcoin-prices’的索引是否存在。</li>
+<li>在 ‘索引模式‘ 中创建名为 ’bit*‘ 的索引模式。</li>
+<li>在 ‘Discovery’ 中切换到 ‘bit*’ 索引模式，浏览导入的数据。</li>
+</ul>
 <h2 id=安装-metricbeat>安装 Metricbeat</h2>
 <p>ssh 登陆到虚拟机2，安装 Metricbeat 采集这个服务器上的性能指标。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/metricbeat-7.16.3-x86_64.rpm
