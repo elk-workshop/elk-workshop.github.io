@@ -18,7 +18,7 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-749876-6')</script>
 <style>:root{--custom-background-color:rgb(0,191,179)}</style>
 <meta property="og:title" content="在CentOS上安装 Elastic Stack 7.16">
-<meta property="og:description" content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括： 虚拟机 1 Elasticsearch Kibana 虚拟机 2 Logstash MetricBeat 安装 Elasticsearch 系统准备 SSH 登陆虚拟机 1，执行下面的命令。 hostnamectl set-hostname elk-1 systemctl status firewalld systemctl stop firewalld ping 192.168.1.132">
+<meta property="og:description" content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3。测试环境有两台虚拟机组成。 虚拟机 1 Elasticsearch Kibana 虚拟机 2 Logstash MetricBeat 虚拟机配置推荐： 虚拟机 1· CPU x 2， 内存 4+GB，">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://elastic.martinliu.cn/chapter1/1/"><meta property="og:image" content="https://elastic.martinliu.cn/images/og-image.png"><meta property="article:section" content="chapter1">
 <meta property="article:published_time" content="2017-10-17T15:26:15+00:00">
@@ -26,11 +26,11 @@
 <meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://elastic.martinliu.cn/images/og-image.png">
 <meta name=twitter:title content="在CentOS上安装 Elastic Stack 7.16">
-<meta name=twitter:description content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括： 虚拟机 1 Elasticsearch Kibana 虚拟机 2 Logstash MetricBeat 安装 Elasticsearch 系统准备 SSH 登陆虚拟机 1，执行下面的命令。 hostnamectl set-hostname elk-1 systemctl status firewalld systemctl stop firewalld ping 192.168.1.132">
+<meta name=twitter:description content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3。测试环境有两台虚拟机组成。 虚拟机 1 Elasticsearch Kibana 虚拟机 2 Logstash MetricBeat 虚拟机配置推荐： 虚拟机 1· CPU x 2， 内存 4+GB，">
 <meta itemprop=name content="在CentOS上安装 Elastic Stack 7.16">
-<meta itemprop=description content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括： 虚拟机 1 Elasticsearch Kibana 虚拟机 2 Logstash MetricBeat 安装 Elasticsearch 系统准备 SSH 登陆虚拟机 1，执行下面的命令。 hostnamectl set-hostname elk-1 systemctl status firewalld systemctl stop firewalld ping 192.168.1.132"><meta itemprop=datePublished content="2017-10-17T15:26:15+00:00">
+<meta itemprop=description content="本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3。测试环境有两台虚拟机组成。 虚拟机 1 Elasticsearch Kibana 虚拟机 2 Logstash MetricBeat 虚拟机配置推荐： 虚拟机 1· CPU x 2， 内存 4+GB，"><meta itemprop=datePublished content="2017-10-17T15:26:15+00:00">
 <meta itemprop=dateModified content="2017-10-17T15:26:15+00:00">
-<meta itemprop=wordCount content="1523"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
+<meta itemprop=wordCount content="2737"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
 <meta itemprop=keywords content></head>
 <body><div class=container><header>
 <h1>Elastic Stack Workshop</h1><span class=version>Version 0.1.2</span><a href=https://github.com/martinliu/elasticstack-workshop class=github><i class="fab fa-github"></i></a>
@@ -46,7 +46,7 @@
 </div>
 <div class=content-container>
 <main><h1>在CentOS上安装 Elastic Stack 7.16</h1>
-<p>本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3，包括：</p>
+<p>本文讲解如何在 CentOS 8 上安装 Elastic Stack 7.16.3。测试环境有两台虚拟机组成。</p>
 <ul>
 <li>
 <p>虚拟机 1</p>
@@ -63,22 +63,41 @@
 </ul>
 </li>
 </ul>
-<h2 id=安装-elasticsearch>安装 Elasticsearch</h2>
+<p>虚拟机配置推荐：</p>
+<ul>
+<li>
+<p>虚拟机 1·</p>
+<ul>
+<li>CPU x 2， 内存 4+GB，磁盘 8+GB</li>
+<li>私有/共有 IP 地址，开放端口：22、5601、9200；下文是：192.168.1.141 。</li>
+</ul>
+</li>
+<li>
+<p>虚拟机 2</p>
+<ul>
+<li>CPU x 1， 内存 2+GB，磁盘 8+GB</li>
+<li>私有/共有 IP 地址，开放端口：22；下文是：192.168.1.132 。</li>
+</ul>
+</li>
+</ul>
+<p><img src=https://elasticstack-1300734579.cos.ap-nanjing.myqcloud.com/2022-01-30-2022-01-30_09-19-48.png alt=网络示意图></p>
+<p>建议通过使用两个虚拟机可以达到最佳的练习效果，如果条件有限，至少准备一个虚拟机，配置不低于虚拟机 1。操作系统推荐 CentOS 8。</p>
+<h2 id=安装-elasticsearch-服务器>安装 Elasticsearch 服务器</h2>
 <h3 id=系统准备>系统准备</h3>
-<p>SSH 登陆虚拟机 1，执行下面的命令。</p>
+<p>首先 SSH 登陆至虚拟机 1，执行下面的命令，完成设置主机名，关闭防火墙，测试虚拟机 2 是否可以ping通。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>hostnamectl set-hostname elk-1
 systemctl status firewalld
 systemctl stop firewalld
 ping 192.168.1.132
-</code></pre></div><p>SSH 登陆虚拟机 2，执行下面的命令，安装 Logstash 所需要的 JDK。</p>
+</code></pre></div><p>SSH 登陆虚拟机 2，执行下面的命令，完成设置主机名，关闭防火墙，测试虚拟机 1 是否可以ping通；安装 Logstash 所需要的 JDK，并验证 java 版本。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>hostnamectl set-hostname beat-1
 systemctl status firewalld
 systemctl stop firewalld
 ping 192.168.1.141
 yum install -y java-1.8.0-openjdk
 java --version
-</code></pre></div><h3 id=选择最优-yum-repo>选择最优 YUM repo</h3>
-<p>Elastic 官方网站</p>
+</code></pre></div><h3 id=选择最优-yum-源>选择最优 YUM 源</h3>
+<p>如果你使用的是国外公有云的虚拟机，请直接使用 Elastic 官方网站提供的 yum 源服务器。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>[</span>elasticsearch<span style=color:#f92672>]</span>
 name<span style=color:#f92672>=</span>Elasticsearch repository <span style=color:#66d9ef>for</span> 7.x packages
 baseurl<span style=color:#f92672>=</span>https://artifacts.elastic.co/packages/7.x/yum
@@ -88,27 +107,33 @@ enabled<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>
 autorefresh<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
 type<span style=color:#f92672>=</span>rpm-md
 </code></pre></div><p>本文使用清华的镜像站点：<a href=https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/>https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/</a></p>
-<p>国内各大云厂商的开源镜像网站上都可以找到 Elastic Stack 的 yum 安装源。</p>
+<p>你在国内各大云厂商的开源镜像网站上都可以找到 Elastic Stack 的 yum 安装源。</p>
+<ul>
+<li><a href=https://mirrors.cloud.tencent.com/elasticstack/>https://mirrors.cloud.tencent.com/elasticstack/</a></li>
+<li><a href=https://repo.huaweicloud.com/elasticsearch/>https://repo.huaweicloud.com/elasticsearch/</a> 【版本在国内全网最全】</li>
+<li><a href=https://mirrors.aliyun.com/elasticstack/>https://mirrors.aliyun.com/elasticstack/</a></li>
+</ul>
 <h3 id=安装-elasticsearch-软件包>安装 Elasticsearch 软件包</h3>
-<p>执行安装命令：</p>
+<p>在虚拟机1中，执行如下免yum repo配置的rpm软件包安装命令：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/elasticsearch-7.16.3-x86_64.rpm
-</code></pre></div><p>查看默认的 Elasticsearch 配置文件，在最后增加一下四行：</p>
+</code></pre></div><p>查看默认的 Elasticsearch 配置文件，在最后增加以下四行：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#f92672>cluster.name</span>: <span style=color:#ae81ff>elk101</span>
 <span style=color:#f92672>network.host</span>: <span style=color:#ae81ff>0.0.0.0</span>
 <span style=color:#f92672>discovery.type</span>: <span style=color:#ae81ff>single-node</span>
 <span style=color:#f92672>xpack.security.enabled</span>: <span style=color:#66d9ef>true</span>
-</code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>vi /etc/elasticsearch/elasticsearch.yml
-</code></pre></div><p>启动服务：</p>
+</code></pre></div><p>用 vi 在原有配置文件的最后增加四行新配置参数。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>vi /etc/elasticsearch/elasticsearch.yml
+</code></pre></div><p>启动 Elasticsearch 服务：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl daemon-reload
 systemctl enable elasticsearch
 systemctl start elasticsearch
 systemctl status elasticsearch
-</code></pre></div><p>检查服务的状态和日志：</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>ls /var/log/elasticsearch/
+</code></pre></div><p>检查 Elasticsearch 服务的状态和日志：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl status elasticsearch
+ls /var/log/elasticsearch/
 tail -f /var/log/elasticsearch/elk101.log
 journalctl --unit elasticsearch
-
-</code></pre></div><p>给 Elasticsearch 系统的所有内置账户设置统一密码 <code>elastic101</code> 「仅限测试目的」</p>
+</code></pre></div><p>为 Elasticsearch 系统的所有内置账户设置统一密码 <code>elastic101</code> ，使用一下命令，并在提示符中输入相同密码之后按回车继续。「仅限测试目的」。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>[</span>root@elk-1 ~<span style=color:#f92672>]</span><span style=color:#75715e># /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive -b</span>
 Enter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>elastic<span style=color:#f92672>]</span>:
 Reenter password <span style=color:#66d9ef>for</span> <span style=color:#f92672>[</span>elastic<span style=color:#f92672>]</span>:
@@ -130,7 +155,7 @@ Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f9
 Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>remote_monitoring_user<span style=color:#f92672>]</span>
 Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f92672>[</span>elastic<span style=color:#f92672>]</span>
 <span style=color:#f92672>[</span>root@elk-1 ~<span style=color:#f92672>]</span>
-</code></pre></div><p>在浏览器里访问网址： <code>http://192.168.1.141:9200</code>；使用用户名密码【elastic / elastic101】登陆，应该能够看到下面的结果：</p>
+</code></pre></div><p>在浏览器里访问 Elasticsearch IP地址 + 服务端口址网址，验证密码：<code>&lt;http://192.168.1.141:9200></code>；使用用户名密码【elastic / elastic101】登陆，应该能够看到下面的结果：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
   <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;elk-1&#34;</span>,
   <span style=color:#f92672>&#34;cluster_name&#34;</span>: <span style=color:#e6db74>&#34;elk101&#34;</span>,
@@ -148,10 +173,10 @@ Changed password <span style=color:#66d9ef>for</span> user <span style=color:#f9
   },
   <span style=color:#f92672>&#34;tagline&#34;</span>: <span style=color:#e6db74>&#34;You Know, for Search&#34;</span>
 }
-</code></pre></div><h2 id=安装-kibana>安装 Kibana</h2>
-<p>在虚拟机 1 上，使用 Elasticserach 的选择的 yum 安装源服务器，执行如下安装命令：</p>
+</code></pre></div><h2 id=安装-kibana-服务>安装 Kibana 服务</h2>
+<p>SSH 登陆到虚拟机1 上，使用 Elasticserach 所选择的 yum 安装源服务器，执行如下安装命令：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/kibana-7.16.3-x86_64.rpm
-</code></pre></div><p>从上到下的查看 kibana 配置文件，并在最后增加下面的内容：</p>
+</code></pre></div><p>用 vi 从上到下的查看 Kibana 的默认配置参数，<code>vi /etc/kibana/kibana.yml</code> ；并在最后增加下面的内容：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#f92672>server.host</span>: <span style=color:#e6db74>&#34;0.0.0.0&#34;</span>
 <span style=color:#f92672>elasticsearch.hosts</span>: [<span style=color:#e6db74>&#34;http://localhost:9200&#34;</span>]
 <span style=color:#f92672>elasticsearch.username</span>: <span style=color:#ae81ff>elastic</span>
@@ -165,20 +190,19 @@ systemctl start kibana
 </code></pre></div><p>使用下面的命令检查 Kibana 的状态和日志：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl status kibana
 tail -f /var/log/messages
-</code></pre></div><p>在浏览器里访问网址： <code>http://192.168.1.141:5601</code>；使用用户名密码【elastic / elastic101】登陆，应该能够看到 Kibana 登陆后的中文界面。点击 “自己浏览” 按钮进入界面。</p>
-<p>点击 “试用样例数据” 链接，添加并且查看三组样例数据。</p>
-<h2 id=安装-logstash>安装 Logstash</h2>
-<p>SSh 登陆虚拟机 2。先安装 Logstash。</p>
+</code></pre></div><p>在浏览器里访问 Kibana 服务的 ip + 端口网址： <code>http://192.168.1.141:5601</code>；使用用户名密码【elastic / elastic101】登陆，你应该能够看到 Kibana 登陆后的中文界面。点击 “自己浏览” 按钮进入界面。</p>
+<p>点击 “试用样例数据” 链接，添加并且浏览三组 Kibana 内置的样例数据。</p>
+<h2 id=安装-logstash-服务>安装 Logstash 服务</h2>
+<p>SSh 登陆到虚拟机 2。先安装 Logstash ，使用 csv 插件导入数据文件到 Elasticsearch 中。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/logstash-7.16.3-x86_64.rpm
-</code></pre></div><p>用 vi 命令在 /tmp 下创建内容如下名为 mtgoxusd.csv 的数据文件。</p>
+</code></pre></div><p>在 /tmp 目录下创建名为 bitcon 的目录，用 vi 命令在 /tmp/bitcon 目录下，创建名为 mtgoxusd.csv 的数据文件，该数据文件到内容如下。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>Date,Open,High,Low,Close,Volume <span style=color:#f92672>(</span>BTC<span style=color:#f92672>)</span>,Volume <span style=color:#f92672>(</span>Currency<span style=color:#f92672>)</span>,Weighted Price
 2014-02-25,173.2,173.84343,101.62872,135.0,29886.7532397,3667985.39624,122.729470372
 2014-02-24,314.99996,316.78999,131.72093,173.871,94594.0225893,17590531.0124,185.958166604
 2014-02-23,260.70495,348.98,220.1,309.99971,38395.103758,11051773.3535,287.843299581
 2014-02-22,111.0,290.52557,96.6345,255.53,71861.2880229,11632970.1851,161.88090285
 2014-02-21,111.61995,160.0,91.5,111.4,82102.9295521,9798282.70207,119.341450488
-</code></pre></div><p>用 vi 命令创建 <code>vi /etc/logstash/conf.d/csv-loading.conf</code>
-内容如下的 logstash 流水线配置文件：</p>
+</code></pre></div><p>用 vi 命令创建logstash 流水线配置文件 <code>vi /etc/logstash/conf.d/csv-loading.conf</code>，csv-loading.conf 配置文件的内容如下：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#ae81ff>input {</span>
   <span style=color:#ae81ff>file {</span>
     <span style=color:#ae81ff>path =&gt; &#34;/tmp/bitcon/*.csv&#34;</span>
@@ -201,28 +225,34 @@ tail -f /var/log/messages
   }
 }
 </code></pre></div><p>启动 Logstash 服务。</p>
-<pre tabindex=0><code class=language-yum data-lang=yum>systemctl enable logstash
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl enable logstash
 systemctl start logstash
-</code></pre><p>使用命令 <code>tail -f /var/log/logstash/logstash-plain.log</code> 查看 Logstash 服务的输出文件。</p>
-<p>在 Kibana 中执行一下流程，查看导入的数据：</p>
+systemctl status elasticsearch
+journalctl --unit elasticsearch
+</code></pre></div><p>观察 logstash 服务的状态是否正常，如果服务日志中有错误出现，请排错后在继续后续操作。</p>
+<p>使用命令 <code>tail -f /var/log/logstash/logstash-plain.log</code> 查看 Logstash 服务的输出文件。</p>
+<p>在 Kibana 中执行以下操作流程，查看由 Logstash 所导入的数据：</p>
 <ul>
-<li>在 ‘索引管理’ 中确认名为‘bitcoin-prices’的索引是否存在。</li>
-<li>在 ‘索引模式‘ 中创建名为 ’bit*‘ 的索引模式。</li>
-<li>在 ‘Discovery’ 中切换到 ‘bit*’ 索引模式，浏览导入的数据。</li>
+<li>登陆 Kibana 后，点击左侧的菜单</li>
+<li>在 ‘索引管理’ 菜单中，中查看并确认名为‘bitcoin-prices’的索引是否存在。</li>
+<li>进入 ‘索引模式‘ 菜单，并起创建名为 ’bitcon*‘ 的索引模式。</li>
+<li>在 ‘Discovery’ 菜单中，使用索引模式切换下拉菜单，切换到 ‘bitcon*’ 索引模式，浏览导入的5条数据。</li>
 </ul>
-<h2 id=安装-metricbeat>安装 Metricbeat</h2>
-<p>ssh 登陆到虚拟机 2，安装 Metricbeat 采集这个服务器上的性能指标。</p>
+<p><img src=https://elasticstack-1300734579.cos.ap-nanjing.myqcloud.com/2022-01-30-2022-01-30_10-28-12.png alt=5条数据></p>
+<h2 id=安装-metricbeat-服务>安装 Metricbeat 服务</h2>
+<p>Logstash 的输入插件中包含 Metricbeat ，但是在这个本实验练习中，我们并不打算使用 Logstash 对 Metricbeat 所采集到的数据进行任何数据加工操作；而且所有虚拟机都在同一个网段中，也没有必要用 Logstash 对 Metricbeat 的数据进行转发。在既不使用 Lostash 的数据转化处理（ETL）功能，也不需要使用 Logstahs 做跨网段转发的情况下，是完全不需要使用 Metricbeat/Filebeat 和 Logstash 的集成的。</p>
+<p>Metricbeat 是系统性能监控模块，ssh 登陆到虚拟机 2，安装 Metricbeat 采集这个服务器的操作系统性能指标。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/metricbeat-7.16.3-x86_64.rpm
 </code></pre></div><p>进入 Metricbeat 的配置文件目录 cd /etc/metricbeat/，查看 Metricbeat 的配置目录，熟悉目录中的结构和文件。</p>
-<p>初始化 Metricbeat 索引，在命令行下运行下面的命令，在执行前根据下面的参数解释，替换其中的相关参数。</p>
+<p>初始化 Metricbeat 索引，在命令行下运行下面的命令，根据你的网络环境替换其中的相关参数。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat setup -e  --index-management   --dashboards <span style=color:#ae81ff>\
 </span><span style=color:#ae81ff></span>  -E output.elasticsearch.hosts<span style=color:#f92672>=[</span><span style=color:#e6db74>&#39;192.168.1.141:9200&#39;</span><span style=color:#f92672>]</span>   <span style=color:#ae81ff>\
 </span><span style=color:#ae81ff></span>  -E output.elasticsearch.username<span style=color:#f92672>=</span>elastic   <span style=color:#ae81ff>\
 </span><span style=color:#ae81ff></span>  -E output.elasticsearch.password<span style=color:#f92672>=</span>elastic101   <span style=color:#ae81ff>\
 </span><span style=color:#ae81ff></span>  -E setup.kibana.host<span style=color:#f92672>=</span>192.168.1.141:5601
-</code></pre></div><p>查看 Metricbeat 的采集模块，并启用 logstash 模块。</p>
+</code></pre></div><p>用如下命令查看 Metricbeat 的采集模块有哪些。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat modules list
-</code></pre></div><p>从上到下的查看 /etc/metricbeat/metricbeat.yml 配置文件内容。</p>
+</code></pre></div><p>从上到下的查看 Metricbeat 配置文件内容， <code>vi /etc/metricbeat/metricbeat.yml</code> 。</p>
 <p>在当前目录下创建名为 mb.yml 的文件，内容如下：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#f92672>metricbeat.config.modules</span>:
   <span style=color:#f92672>path</span>: <span style=color:#ae81ff>${path.config}/modules.d/*.yml</span>
@@ -238,38 +268,59 @@ systemctl start logstash
 <span style=color:#f92672>logging.level</span>: <span style=color:#ae81ff>error</span>
 <span style=color:#f92672>queue.spool</span>: <span style=color:#ae81ff>~</span>
 <span style=color:#f92672>monitoring.enabled</span>: <span style=color:#66d9ef>true</span>
-</code></pre></div><p>备份默认配置文件，并用以上配置文件替换默认文件。</p>
+</code></pre></div><p>备份默认配置文件，并用以上 <code>mb.yml</code> 配置文件替换默认文件。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>mv /etc/metricbeat/metricbeat.yml /etc/metricbeat/metricbeat.yml.bk
 cp mb.yml /etc/metricbeat/metricbeat.yml
-</code></pre></div><p>测试配置文件的正确性</p>
+</code></pre></div><p>测试配置文件的语法的正确性，测试与 Elasticsearch 服务器的连接配置参数。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat test config
 metricbeat test output
-</code></pre></div><p>启动并查看 metricbeat 服务的状态。</p>
+</code></pre></div><p>启动并查看 Metricbeat 服务的状态。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl enable  metricbeat
 systemctl start  metricbeat
 systemctl status  metricbeat
-</code></pre></div><p>查看 Metricbeat 的相关仪表板：</p>
+</code></pre></div><p>在 Kibana 中查看 Metricbeat 的相关仪表板：</p>
 <ul>
 <li>打开 Kibana 界面</li>
 <li>打开左侧菜单栏，点击 ‘Dashboard' 选项</li>
-<li>在页面的搜索框中输入 system 后，查看 Metricbeat 自带的仪表板，它们是 setup 命令导入的。</li>
-<li>点击查看名为 &ldquo;[Metricbeat System] Overview ECS&rdquo; 的仪表板。
-在 System Overview 和 Host Overview 的两个视图中切换查看</li>
+<li>在页面的搜索框中输入 system 后，查看 Metricbeat 自带的仪表板，它们都是是 <code>metricbeeat setup</code> 命令导入的。</li>
+<li>点击查看名为 &ldquo;[Metricbeat System] Overview ECS&rdquo; 的仪表板。 在 System Overview 和 Host Overview 的两个视图中切换查看所采集到的性能数据。</li>
+<li>进入左侧 ‘Observabile’ 菜单下面的 ’概览‘选项。查看指标下面的，名为 beat-1 的主机。</li>
 </ul>
+<p><img src=https://elasticstack-1300734579.cos.ap-nanjing.myqcloud.com/2022-01-30-2022-01-30_10-30-23.png alt=可观测性></p>
 <h2 id=管理-elastic-stack>管理 Elastic Stack</h2>
-<p>登陆 Kibana ，在 Management 菜单中点击 “堆栈监测”， 并点击 ok 按钮确认，查看集群的监控信息。</p>
-<p>在 Stack Management 菜单中查看如下选项：</p>
+<p>登陆 Kibana ，在 Management 菜单中点击 “堆栈监测”， 并点击 ok 按钮确认，启用 Elastic Stack 的自监控功能，查看集群 elk101 的监控信息。</p>
+<p><img src=https://elasticstack-1300734579.cos.ap-nanjing.myqcloud.com/2022-01-30-2022-01-30_10-37-01.png alt=集群自监控></p>
+<p>在 Stack Management 菜单中查看下面的重要选项，熟悉 Elastic Stack 的主要管理功能：</p>
 <ul>
 <li>索引管理</li>
 <li>用户</li>
 <li>角色</li>
 <li>索引模式</li>
 </ul>
+<h2 id=其它扩展练习可选>其它扩展练习【可选】</h2>
+<p>用上面所学到的知识，自行完成如下的扩展测试练习。</p>
+<ol>
+<li>在 虚拟机1 上安装 Metricbeat ，并启用 Elasticstarch 和 Kibana 采集模块。</li>
+<li>在两个虚拟机上安装配置 Filebeat，并启用 操作系统日志采集模块。</li>
+<li>在 虚拟机2 上下载另外的大数量 csv 文件，尝试将其加载到 Elasticsearch 中，并在 Kibana中对其分析。</li>
+</ol>
+<p>扩展工作坊推荐：</p>
+<ul>
+<li>可观测性 ：<a href=https://elastic.martinliu.cn/codelabs/elastic-observability-foundation/#0>https://elastic.martinliu.cn/codelabs/elastic-observability-foundation/#0</a></li>
+<li>Elastic 安全 ：<a href=https://elastic.martinliu.cn/codelabs/elastic-security-foundation/#0>https://elastic.martinliu.cn/codelabs/elastic-security-foundation/#0</a></li>
+<li>企业搜索 ： <a href=https://elastic.martinliu.cn/codelabs/entprise-search-foundation/#0>https://elastic.martinliu.cn/codelabs/entprise-search-foundation/#0</a></li>
+</ul>
+<p>官方参考文档：</p>
+<ul>
+<li>Elasticsearch <a href=https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html>https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html</a></li>
+<li>Kibana <a href=https://www.elastic.co/guide/en/kibana/current/index.html>https://www.elastic.co/guide/en/kibana/current/index.html</a></li>
+<li>Logstash <a href=https://www.elastic.co/guide/en/logstash/current/index.html>https://www.elastic.co/guide/en/logstash/current/index.html</a></li>
+</ul>
 <div class=edit-meta>
 Last updated on 2017-10-17
 <br>
 Published on 2017-10-17
-<br><a href=https://github.com/martinliu/elasticstack-workshop/edit/master/chapter1/1.md class=edit-page><i class="fas fa-pen-square"></i>&nbsp;Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=https://elastic.martinliu.cn/chapter1/ title="新手 100 系列"><i class="fas fa-arrow-left" aria-hidden=true></i>&nbsp;Prev - 新手 100 系列</a>
+<br><a href=https://github.com/martinliu/elasticstack-workshop//edit/master/chapter1/1.md class=edit-page><i class="fas fa-pen-square"></i>&nbsp;Edit on GitHub</a></div><nav class=pagination><a class="nav nav-prev" href=https://elastic.martinliu.cn/chapter1/ title="新手 100 系列"><i class="fas fa-arrow-left" aria-hidden=true></i>&nbsp;Prev - 新手 100 系列</a>
 <a class="nav nav-next" href=https://elastic.martinliu.cn/chapter1/2/ title="Chapter 1-2">Next - Chapter 1-2 <i class="fas fa-arrow-right" aria-hidden=true></i></a>
 </nav><footer><p class=powered>Powered by <a href=https://gohugo.io>Hugo</a>. Theme by <a href=https://themes.gohugo.io/hugo-theme-techdoc/>TechDoc</a>. Designed by <a href=https://github.com/thingsym/hugo-theme-techdoc>Thingsym</a>.</p>
 </footer>
