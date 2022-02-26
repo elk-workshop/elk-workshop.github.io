@@ -30,7 +30,7 @@
 <meta itemprop=name content="在 CentOS 上安装 Elastic Stack 7.16">
 <meta itemprop=description content="本文讲解如何在 CentOS 上安装 Elastic Stack 7.16.3。测试环境有两台虚拟机组成。 参考文章：刘晓国的博客 - Elastic：在 CentOS 上一步一步安装 Elastic Stack Elasticsearch 的各种安装"><meta itemprop=datePublished content="2017-10-17T15:26:15+00:00">
 <meta itemprop=dateModified content="2017-10-17T15:26:15+00:00">
-<meta itemprop=wordCount content="3057"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
+<meta itemprop=wordCount content="3085"><meta itemprop=image content="https://elastic.martinliu.cn/images/og-image.png">
 <meta itemprop=keywords content></head>
 <body><div class=container><header>
 <h1>Elastic Stack Workshop</h1><span class=version>Version 0.1.2</span><a href=https://github.com/martinliu/elasticstack-workshop class=github><i class="fab fa-github"></i></a>
@@ -100,7 +100,7 @@ systemctl status firewalld
 systemctl stop firewalld
 ping 192.168.1.141
 yum install -y java-1.8.0-openjdk
-java --version
+java -version
 </code></pre></div><h3 id=选择最优-yum-源>选择最优 YUM 源</h3>
 <p>如果你使用的是国外公有云的虚拟机，请直接使用 Elastic 官方网站提供的 yum 源服务器。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#f92672>[</span>elasticsearch<span style=color:#f92672>]</span>
@@ -202,7 +202,7 @@ tail -f /var/log/messages
 <h2 id=安装-logstash-服务>安装 Logstash 服务</h2>
 <p>SSh 登陆到虚拟机 2。先安装 Logstash ，使用 csv 插件导入数据文件到 Elasticsearch 中。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.16.3/logstash-7.16.3-x86_64.rpm
-</code></pre></div><p>在 /tmp 目录下创建名为 bitcon 的目录，用 vi 命令在 /tmp/bitcon 目录下，创建名为 mtgoxusd.csv 的数据文件，该数据文件到内容如下。</p>
+</code></pre></div><p>在 /tmp 目录下创建名为 bitcoin 的目录，用 vi 命令在 /tmp/bitcoin 目录下，创建名为 mtgoxusd.csv 的数据文件，该数据文件到内容如下。</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>Date,Open,High,Low,Close,Volume <span style=color:#f92672>(</span>BTC<span style=color:#f92672>)</span>,Volume <span style=color:#f92672>(</span>Currency<span style=color:#f92672>)</span>,Weighted Price
 2014-02-25,173.2,173.84343,101.62872,135.0,29886.7532397,3667985.39624,122.729470372
 2014-02-24,314.99996,316.78999,131.72093,173.871,94594.0225893,17590531.0124,185.958166604
@@ -213,7 +213,7 @@ tail -f /var/log/messages
 <p>用 vi 命令创建logstash 流水线配置文件 <code>vi /etc/logstash/conf.d/csv-loading.conf</code>，csv-loading.conf 配置文件的内容如下：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#ae81ff>input {</span>
   <span style=color:#ae81ff>file {</span>
-    <span style=color:#ae81ff>path =&gt; &#34;/tmp/bitcon/*.csv&#34;</span>
+    <span style=color:#ae81ff>path =&gt; &#34;/tmp/bitcoin/*.csv&#34;</span>
     <span style=color:#ae81ff>start_position =&gt; &#34;beginning&#34;</span>
   }
 }
@@ -258,8 +258,6 @@ journalctl --unit logstash
 </span><span style=color:#ae81ff></span>  -E output.elasticsearch.username<span style=color:#f92672>=</span>elastic   <span style=color:#ae81ff>\
 </span><span style=color:#ae81ff></span>  -E output.elasticsearch.password<span style=color:#f92672>=</span>elastic101   <span style=color:#ae81ff>\
 </span><span style=color:#ae81ff></span>  -E setup.kibana.host<span style=color:#f92672>=</span>192.168.1.141:5601
-</code></pre></div><p>用如下命令查看 Metricbeat 的采集模块有哪些。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat modules list
 </code></pre></div><p>从上到下的查看 Metricbeat 配置文件内容， <code>vi /etc/metricbeat/metricbeat.yml</code> 。</p>
 <p>在当前目录下创建名为 mb.yml 的文件，内容如下：</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#f92672>metricbeat.config.modules</span>:
@@ -287,7 +285,10 @@ metricbeat test output
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>systemctl enable  metricbeat
 systemctl start  metricbeat
 systemctl status  metricbeat
-</code></pre></div><p>在 Kibana 中查看 Metricbeat 的相关仪表板：</p>
+</code></pre></div><p>用如下命令查看 Metricbeat 的采集模块有哪些。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>metricbeat modules list
+</code></pre></div><p>从输出中，我们可以看到 Metricbeat 默认启用了操作系统性能采集模块。</p>
+<p>在 Kibana 中查看 Metricbeat 的相关仪表板：</p>
 <ul>
 <li>打开 Kibana 界面</li>
 <li>打开左侧菜单栏，点击 ‘Dashboard' 选项</li>
