@@ -74,32 +74,43 @@
 <p>本课程使用的 Elastic Stack 安装包，示例配置文件都可以在下列位置获取。</p>
 <p>Elastic Stack 软件安装包清单：</p>
 <ul>
-<li>auditbeat-7.10.1-x86_64.rpm</li>
-<li>filebeat-7.10.1-x86_64.rpm</li>
-<li>packetbeat-7.10.1-x86_64.rpm</li>
-<li>elasticsearch-7.10.1-x86_64.rpm</li>
+<li>auditbeat-7.10.0-x86_64.rpm</li>
+<li>filebeat-7.10.0-x86_64.rpm</li>
+<li>packetbeat-7.10.0-x86_64.rpm</li>
+<li>elasticsearch-7.10.0-x86_64.rpm</li>
 </ul>
 <p>下面开始创建 Elasticsearch 集群，并初始化相关设置。</p>
 <h2 is-upgraded>创建一个 Elasticsearch 集群</h2>
 <p>登录阿里云控制台，搜索 Elasticsearch Service 产品，进入该产品控制台，点击 &#34;新建&#34; 集群按钮。</p>
-<p>在选择 Elasticsearch 版本的时候请选 <strong>7.10.1</strong>。</p>
-<p class="image-container"><img alt="新建 ES 集群" src="img/4ac8e24f2763ba1c.png"></p>
+<p>在选择 Elasticsearch 版本的时候请选 <strong>7.10.0</strong>。</p>
+<p class="image-container"><img alt="新建 ES 集群 1" src="img/368d49c5c400ab37.png"></p>
+<ul>
+<li>选择 7.10 通用商业版</li>
+</ul>
+<p class="image-container"><img alt="新建 ES 集群 2" src="img/92aa9060557deca1.png"></p>
 <p>说明：</p>
 <ol type="1">
 <li>选择合适的可用区，建议练习用虚拟机也在相同可用区。</li>
 <li>选择合适的子网，建议练习用虚拟机也在相同子网。</li>
-<li>以练习产品为目的的测试环境可以使用 2 节点的最低集群配置。</li>
+<li>选择增加 &#34;协调节点&#34;，否则无法开启 ES 集群的 https 访问</li>
+<li>输入集群名、密码 (本练习中使用的密码是 Security%123，请在后续的课件中，在配置文件中替换成你自己的密码 )等信息，然后完成集群的创建。</li>
 </ol>
-<p>在点击 &#34;下一步&#34; 按钮之后，输入集群名、密码 (本练习中使用的密码是Security%123，请在后续的课件中，在配置文件中替换成你自己的密码 )等信息，然后完成集群的创建。</p>
-<aside class="warning"><p>注意：请确保将 Elasticsearch 服务运行正常，查看集群的基础配置，访问控制，内网访问地址， 记录本 ES 集群 IP 地址备用。</p>
+<aside class="warning"><p>注意：请确保将 Elasticsearch 服务运行正常，查看集群的基础配置，访问控制，私网访问地址， 记录本 ES 集群私网访问网址备用。集群创建成功后，修改 ES 集群的访问协议，使私网用 https 访问，ES 集群不需要开启公网访问。</p>
 </aside>
 <h2 is-upgraded>Kibana 相关配置</h2>
 <h3 is-upgraded>启用 Kibana 内网访问地址</h3>
 <p>进入刚刚创建的 Elasticsearch 服务集群配置界面，点击 &#34;可视化配置&#34; 标签，点击并开启 &#34;内网访问&#34; 选项，记录界面中所出现的网址备用，如下所示：</p>
-<pre><code> http://es-rbk77auj.internal.kibana.tencentelasticsearch.com:5601
-</code></pre>
-<p>点击页面语言选项右边的铅笔✏️按钮，修改界面为中文。</p>
-<p>点击公网访问地址，使用 elastic / Security%123 密码验证是否能成功登陆和使用 Kibana。</p>
+<p class="image-container"><img alt="新建 ES 集群 2" src="img/7a9caaa818d8ac71.png"></p>
+<ul>
+<li>点击&#34;修改配置&#34;， 选择&#34;私网访问&#34;后，复制 Kibana 私网访问地址：</li>
+<li>点击&#34;公网入口&#34; 后，将默认的访问白名单从 127.0.0.1 改为 0.0.0.0/0 (此处非最佳安全配置，为了练习的方便)</li>
+<li>将 Kibana 的显示语言从 English 修改为 中文</li>
+</ul>
+<p>在浏览器中输入公网访问地址，使用 elastic / Security%123 密码验证是否能成功登陆和使用 Kibana。</p>
+<ul>
+<li>公网地址，例如：https://es-cn-7pp2v2ce7001ivh93.kibana.elasticsearch.aliyuncs.com</li>
+<li>私网地址：例如：https://es-cn-7pp2v2ce7001ivh93-kibana.internal.elasticsearch.aliyuncs.com</li>
+</ul>
 <h3 is-upgraded>设置 Elasticsearch 集群索引数据刷新频率</h3>
 <p>最后，需要在 Kibana 的开发者工具里调整一个集群参数。</p>
 <pre><code>PUT _all/_settings
@@ -107,7 +118,7 @@
     &#34;refresh_interval&#34;: &#34;1s&#34;
   }
 </code></pre>
-<p class="image-container"><img alt="14021608105456_.pic_hd" src="img/a608388c0e313c6c.jpg"></p>
+<p class="image-container"><img alt="新建 ES 集群 4" src="img/fdc10c3e0c380014.png"></p>
 <p>点击左侧的开发者工具图标，在 <code>Console</code> 的代码输入区域中输入以上代码片段，将光标移动到 <code>PUT</code> 这一行，点击哪一行右侧的三角形播放按钮，等待右侧出现 <code>true</code> 的执行结果即可。</p>
 <h3 is-upgraded>创建 GeoIp 解析流水线</h3>
 <p>还需要为摄入数据创建一个用于解析 IP 地址地理位置的 pipeline ，这个操作在 Kibana 的开发者工具中完成。将下面的代码复制粘贴到 Kibana 的开发者工具中。</p>
@@ -156,13 +167,12 @@
 GET _ingest/pipeline/geoip-info
 </code></pre>
 <p>将左侧编辑器文本框中的光标移动到 <code>PUT _ingest/pipeline/geoip-info</code> 这一行，点击右侧扳手图标傍边的三角按钮，执行 pipeline 创建操作。</p>
-<p class="image-container"><img alt="2021-03-24_14-26-10" src="img/18e5c0ae6c62212c.png"></p>
 <p>在控制台中输入并点击 <code>GET _ingest/pipeline/geoip-info</code> 这个语句右侧的三角形，查看刚才创建的流水线的信息。</p>
 <aside class="warning"><p>注意：这个数据丰富流水线会在 Beats 的配置文件中触发，必须正确创建以上流水线，才能顺利完成后续练习。</p>
 </aside>
 <h3 is-upgraded>查看 ELK 技术栈自监控</h3>
 <p>点击 Kibana 左上角菜单中点击 &#34;堆栈监控&#34;，阿里云的 Elasticsearch 集群默认开启了技术栈自监控，将看到的结果类似如下所示。</p>
-<p class="image-container"><img alt="2021-03-25_15-01-45" src="img/e7e094a76e1fda35.png"></p>
+<p class="image-container"><img alt="新建 ES 集群 4" src="img/5c4dbf7bae557087.png"></p>
 <p>在以上的监控功能中，特别是 Beats 这一块，能看到各种 Beats 在被监控节点上的部署结果和运行现状，在后续的测试过程中，建议多次访问这个监控页面查看安装配置结果。</p>
 <aside class="warning"><p>注意：这个监控页面需要依赖于 Beats 的配置文件中启用了监控功能，建议在所有 Beats 配置文件中打开这个开关。</p>
 </aside>
@@ -188,7 +198,7 @@ GET _ingest/pipeline/geoip-info
 <li>操作系统的软件包、登录、进程、网络 socket 和用户相关事件</li>
 </ol>
 <p>安装 Auditbeat 软件包，运行下面的命令：</p>
-<pre><code language="language-sh" class="language-sh">sudo rpm -ivh https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/auditbeat-7.10.1-x86_64.rpm
+<pre><code language="language-sh" class="language-sh">sudo rpm -ivh https://mirrors.aliyun.com/elasticstack/7.x/yum/7.10.0/auditbeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>初始化 auditbeat 的索引和数据分析仪表板，运行下面的命令：</p>
 <pre><code language="language-sh" class="language-sh">sudo auditbeat setup -e \
@@ -196,12 +206,12 @@ GET _ingest/pipeline/geoip-info
   -E output.elasticsearch.hosts=[&#39;192.168.0.14:9200&#39;] \
   -E output.elasticsearch.username=elastic \
   -E output.elasticsearch.password=Security%123\
-  -E setup.kibana.host=http://es-rbk77auj.internal.kibana.tencentelasticsearch.com:5601
+  -E setup.kibana.host=https://es-cn-7pp2v2ce7001ivh93-kibana.internal.elasticsearch.aliyuncs.com
 </code></pre>
 <p>参数解释：</p>
 <ul>
-<li>output.elasticsearch.hosts ： Elasticsearch 集群内网访问 IP</li>
-<li>setup.kibana.host ： Kibana 服务内网访问网址</li>
+<li>output.elasticsearch.hosts ： Elasticsearch 集群私网访问网址，这里使用的是 https 协议访问 ES 集群</li>
+<li>setup.kibana.host ： Kibana 服务私网访问网址</li>
 </ul>
 <p>注意：以上两个信息需要在根据你的实验环境进行替换。</p>
 <p>待以上文件执行成功以后，在 Kibana 中浏览 Auditbeat 的仪表板。点击名为 &#34;[Auditbeat System] System Overview ECS&#34;的仪表板。</p>
@@ -315,7 +325,7 @@ sudo systemctl status  auditbeat
 </ul>
 <p>安装 Pecketbeat 软件包和它的依赖，运行下面的命令：</p>
 <pre><code language="language-sh" class="language-sh">sudo yum install libpcap -y
-sudo rpm -ivh https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/packetbeat-7.10.1-x86_64.rpm
+sudo rpm -ivh https://mirrors.aliyun.com/elasticstack/7.x/yum/7.10.0/packetbeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>初始化 Pecketbeat 的索引和数据分析仪表板，运行下面的命令：</p>
 <pre><code language="language-sh" class="language-sh">sudo packetbeat setup -e \
@@ -323,7 +333,7 @@ sudo rpm -ivh https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/pack
   -E output.elasticsearch.hosts=[&#39;192.168.0.14:9200&#39;] \
   -E output.elasticsearch.username=elastic \
   -E output.elasticsearch.password=Security%123\
-  -E setup.kibana.host=http://es-rbk77auj.internal.kibana.tencentelasticsearch.com:5601
+  -E setup.kibana.host=https://es-cn-7pp2v2ce7001ivh93-kibana.internal.elasticsearch.aliyuncs.com
 </code></pre>
 <p>以上命令成功执行之后，查看新增的 Packetbeat 仪表板。</p>
 <p>查看和学习 Packetbeat 默认的配置文件和下面的示例配置文件的差异。</p>
@@ -439,7 +449,7 @@ sudo yum update -y
 <p class="image-container"><img alt="2021-03-25_16-15-18" src="img/58bb37455d4eadd6.png"></p>
 <p>用户还可以使用 Filebeat 的扩展能力，基于 ECS 开发自己的自定义功能模块，用于安全数据的统一收集，这有利于消除安全信息数据在工具集方面的各种壁垒，消除数据孤岛和死角。</p>
 <p>运行下面的命令安装 Filebeat 软件包：</p>
-<pre><code language="language-sh" class="language-sh">sudo rpm -ivh https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/filebeat-7.10.1-x86_64.rpm
+<pre><code language="language-sh" class="language-sh">sudo rpm -ivh https://mirrors.aliyun.com/elasticstack/7.x/yum/7.10.0/filebeat-7.10.0-x86_64.rpm
 </code></pre>
 <p>初始化 Filebeat 的索引和数据分析仪表板，运行下面的命令：</p>
 <pre><code language="language-sh" class="language-sh">sudo filebeat setup -e \
@@ -447,7 +457,7 @@ sudo yum update -y
   -E output.elasticsearch.hosts=[&#39;192.168.0.14:9200&#39;] \
   -E output.elasticsearch.username=elastic \
   -E output.elasticsearch.password=Security%123\
-  -E setup.kibana.host=http://es-rbk77auj.internal.kibana.tencentelasticsearch.com:5601
+  -E setup.kibana.host=https://es-cn-7pp2v2ce7001ivh93-kibana.internal.elasticsearch.aliyuncs.com
 </code></pre>
 <p>Filebeat 默认不会启用任何数据采集模块，运行下面的命令，启用系统日志文件的采集。</p>
 <pre><code language="language-sh" class="language-sh">sudo filebeat modules enable system
