@@ -32,7 +32,7 @@
 <p>本课程专为安全分析师（SecOps），和其它对此感兴趣工程师而设计。希望你在本课程中体验到运用 Elastic Security 进行安全运维的一天。你将学习到如何使用 Elastic Security 来可视化数据，配置数据摄入，应用规则检测引擎。在本课程结束时，你将全面掌握使用 Elastic Security 来检测基础设施威胁的工作方法，能够运用 Elasticsearch 的快速搜索进行实时的安全防护和响应。</p>
 <p>在本课程中您将会学到：</p>
 <ol type="1">
-<li>在阿里云上搭建 Elasticsearch 集群，自己搭建 Kibana 服务服务器。</li>
+<li>在阿里云上搭建 Elasticsearch 集群。</li>
 <li>学习使用 Elastic Stack 进行安全管理的基本概念和方案架构。</li>
 <li>使用 Elastic 提供的 Auditbeat、 Filebeat 和 PacketBeat 摄入数据。</li>
 <li>部署和接入外部开源 IDS 软件 Scatea 的监控数据</li>
@@ -44,8 +44,8 @@
 <p class="image-container"><img alt="2021-03-18_11-39-47-6075057" src="img/e8b6c190ba617b89.png"></p>
 <p>本课程所使用到的 Elastic Stack 的组件包括：</p>
 <ul>
-<li>Elasticsearch、Kibana、Packetbeat、Filebeat、Auditbeat 版本是 7.10. 1。</li>
-<li>Suricata 版本 5.0.6，开源入侵监测引擎。</li>
+<li>Elasticsearch、Kibana、Packetbeat、Filebeat、Auditbeat 版本是 7.10.0。</li>
+<li>Suricata 版本 5.0.2，开源入侵监测引擎。</li>
 </ul>
 <h2 is-upgraded>安全管理旅程的四个阶段</h2>
 <p>网络信息安全管理方案的复杂性和成本是有目共睹的，通常安全相关工作由安全管理团队专人专职负责，他们运用各种专业技能和工具开展日常的工作。Elasticsearch 在安全领域是经常被使用到的搜索和分析平台。Elastic 在最近几年着重发展了对安全管理的支持。用户可以在已有的 Elastic Stack 的技能的基础上，平滑的扩展到安全管理使用场景，复用现有的技能和 ELK 基础设施解决安全管理的痛点。</p>
@@ -95,6 +95,7 @@
 <li>选择增加 &#34;协调节点&#34;，否则无法开启 ES 集群的 https 访问</li>
 <li>输入集群名、密码 (本练习中使用的密码是 Security%123，请在后续的课件中，在配置文件中替换成你自己的密码 )等信息，然后完成集群的创建。</li>
 </ol>
+<p class="image-container"><img alt="新建 ES 集群 2" src="img/c8fa83df7c06f4ee.png"></p>
 <aside class="warning"><p>注意：请确保将 Elasticsearch 服务运行正常，查看集群的基础配置，访问控制，私网访问地址， 记录本 ES 集群私网访问网址备用。集群创建成功后，修改 ES 集群的访问协议，使私网用 https 访问，ES 集群不需要开启公网访问。</p>
 </aside>
 <h2 is-upgraded>Kibana 相关配置</h2>
@@ -183,7 +184,7 @@ GET _ingest/pipeline/geoip-info
       <google-codelab-step label="安全事件收集" duration="30">
         <p>如果使用 Elastic 的 Beats （以及相关模块）采集和摄入安全事件数据，那么所有数据在进入 Elasticsearch 的过程中就完成了和统一通用数据定义 ECS 的适配。相同含义字段在各个不同数据源中的差异性就在这个过程中得到了调和，在 Kibana 分析安全数据的过程中，也是基于数据已经得到了 ECS 的标准化了。</p>
 <p>下面分步骤配置三种最常用的 Beats 数据采集工具。</p>
-<h2 is-upgraded>安装配置 Auditbeat</h2>
+<h2 is-upgraded>安装配置 Auditbeat 采集操作系统事件</h2>
 <p>Auditbeat 支持的操作系统包括：</p>
 <ul>
 <li>Linux（DEB，RPM，tar.gz）</li>
@@ -203,7 +204,7 @@ GET _ingest/pipeline/geoip-info
 <p>初始化 auditbeat 的索引和数据分析仪表板，运行下面的命令：</p>
 <pre><code language="language-sh" class="language-sh">sudo auditbeat setup -e \
   -E output.logstash.enabled=false \
-  -E output.elasticsearch.hosts=[&#39;192.168.0.14:9200&#39;] \
+  -E output.elasticsearch.hosts=[&#39;https://es-cn-7pp2v2ce7001ivh93.elasticsearch.aliyuncs.com:9200&#39;] \
   -E output.elasticsearch.username=elastic \
   -E output.elasticsearch.password=Security%123\
   -E setup.kibana.host=https://es-cn-7pp2v2ce7001ivh93-kibana.internal.elasticsearch.aliyuncs.com
@@ -249,7 +250,7 @@ fields:
   env: workshop
 
 output.elasticsearch:
-  hosts: [&#34;192.168.0.14:9200&#34;]
+  hosts: [&#34;https://es-cn-7pp2v2ce7001ivh93.elasticsearch.aliyuncs.com:9200&#34;]
   username: elastic
   password:  Security%123
   pipeline:  geoip-info
@@ -316,7 +317,7 @@ sudo systemctl status  auditbeat
 <p class="image-container"><img alt="2021-03-25_15-14-12" src="img/2542f0a99494dff9.png"></p>
 <aside class="warning"><p>注意：至此完成了 Auditbeat 在这个服务器上的部署和配置，并且确认仪表板中的数据都是更新的，这个 Beat采集代理的监控状态也正常。</p>
 </aside>
-<h2 is-upgraded>安装配置 Pecketbeat</h2>
+<h2 is-upgraded>安装配置 Pecketbeat 采集网络事件</h2>
 <p>Pecketbeat 是一个应用监控和性能分析系统，它可以嗅探服务器上发生的网络包，解码 7 层的网络消息，然后将分析结果发送到后台的 Elasticsearch 服务中进行分析， 支持的操作系统包括：</p>
 <ul>
 <li>Linux（DEB，RPM，tar.gz）</li>
@@ -330,7 +331,7 @@ sudo rpm -ivh https://mirrors.aliyun.com/elasticstack/7.x/yum/7.10.0/packetbeat-
 <p>初始化 Pecketbeat 的索引和数据分析仪表板，运行下面的命令：</p>
 <pre><code language="language-sh" class="language-sh">sudo packetbeat setup -e \
   -E output.logstash.enabled=false \
-  -E output.elasticsearch.hosts=[&#39;192.168.0.14:9200&#39;] \
+  -E output.elasticsearch.hosts=[&#39;https://es-cn-7pp2v2ce7001ivh93.elasticsearch.aliyuncs.com:9200&#39;] \
   -E output.elasticsearch.username=elastic \
   -E output.elasticsearch.password=Security%123\
   -E setup.kibana.host=https://es-cn-7pp2v2ce7001ivh93-kibana.internal.elasticsearch.aliyuncs.com
@@ -374,7 +375,7 @@ fields:
   env: workshop
 
 output.elasticsearch:
-  hosts: [&#34;192.168.0.14:9200&#34;]
+  hosts: [&#34;https://es-cn-7pp2v2ce7001ivh93.elasticsearch.aliyuncs.com:9200&#34;]
   username: elastic
   password:  Security%123
   pipeline:  geoip-info
@@ -444,7 +445,7 @@ sudo yum update -y
 <p>将鼠标移动到日本的那个红点上，显示详细信息。</p>
 <aside class="warning"><p>注意：至此完成了 Packetbeat 的配置和调试工作，还可以再次确认相关仪表板和 Beat 代理监控的状态。</p>
 </aside>
-<h2 is-upgraded>安装配置 Filebeat</h2>
+<h2 is-upgraded>安装配置 Filebeat 集成第三方系统</h2>
 <p>在 Kibana 的主页上点击&#34;添加数据&#34;按钮后，点击 &#34;安全&#34;，这里展示的是 Elastic 官方支持的安全事件数据采集模块，大部分是通过 Filebeat 日志文件集成的方式完成。</p>
 <p class="image-container"><img alt="2021-03-25_16-15-18" src="img/58bb37455d4eadd6.png"></p>
 <p>用户还可以使用 Filebeat 的扩展能力，基于 ECS 开发自己的自定义功能模块，用于安全数据的统一收集，这有利于消除安全信息数据在工具集方面的各种壁垒，消除数据孤岛和死角。</p>
@@ -454,7 +455,7 @@ sudo yum update -y
 <p>初始化 Filebeat 的索引和数据分析仪表板，运行下面的命令：</p>
 <pre><code language="language-sh" class="language-sh">sudo filebeat setup -e \
   -E output.logstash.enabled=false \
-  -E output.elasticsearch.hosts=[&#39;192.168.0.14:9200&#39;] \
+  -E output.elasticsearch.hosts=[&#39;https://es-cn-7pp2v2ce7001ivh93.elasticsearch.aliyuncs.com:9200&#39;] \
   -E output.elasticsearch.username=elastic \
   -E output.elasticsearch.password=Security%123\
   -E setup.kibana.host=https://es-cn-7pp2v2ce7001ivh93-kibana.internal.elasticsearch.aliyuncs.com
@@ -481,7 +482,7 @@ fields:
   env: workshop
 
 output.elasticsearch:
-  hosts: [&#34;192.168.0.14:9200&#34;]
+  hosts: [&#34;https://es-cn-7pp2v2ce7001ivh93.elasticsearch.aliyuncs.com:9200&#34;]
   username: elastic
   password:  Security%123
   pipeline:  geoip-info
