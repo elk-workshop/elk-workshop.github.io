@@ -4,26 +4,27 @@
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-77731594-1",
   "updated": "2022-10-21T08:51:51Z",
-  "id": "entprise-search-foundation",
-  "duration": 95,
-  "title": "Elastic 企业搜索工作坊(中等)",
+  "id": "elastic-stack-quick-start-guide-84",
+  "duration": 72,
+  "title": "Elastic Stack 技术栈配置指南（v8.4）",
   "authors": "Martin Liu",
-  "summary": "Elastic 企业搜索(中等)",
-  "source": "codelabs/ent-search-vm.md",
+  "summary": "Elastic Stack 技术栈配置指南（v8.4）",
+  "source": "codelabs/obv-84-update.md",
   "theme": "",
   "status": [
     "published"
   ],
   "category": [
     "elasticsearch",
-    "appsearch",
+    "beats",
     "kibana",
-    "workplace"
+    "observability",
+    "security"
   ],
   "tags": [
     "elasticstack"
   ],
   "feedback": "https://github.com/martinliu/martinliu.github.io/discussions",
   "ga": "UA-159133967-1",
-  "url": "entprise-search-foundation"
+  "url": "elastic-stack-quick-start-guide-84"
 }

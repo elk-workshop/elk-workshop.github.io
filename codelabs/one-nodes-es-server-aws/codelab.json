@@ -3,7 +3,7 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-77731594-1",
-  "updated": "2022-10-02T12:46:44Z",
+  "updated": "2022-10-21T08:51:51Z",
   "id": "one-nodes-es-server-aws",
   "duration": 36,
   "title": "搭建单节点 Elasticsearch 集群服务(AWS)",
