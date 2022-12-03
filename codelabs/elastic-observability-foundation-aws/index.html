@@ -9,7 +9,7 @@
   <title>Elastic Stack 可观测性实战工作坊(中等-AWS)</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -67,7 +67,7 @@
 <li>STEP2：使用 Filebeat 构建高维度的日志采集能力</li>
 <li>STEP3：使用 APM 构建分布式应用系统的全堆栈追踪能力</li>
 </ol>
-<h2 is-upgraded>实施服务质量监控</h2>
+<p>###实施服务质量监控</p>
 <p>通过以上的四个构建步骤，使用 Elastic Stack 实施四大服务质量监控能力的构建，搭建了持续统一运维管理的工具平台。</p>
 <p>使用 SRE 基于‘用户旅程&#39;或‘系统边界&#39;的 SLO 分析设定方法，从 Elastic Stack 的已有数据采集能力中，选取第批直接可用的 SLI 采集点。在基于 SLO 的监控过程中，不断的优选 SLI，调整告警的数量和质量，为开发团队提供持续有效的反馈。</p>
 <p>最后，通过 SLO 服务质量目标监控大屏，实时的将生产环境的状态反馈给所有相关团队。最后收尾以基于 SLO 的监控告警（本课程不涉及告警的配置，告警可以用 Elastic Stack 的 watcher 实现）。</p>
@@ -90,15 +90,13 @@
 <li>TCP 22   0.0.0.0/0</li>
 <li>TCP 5601 0.0.0.0/0</li>
 </ul>
-<aside class="warning"><p>注意：请在 <strong>成功</strong> 的完成了要求的前置课程， 前置课程的 <strong>所有练习操作</strong> 都成功了之后，用 SSH 登录工具登录 EC2 实例。</p>
-</aside>
+<p>Negative : 注意：请在 <strong>成功</strong> 的完成了要求的前置课程， 前置课程的 <strong>所有练习操作</strong> 都成功了之后，用 SSH 登录工具登录 EC2 实例。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP0：服务健康检查" duration="20">
-        <aside class="special"><p>我们的各种业务服务当前的状态是死是活？这应该是首要回答的问题。</p>
-</aside>
+        <p>Positive : 我们的各种业务服务当前的状态是死是活？这应该是首要回答的问题。</p>
 <p>在这一节中，你将学习到：</p>
 <ol type="1">
 <li>安装 Heartbeat</li>
@@ -144,7 +142,7 @@ processors:
 <li>为本健康检查服务器配置可观测性地域元数据，名称为 China-BJ 的经纬度</li>
 </ul>
 <p>注：可能需要修改新配置文件的读写权限 <code>chmod go-w /home/ec2-user/elastic-stack/heartbeat-7.9.3-linux-x86_64/heartbeat.yml</code></p>
-<h2 is-upgraded>初始化和运行 Heatbeat 服务</h2>
+<p>###初始化和运行 Heatbeat 服务</p>
 <p>运行下面的命令初始化和运行 Heatbeat 服务。</p>
 <p>命令如下：</p>
 <pre><code>./heartbeat setup
@@ -155,30 +153,28 @@ processors:
 <li>setup 的作用是初始化 Heatbeat 的索引，导入相关的数据管理策略</li>
 <li>-e 启动 Heartbeat 服务，将服务运行的日志显示在控制台</li>
 </ul>
-<h2 is-upgraded>查看 Uptime 应用</h2>
+<p>###查看 Uptime 应用</p>
 <p>进入 Kibana 页面，点击左上角的菜单，在左侧菜单中点击 Uptime 链接。</p>
 <p class="image-container"><img alt="2020-11-02_12-18-29" src="img/f4ab68d114b0aceb.jpeg"></p>
 <p>在 Uptime 服务器健康检查 App 中查看如下界面。</p>
 <p class="image-container"><img alt="2020-11-02_12-21-04" src="img/ff04520c494a65c1.jpeg"></p>
 <p>点击这个名为 ‘1-node-es&#39; 的连接查看，这个采集点的监控结果。</p>
 <p>点击 Observability 下方的 Overview 链接，在可观测性全景视图中查看页面下方的 Uptime 部分；其中显示了探针的数量，以及 Up 和 Down 状态的统计数据。</p>
-<aside class="warning"><p>注意：请确保 Heatbeat 服务处于正常的运行状况，检查本地 Elasticsearch 服务的监控检查探针工作正常。</p>
-</aside>
+<p>Negative : 注意：请确保 Heatbeat 服务处于正常的运行状况，检查本地 Elasticsearch 服务的监控检查探针工作正常。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP1：指标采集" duration="25">
-        <aside class="special"><p>操作系统和各个应用模块的指标高低，以及网络流量的状态，是基础的运维分析数据，要处于无形部署，按需使用的程度。</p>
-</aside>
+        <p>Positive : 操作系统和各个应用模块的指标高低，以及网络流量的状态，是基础的运维分析数据，要处于无形部署，按需使用的程度。</p>
 <h2 is-upgraded>准备 Metricbeat</h2>
 <p>加压缩 Metricbeat 软件包在本地的目录中。</p>
 <p>命令如下：</p>
 <pre><code>tar xzvf metricbeat-7.9.3-linux-x86_64.tar.gz
 </code></pre>
-<p>进入加压缩后的目录<code>metricbeat-7.9.3-darwin-x86_64</code>，查看 Metricbeat 的数据采集程序目录，熟悉目录中的结构和文件。</p>
+<p>进入加压缩后的目录 <code>metricbeat-7.9.3-darwin-x86_64</code>，查看 Metricbeat 的数据采集程序目录，熟悉目录中的结构和文件。</p>
 <h2 is-upgraded>编辑主配置文件</h2>
-<p>查看默认的主配置文件 <code>metricbeat.yml</code>；确保配置文件中的 processors 这个段落的内容如下。</p>
+<p>查看默认的主配置文件 <code>metricbeat.yml</code> ；确保配置文件中的 processors 这个段落的内容如下。</p>
 <pre><code>processors:
   - add_host_metadata: 
       netinfo.enabled: true
@@ -241,15 +237,13 @@ processors:
 <li>点击菜单中的 Host in Uptime 链接，查看这台主机上运行的各个服务的健康检查状态</li>
 </ol>
 <p>在后续的课程中，我们逐步添加基于主机的日志关联分析，和 APM 关联分析。</p>
-<aside class="warning"><p>注意：请确保 Metricbeat 服务处于正常的运行状况，Metric 的 Kibana 应用可以正常显示数据。</p>
-</aside>
+<p>Negative : 注意：请确保 Metricbeat 服务处于正常的运行状况，Metric 的 Kibana 应用可以正常显示数据。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP2：日志采集" duration="25">
-        <aside class="special"><p>构建元数据标准丰富的高维度、全覆盖日志采集系统是终结手工捞日志看的前提， ；应用日志和采集工具配合得当的情况下，你将挖到运维管理的第一桶金。</p>
-</aside>
+        <p>Positive : 构建元数据标准丰富的高维度、全覆盖日志采集系统是终结手工捞日志看的前提， ；应用日志和采集工具配合得当的情况下，你将挖到运维管理的第一桶金。</p>
 <h2 is-upgraded>下载 Filebeat</h2>
 <p>解压缩 Filebeat 软件包在本地的目录中。</p>
 <p>命令如下：</p>
@@ -257,7 +251,7 @@ processors:
 </code></pre>
 <p>进入 <code>filebeat-7.9.3-linux-x86_64</code>，熟悉 Filebeat 日志文件采集代理的目录结构和内容。</p>
 <h2 is-upgraded>编辑主配置文件</h2>
-<p>查看默认的主配置文件 <code>filebeat.yml</code>；确保配置文件中的 processors 这个段落的内容如下。</p>
+<p>查看默认的主配置文件 <code>filebeat.yml</code> ；确保配置文件中的 processors 这个段落的内容如下。</p>
 <pre><code>processors:
   - add_host_metadata: 
       when.not.contains.tags: forwarded
@@ -296,7 +290,7 @@ sudo chown root -R modules.d
 <pre><code>Connection to backoff(elasticsearch(http://localhost:9200)) established
 </code></pre>
 <p>到目前为止实现了 Filebeat 日志采集代理的后台相关组件初始化，Filebeat 采集代理开始持续的采集操作系统的日志。</p>
-<h2 is-upgraded>查看 Filebeat 相关仪表板</h2>
+<p>###查看 Filebeat 相关仪表板</p>
 <p>查看 Filebeat 的相关仪表板</p>
 <ol type="1">
 <li>打开 Kibana 界面</li>
@@ -313,7 +307,7 @@ sudo chown root -R modules.d
 </ul>
 <p>Syslog 视图的显示效果如下：</p>
 <p class="image-container"><img alt="2020-11-04_10-17-58" src="img/966824bf4bb40f80.jpeg"></p>
-<h2 is-upgraded>查看 Logs 应用</h2>
+<p>###查看 Logs 应用</p>
 <p>在 Kibana 的左侧栏菜单中，点击 ‘Observability&#39; 部分的 ‘Overview&#39; 链接。查看此界面中的 ‘Lobs&#39;部分。这里显示了目前 Filebeat 当前的采集率，柱状图显示的是每分钟采集了多少条日志信息，以及日志来自于那些模块。</p>
 <p>在 Kibana 的左侧栏菜单中，点击 ‘Observability&#39; 部分的 ‘Logs&#39; 链接。</p>
 <p class="image-container"><img alt="2020-11-04_12-32-04" src="img/2b62b099bcd0b45e.jpeg"></p>
@@ -321,19 +315,17 @@ sudo chown root -R modules.d
 <ol type="1">
 <li>按日志字段搜索：尝试搜索 <code>service.id: petclinic</code></li>
 <li>日志高亮显示：输入屏幕上能看到的预期存在的关键词，观察屏幕上的变化，特别是最右侧的波形图的变化。</li>
-<li>点击 <code>Stream live</code> 开启日志数据实时数据流功能，这个功能近似于 tial -f 的查看日志文件的更新。</li>
+<li>点击 <code>Stream live</code>  开启日志数据实时数据流功能，这个功能近似于 tial -f 的查看日志文件的更新。</li>
 </ol>
 <p>打开 ‘Metric&#39; 菜单中的主机查看模式，点击主机图标，打开主机关联数据查看菜单，选择 <code>Host Logs</code> 选项。</p>
-<aside class="warning"><p>注意：到目前为止，本课程实现了基于主机的操作系统syslog日志采集，并且使用了 Kibana 中自带的可观测性数据关联查看分析能力。</p>
-</aside>
+<p>Negative : 注意：到目前为止，本课程实现了基于主机的操作系统syslog日志采集，并且使用了 Kibana 中自带的可观测性数据关联查看分析能力。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP3：APM 全堆栈追踪" duration="30">
         <h2 is-upgraded>运行 APM 服务器</h2>
-<aside class="special"><p>APM 追踪听起来有点难，但是先做的人总是先得到意外的惊喜；最重要的是做 APM、日志和指标三个维度数据的关联分析。</p>
-</aside>
+<p>Positive : APM 追踪听起来有点难，但是先做的人总是先得到意外的惊喜；最重要的是做 APM、日志和指标三个维度数据的关联分析。</p>
 <p>解压缩压缩 APM Server 软件包在本地的目录中。</p>
 <p>Linux 的命令如下：</p>
 <pre><code>tar xzvf apm-server-7.9.3-linux-x86_64.tar.gz
@@ -359,7 +351,7 @@ output.elasticsearch:
 <pre><code>./apm-server -e
 </code></pre>
 <p>观察服务的日志，在没有报错的情况下，进入下一个步骤。</p>
-<h2 is-upgraded>运行宠物商店演示程序</h2>
+<p>###运行宠物商店演示程序</p>
 <p>首先确认一下当前操作系统中 JDK 的版本号，没有的话需要自行安装。</p>
 <pre><code>java --version
 openjdk 11.0.8 2020-07-14
@@ -428,7 +420,7 @@ OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.8+10, mixed mode)
 <p>这个应用前端的代码中已经进行了 Elastic APM 对 Node.js 应用的无痛埋点配置，在进行一个简单的依赖包安装命令后，启动该应用。</p>
 <pre><code>npm start
 </code></pre>
-<p>观察宠物商店前端应用的正常启动过程。然后在浏览器中访问网址：<code>http://public_IP:4000/</code> ，访问公网 IP 的 4000 端口，如果宠物商店系统的工作正常，应该看到如下界面。</p>
+<p>观察宠物商店前端应用的正常启动过程。然后在浏览器中访问网址： <code>http://public_IP:4000/</code> ，访问公网 IP 的 4000 端口，如果宠物商店系统的工作正常，应该看到如下界面。</p>
 <p class="image-container"><img alt="2020-11-04_23-12-48" src="img/4fc95ef629675eaf.jpeg"></p>
 <p>点击 Home 按钮右侧的其它三个菜单，多点击几次，制造一些人为的系统功能调用，目的是生成 APM 追踪数据。</p>
 <p>下一步进入 APM 应用查看追踪数据结果。</p>
@@ -477,8 +469,7 @@ OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.8+10, mixed mode)
       </google-codelab-step>
     
       <google-codelab-step label="实时服务质量监控" duration="20">
-        <aside class="special"><p>可观测性监控管理的王冠是实现&#34;基于服务质量目标（SLO）&#34;的监控。设定 SRE 风格的服务质量目标，进入 P90， 、P95、P99 的 n 个 9 的监控风格是目前的趋势。</p>
-</aside>
+        <p>Positive : 可观测性监控管理的王冠是实现&#34;基于服务质量目标（SLO）&#34;的监控。设定 SRE 风格的服务质量目标，进入 P90， 、P95、P99 的 n 个 9 的监控风格是目前的趋势。</p>
 <p>使用 Canvas 的画布功能，定制如下的 SLO 监控大屏。</p>
 <p class="image-container"><img alt="2020-11-05_00-13-06" src="img/6a4c7412bbf82e5f.jpeg"></p>
 <p>下载名为 <a href="canvas-workpad-petclinic.json" target="_blank">canvas-workpad-petclinic.json</a> 的示例文件。</p>
@@ -489,10 +480,10 @@ OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.8+10, mixed mode)
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>

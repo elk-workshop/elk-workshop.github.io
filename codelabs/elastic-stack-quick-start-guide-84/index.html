@@ -9,7 +9,7 @@
   <title>Elastic Stack 技术栈配置指南（v8.4）</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -58,7 +58,7 @@
     
       <google-codelab-step label="安装 Elasticsearch" duration="10">
         <p>在虚拟机 A 上完成本章节操作。</p>
-<p>SSH 登录到操作系统，下载 Elasticsearch 的 rpm 安装包，用 rpm 的方式安装 Elasticssearch 服务器。 <code>dnf install elasticsearch-8.4.3-x86_64.rpm</code></p>
+<p>SSH 登录到操作系统，下载 Elasticsearch 的 rpm 安装包，用 rpm 的方式安装 Elasticssearch 服务器。 <code>dnf install elasticsearch-8.4.3-x86_64.rpm </code></p>
 <pre><code language="language-sh" class="language-sh">[root@elk8 ~]# dnf install elasticsearch-8.4.3-x86_64.rpm 
 Updating Subscription Management repositories.
 Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)                                        3.9 kB/s | 4.1 kB     00:01    
@@ -300,7 +300,7 @@ cd elastic-agent-8.4.3-linux-x86_64
 sudo ./elastic-agent install --url=https://10.0.30.105:8220 --enrollment-token=NW9ZTjZZTUJtUENhc0ZFTDI5SV86MkZQT1hlc2dUOEdWZnRrWWhNbXVjdw==  
 </code></pre>
 <p>将上面的命令复制到一个写字板中，修改最后一条命令，在最后增加<code>--insecure</code> 参数，如果不加这个参数，远程 Agent 的注册就会由于无法信任 Fleet 服务器的自签名证书而失败。</p>
-<p>你也可以手工下载好 <code>elastic-agent-8.4.3-linux-x86_64.tar.gz</code> 文件，这样不用每次都重复从 Elastic 官网下载安装包；但是重复的在多个被管理服务器上复制也很麻烦。</p>
+<p>你也可以手工下载好 <code>elastic-agent-8.4.3-linux-x86_64.tar.gz</code>  文件，这样不用每次都重复从 Elastic 官网下载安装包；但是重复的在多个被管理服务器上复制也很麻烦。</p>
 <pre><code language="language-sh" class="language-sh">./elastic-agent install --url=https://10.0.30.105:8220 --enrollment-token=NW9ZTjZZTUJtUENhc0ZFTDI5SV86MkZQT1hlc2dUOEdWZnRrWWhNbXVjdw==   --insecure
 </code></pre>
 <p>通过执行上面的命令，我们就在被管理服务器上，一键式的安装了用于数据采集功能的 Elastic Agent ，并将其注册到 Fleet 服务器上。</p>
@@ -457,17 +457,17 @@ sudo ./elastic-agent install --url=https://10.0.30.105:8220 --enrollment-token=R
       <google-codelab-step label="常见问题" duration="2">
         <p>Elastic Agent 在采集数据的服务上安装正常，在 Fleet 服务器的管理界面中也可以看到其状态正常。但是在可观测性的页面中看不到它的任何数据。 主要是由于 Elasticsearch 服务器强制是用 https 协议，客户端没有配置好数字证书的话，必须在Fleet服务器的配置中规避掉，ssl 证书校验的功能。</p>
 <p>其他可能的原因：Elastic Agent 采集端程序和 ES 后台服务器的通讯不正常，检查 9200 端口，用 curl + ES 服务器端的数字证书，用户名和密码，尝试访问 ES 的服务地址 <code>https://192.168.10.10:9200</code>。</p>
-<p>也可以尝试在 Fleet 的管理页面上删除这个 Agent；然后在被管理服务器上，用命令 <code>elastic-agent uninstall</code> 删除服务，然后重新安装注册这个被管理服务器，注意在注册命令的最后面可以尝试增加这两个参数：<br><code>--insecure --fleet-server-es-insecure</code> 第一个参数是忽略 Fleet 服务器的 ssl 证书校验，第二个参数是忽略 es 服务器的 ssl 证书校验。或者尝试重新手工安装一遍 es 服务器上的 ca 根证书。</p>
+<p>也可以尝试在 Fleet 的管理页面上删除这个 Agent；然后在被管理服务器上，用命令 <code>elastic-agent uninstall</code> 删除服务，然后重新安装注册这个被管理服务器，注意在注册命令的最后面可以尝试增加这两个参数：<code>--insecure --fleet-server-es-insecure</code> 第一个参数是忽略 Fleet 服务器的 ssl 证书校验，第二个参数是忽略 es 服务器的 ssl 证书校验。或者尝试重新手工安装一遍 es 服务器上的 ca 根证书。</p>
 
 
       </google-codelab-step>
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>

@@ -9,7 +9,7 @@
   <title>Elastic 企业搜索工作坊(中等)</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -121,7 +121,7 @@ sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
 sudo systemctl status elasticsearch
 </code></pre>
-<p>使用 <code>sudo tail -f /var/log/elasticsearch/elk-es01.log</code> 命令查看当前 Elasticsearch 服务的日志。</p>
+<p>使用 <code>sudo tail -f /var/log/elasticsearch/elk-es01.log</code>  命令查看当前 Elasticsearch 服务的日志。</p>
 <p>初始化 ES 服务器内建用户的密码。</p>
 <pre><code language="language-shell" class="language-shell">sudo /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive -b
 </code></pre>
@@ -147,8 +147,7 @@ Changed password for user [remote_monitoring_user]
 Changed password for user [elastic]
 </code></pre>
 <p>在浏览器中访问 http://IP-address:9200/ ，测试 Elasticsearch 服务是否正常，确认上面配置的 elastic 用户的密码 <code>security123</code> 登录。</p>
-<aside class="warning"><p>注意：请确保将 Elasticsearch 服务运行正常，可以在网页浏览器中登录/验证 elastic 用户的密码 security123。</p>
-</aside>
+<p>Negative : 注意：请确保将 Elasticsearch 服务运行正常，可以在网页浏览器中登录/验证 elastic 用户的密码 security123。</p>
 <h2 is-upgraded>安装配置 Kibana</h2>
 <p>执行 Kibana 安装命令，如下所示：</p>
 <pre><code language="language-shell" class="language-shell">sudo yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.15.0/kibana-7.15.0-x86_64.rpm
@@ -178,8 +177,7 @@ sudo systemctl status   kibana.service
 <p class="image-container"><img alt="2021-03-25_15-07-47" src="img/54178de9ef74f38d.jpg"></p>
 <h2 is-upgraded>启用企业版许可 30 天试用</h2>
 <p>点击 Kibana 左上角菜单中点击 &#34;Stack Management&#34; –&gt; &#34;许可管理&#34;，点击 &#34;开始试用&#34; 按钮，启用 30 天的高级功能的试用期。</p>
-<aside class="warning"><p>注意：至此完成了 Elastic Stack 的基础准备工作，Elasticsearch + Kibana 的服务都处于正常运行状态，启用了企业版功能的试用。</p>
-</aside>
+<p>Negative : 注意：至此完成了 Elastic Stack 的基础准备工作，Elasticsearch + Kibana 的服务都处于正常运行状态，启用了企业版功能的试用。</p>
 
 
       </google-codelab-step>
@@ -306,8 +304,7 @@ Creating Filebeat log directory: /usr/share/enterprise-search/log
 <li>Kibana 服务器测安装配置</li>
 <li>Enterprise Search服务器的安装配置，实现了使用 Elasticsearch的内置用户认证登陆 Enterprise Serach服务器的应用。</li>
 </ul>
-<aside class="warning"><p>注意：完成了在单机上所有基础环境的配置和搭建，完成了基础的配置准备工作。</p>
-</aside>
+<p>Negative : 注意：完成了在单机上所有基础环境的配置和搭建，完成了基础的配置准备工作。</p>
 
 
       </google-codelab-step>
@@ -406,8 +403,7 @@ Creating Filebeat log directory: /usr/share/enterprise-search/log
 <li>返回搜索结果清单</li>
 <li>点击右上角的 ‘ 查询测试器&#39;，搜索 pokemon ，观察结果清单，确认首条搜索结果是什么。</li>
 </ol>
-<aside class="warning"><p>注意： 这里我们完成了首个搜索引擎的数据初始化、字段类型调整、同义词字典、搜索字段权重和置顶策略展示的设置，基本上搜索功能可以达到我们的需求。</p>
-</aside>
+<p>Negative : 注意： 这里我们完成了首个搜索引擎的数据初始化、字段类型调整、同义词字典、搜索字段权重和置顶策略展示的设置，基本上搜索功能可以达到我们的需求。</p>
 <h2 is-upgraded>提供用户搜索界面</h2>
 <p>搜索引擎提供了用户搜索节目的设计功能，下面我们实现一个最简洁实用的用户搜索界面。</p>
 <p class="image-container"><img alt="2021-09-24_17-54-15" src="img/3d5d5ff4a92f8472.jpg"></p>
@@ -457,10 +453,10 @@ Creating Filebeat log directory: /usr/share/enterprise-search/log
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>

@@ -9,7 +9,7 @@
   <title>搭建单节点 Elasticsearch 集群服务(AWS)</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -62,8 +62,7 @@
     
       <google-codelab-step label="环境需求检查" duration="2">
         <p>顺利完成本 Lab 的笔记本电脑的软硬件需求如下。</p>
-<aside class="special"><p>建议使用配置足够的笔记本电脑，能上网，可以快速访问 AWS 中国区的服务，已获取最佳体验。</p>
-</aside>
+<p>Positive : 建议使用配置足够的笔记本电脑，能上网，可以快速访问 AWS 中国区的服务，已获取最佳体验。</p>
 <h2 is-upgraded>硬件配置</h2>
 <ul>
 <li>4GB 内存或更多</li>
@@ -92,15 +91,13 @@
 <li>TCP 22   0.0.0.0/0</li>
 <li>TCP 5601 0.0.0.0/0</li>
 </ul>
-<aside class="warning"><p>打开SSH工具软件，成功的登录到目标 EC2 实例中，查看根目录下应该包含两个目录 <code>elastic-stack</code> 和 <code>petclinic</code> 。</p>
-</aside>
+<p>Negative : 打开SSH工具软件，成功的登录到目标 EC2 实例中，查看根目录下应该包含两个目录 <code>elastic-stack</code> 和 <code>petclinic</code> 。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="运行 Elasticsearch 服务器" duration="5">
-        <aside class="special"><p>在实操练习 EC2 虚拟机的 elastic-stack 目录中使用 Elasticsearch 服务器软件压缩包。</p>
-</aside>
+        <p>Positive : 在实操练习 EC2 虚拟机的 elastic-stack 目录中使用 Elasticsearch 服务器软件压缩包。</p>
 <h2 is-upgraded>解压缩软件压缩包</h2>
 <p>进入软件包所在的 elastic-stack 目录中。解压缩 Elasticsearch 服务器端软件包。</p>
 <pre><code language="language-bash" class="language-bash">tar -xvf elasticsearch-7.9.3-linux-x86_64.tar.gz
@@ -152,15 +149,13 @@ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master
 <p>在浏览器中验证 Elasticsearch 集群服务的状态，打开浏览器中访问这个网址 <code>http://public_IP:9200</code> 。 使用浏览器访问 EC2 实例的公网 IP 的 <code>9200</code> 端口，访问结果应如下图所示：</p>
 <p class="image-container"><img alt="2020-10-28_11-35-01" src="img/42317fb1250e878e.jpeg"></p>
 <p>然后尝试访问这个网址 <code>http://public_IP:9200/_cat/nodes\?v</code> 。</p>
-<aside class="warning"><p>确保在命令行和浏览器中都能看到正确的集群名称、节点名称和软件版本号。当前处于开发模式的无密码访问模式，处于非安全的状态。</p>
-</aside>
+<p>Negative : 确保在命令行和浏览器中都能看到正确的集群名称、节点名称和软件版本号。当前处于开发模式的无密码访问模式，处于非安全的状态。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="索引一些文档" duration="8">
-        <aside class="special"><p>这个运行中的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对索引和文档的增删改查（CURD）等操作。</p>
-</aside>
+        <p>Positive : 这个运行中的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对索引和文档的增删改查（CURD）等操作。</p>
 <h2 is-upgraded>索引单个和返回单个文档</h2>
 <p>索引一个文档，该文档只具有一个键值对数据 &#34;name&#34;: &#34;John Doe&#34; 。</p>
 <pre><code language="language-bash" class="language-bash">curl -X PUT &#34;localhost:9200/customer/_doc/1?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
@@ -222,15 +217,13 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <p>上面的结果表明：当前的集群中已经创建了两个索引 <code>bank</code> 和 <code>customer</code> ; 名为 <code>bank</code> 的索引显示文档数为 1000，这就是刚才用 bulk API 导入的数据。</p>
 <p>如果在浏览器中访问这个网址 <code>http://public_IP:9200/_cat/indices?v</code> 也可以看到如下相同结果。</p>
 <p class="image-container"><img alt="2020-10-28_12-58-30" src="img/fba2aff51dffabce.jpeg"></p>
-<aside class="warning"><p><code>_doc</code> 和 <code>_bulk</code> API 索引了单个和批量的数据文档。名为 <code>bank</code> 和 <code>customer</code> 的索引也在过程中被创建。</p>
-</aside>
+<p>Negative : <code>_doc</code> 和 <code>_bulk</code> API 索引了单个和批量的数据文档。名为 <code>bank</code> 和 <code>customer</code> 的索引也在过程中被创建。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="测试搜索功能" duration="6">
-        <aside class="special"><p>使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
-</aside>
+        <p>Positive : 使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
 <h2 is-upgraded>搜索 1</h2>
 <p>说明：</p>
 <ul>
@@ -264,7 +257,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <ul>
 <li>目标 bank 索引</li>
 <li>搜索所有文档</li>
-<li>从返回结果中取出第 10 到 19 个文档。  <ul>
+<li>从返回结果中取出第 10 到 19 个文档。 <ul>
 <li>from 结果的起始位置</li>
 <li>size 返回的数据条数</li>
 </ul>
@@ -310,7 +303,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>文档相关性最高分是 9.507477</li>
 <li>相关性最高的文档，address 字段中同时包含了  <code>mill</code> 和 <code>lane</code> 两个关键词。</li>
 </ul>
-<h2 is-upgraded>搜索 4</h2>
+<p>###搜索 4</p>
 <p>说明：</p>
 <ul>
 <li>目标 bank 索引</li>
@@ -369,16 +362,14 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>在 1000 个文档中成功的搜索到 217 个文档</li>
 <li>在返回结果中观察 <code>balance</code>  的数值是否满足搜索条件</li>
 </ul>
-<aside class="warning"><p>通过 <code>_search</code> API 成功的完成了 5 个目的不同的搜索操作，体会 Elasticsearch 的搜索能力。</p>
-</aside>
+<p>Negative : 通过 <code>_search</code> API 成功的完成了 5 个目的不同的搜索操作，体会 Elasticsearch 的搜索能力。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="搜索结果的聚合分析" duration="6">
-        <aside class="special"><p>Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
-</aside>
-<h2 is-upgraded>聚合运算 1</h2>
+        <p>Positive : Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
+<p>###聚合运算 1</p>
 <p>说明：</p>
 <ul>
 <li>不是设置任何搜索条件，在所有文档中做聚合运算</li>
@@ -404,7 +395,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>hits 总共搜索了 1000 个文档</li>
 <li>在 aggregations 查看每个州的银行账户总个数</li>
 </ul>
-<h2 is-upgraded>聚合运算 2</h2>
+<p>###聚合运算 2</p>
 <p>说明：</p>
 <ul>
 <li>不是设置任何搜索条件，在所有文档中做聚合运算</li>
@@ -439,7 +430,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>结果同上一个聚合</li>
 <li>另外增加了每个州的所有银行账户的余额求平均值运算</li>
 </ul>
-<h2 is-upgraded>聚合运算 3</h2>
+<p>###聚合运算 3</p>
 <p>说明：</p>
 <ul>
 <li>其它功能同上</li>
@@ -474,15 +465,13 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>观察 bucket 里的聚合结果</li>
 <li>按每个州的所有银行账户的平均值倒排序</li>
 </ul>
-<aside class="warning"><p>通过 <code>_search</code> API 中的 <code>aggs</code> 运算成功的完成了 3 个目的不同的搜索结果聚合运算操作，体会 Elasticsearch 的数据搜索后的聚合运算分析能力。</p>
-</aside>
+<p>Negative :  通过 <code>_search</code> API 中的 <code>aggs</code> 运算成功的完成了 3 个目的不同的搜索结果聚合运算操作，体会 Elasticsearch 的数据搜索后的聚合运算分析能力。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="运行和使用 Kibana 服务器" duration="8">
-        <aside class="special"><p>解压缩并运行 Kibana 软件包，使用 Kibana 的图形界面搜索 bank 索引中的数据。</p>
-</aside>
+        <p>Positive : 解压缩并运行 Kibana 软件包，使用 Kibana 的图形界面搜索 bank 索引中的数据。</p>
 <h2 is-upgraded>运行 Kibana</h2>
 <p>在 EC2 实例的 SSH 控制台中，运行下面的命令。</p>
 <pre><code>tar -xzf kibana-7.9.3-linux-x86_64.tar.gz
@@ -518,18 +507,17 @@ cd kibana-7.9.3-linux-x86_64/
 <p>点击左侧的向下三角图标，打开索引选择菜单，选中刚才创建的 bank 索引模式。</p>
 <p class="image-container"><img alt="2020-10-28_23-54-33" src="img/9df60b0c4b57e172.jpeg"></p>
 <p>参考左侧的可用字段，这是 bank 索引的所有字段。点击第一条数据的向下按钮，查看该文档。</p>
-<aside class="warning"><p>成功的导入和查看了 Kibana 产品附带的三组示例数据。使用 Kibana 图形界面探索了批量导入的 bank 索引中的数据。</p>
-</aside>
+<p>Negative : 成功的导入和查看了 Kibana 产品附带的三组示例数据。使用 Kibana 图形界面探索了批量导入的 bank 索引中的数据。</p>
 
 
       </google-codelab-step>
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>

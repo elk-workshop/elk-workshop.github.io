@@ -9,7 +9,7 @@
   <title>Elastic Stack 可观测性实战工作坊(腾讯)</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -125,15 +125,13 @@ cd petclinic/frontend/
 npm install
 </code></pre>
 <p>在以上命令中， <code>git clone</code> 和 <code>npm install</code> 可能需要花费 5 到 10 分钟不等。请确保以上几条命令都正常执行完毕。</p>
-<aside class="warning"><p>检查点：已经正常登陆了 Kibana 图形界面。已经 SSH 登陆了CentOS 虚拟机。在虚拟机中可以 ping 通 Elasticsearch 集群中的任意节点。</p>
-</aside>
+<p>Negative : 检查点：已经正常登陆了 Kibana 图形界面。已经 SSH 登陆了CentOS 虚拟机。在虚拟机中可以 ping 通 Elasticsearch 集群中的任意节点。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP0：服务健康检查" duration="20">
-        <aside class="special"><p>我们的各种业务服务当前的状态是死是活？这应该是首要回答的问题。</p>
-</aside>
+        <p>Positive : 我们的各种业务服务当前的状态是死是活？这应该是首要回答的问题。</p>
 <p>在这一节中，你将学习到：</p>
 <ol type="1">
 <li>安装 Heartbeat 探针服务</li>
@@ -206,21 +204,19 @@ heartbeat -e
 systemctl enable  heartbeat-elastic.service 
 systemctl status  heartbeat-elastic.service 
 </code></pre>
-<aside class="warning"><p>注意：请确保 Heartbeat 服务处于正常的运行状况，检查本地 Kibana 服务的监控检查探针工作正常。</p>
-</aside>
+<p>Negative : 注意：请确保 Heartbeat 服务处于正常的运行状况，检查本地 Kibana 服务的监控检查探针工作正常。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP1：指标采集" duration="25">
-        <aside class="special"><p>操作系统和各个应用模块的指标高低，以及网络流量的状态，是基础的运维分析数据，要处于无形部署，按需使用的程度。</p>
-</aside>
+        <p>Positive : 操作系统和各个应用模块的指标高低，以及网络流量的状态，是基础的运维分析数据，要处于无形部署，按需使用的程度。</p>
 <h2 is-upgraded>安装 Metricbeat</h2>
 <p>通过网络安装 Metricbeat 软件包。</p>
 <p>命令如下：</p>
 <pre><code language="language-sh" class="language-sh">yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/metricbeat-7.10.1-x86_64.rpm
 </code></pre>
-<p>进入 Metricbeat 的配置文件目录<code>cd /etc/metricbeat/</code>，查看 Metricbeat 的配置目录，熟悉目录中的结构和文件。</p>
+<p>进入 Metricbeat 的配置文件目录 <code>cd /etc/metricbeat/</code>，查看 Metricbeat 的配置目录，熟悉目录中的结构和文件。</p>
 <h2 is-upgraded>初始化 Metricbeat 服务</h2>
 <p>在命令行下运行下面的两条命令，在执行前根据下面的参数解释，替换其中的三个参数。</p>
 <pre><code language="language-sh" class="language-sh">metricbeat setup -e   --index-management   --dashboards \
@@ -256,7 +252,7 @@ Loaded dashboards
 <li>点击 ‘heartbeat-7.10.1&#39; 的策略，也设置同样的这个 120 天删除的策略。后续的索引初始化配置完毕之后，也在这里做相同的操作。从而熟悉掌握这个配置。</li>
 </ul>
 <h2 is-upgraded>编辑主配置文件</h2>
-<p>备份和查看默认的主配置文件 <code>metricbeat.yml</code>；并将其替换为以下内容。</p>
+<p>备份和查看默认的主配置文件 <code>metricbeat.yml</code> ；并将其替换为以下内容。</p>
 <pre><code>#=========================== Modules configuration ============================
 metricbeat.config.modules:
   path: ${path.config}/modules.d/*.yml
@@ -359,15 +355,13 @@ curl localhost/server-status
 <p class="image-container"><img alt="14051608125946_.pic_hd" src="img/b24433fd955cbd91.jpg"></p>
 <p>如上图所示，我们看到 ‘Host&#39; 下面显示了系统监控指标的几个指标；‘Nginx&#39; 下面显示了 Nginx 的相关指标。</p>
 <p>在后续的课程中，我们逐步添加基于主机的日志关联分析，和 APM 关联分析。</p>
-<aside class="warning"><p>注意：请确保 Metricbeat 服务处于正常的运行状况，Kibana 的 Metrics 应用可以正常显示数据。</p>
-</aside>
+<p>Negative : 注意：请确保 Metricbeat 服务处于正常的运行状况，Kibana 的 Metrics 应用可以正常显示数据。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP2：日志采集" duration="25">
-        <aside class="special"><p>构建元数据标准丰富的高维度、全覆盖日志采集系统是终结手工捞日志看的前提， ；应用日志和采集工具配合得当的情况下，你将挖到运维管理的第一桶金。</p>
-</aside>
+        <p>Positive : 构建元数据标准丰富的高维度、全覆盖日志采集系统是终结手工捞日志看的前提， ；应用日志和采集工具配合得当的情况下，你将挖到运维管理的第一桶金。</p>
 <h2 is-upgraded>安装 Filebeat</h2>
 <p>通过网络安装 Filebeat 软件包。命令如下：</p>
 <pre><code>yum install -y https://mirrors.tencent.com/elasticstack/7.x/yum/7.10.1/filebeat-7.10.1-x86_64.rpm
@@ -409,7 +403,7 @@ Loaded dashboards
 </ul>
 <p>本步骤是一次性的，在后续的其它被管理节点上就不需要再次执行 Beats 的任何 setup 命令了。</p>
 <h2 is-upgraded>编辑主配置文件</h2>
-<p>查看默认的主配置文件 <code>filebeat.yml</code>；确保配置文件中具有以下内容。</p>
+<p>查看默认的主配置文件 <code>filebeat.yml</code> ；确保配置文件中具有以下内容。</p>
 <pre><code>#=========================== Filebeat inputs =============================
 filebeat.inputs:
 - type: log
@@ -507,19 +501,17 @@ systemctl status  filebeat
 <ol type="1">
 <li>按日志字段搜索：尝试搜索 <code>service.id: petclinic-vm</code></li>
 <li>日志高亮显示：输入屏幕上能看到的预期存在的关键词，观察屏幕上的变化，特别是最右侧的波形图的变化。</li>
-<li>点击 <code>Stream live</code> 开启日志数据实时数据流功能，这个功能近似于 tial -f 的查看日志文件的更新。</li>
+<li>点击 <code>Stream live</code>  开启日志数据实时数据流功能，这个功能近似于 tial -f 的查看日志文件的更新。</li>
 </ol>
 <p>打开 ‘Metric&#39; 菜单中的主机查看模式，点击主机图标，打开主机关联数据查看菜单，选择 <code>Host Logs</code> 选项。</p>
-<aside class="warning"><p>注意：到目前为止，本课程实现了基于主机的操作系统syslog日志采集，并且使用了 Kibana 中自带的可观测性数据关联查看分析能力。</p>
-</aside>
+<p>Negative : 注意：到目前为止，本课程实现了基于主机的操作系统syslog日志采集，并且使用了 Kibana 中自带的可观测性数据关联查看分析能力。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="STEP3：APM 全堆栈追踪" duration="30">
         <h2 is-upgraded>安装 APM 服务器</h2>
-<aside class="special"><p>APM 追踪听起来有点难，但是先做的人总是先得到意外的惊喜；最重要的是做 APM、日志和指标三个维度数据的关联分析。</p>
-</aside>
+<p>Positive : APM 追踪听起来有点难，但是先做的人总是先得到意外的惊喜；最重要的是做 APM、日志和指标三个维度数据的关联分析。</p>
 <p>安装 APM Server 软件。</p>
 <pre><code>yum install -y https://mirrors.cloud.tencent.com/elasticstack/7.x/yum/7.10.1/apm-server-7.10.1-x86_64.rpm
 cd /etc/apm-server/
@@ -614,7 +606,7 @@ OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.8+10, mixed mode)
 <p>这个应用前端的代码中已经进行了 Elastic APM 对 Node.js 应用的无痛埋点配置，在进行一个简单的依赖包安装命令后，启动该应用。</p>
 <pre><code>npm start
 </code></pre>
-<p>观察宠物诊所前端应用的正常启动过程。然后在浏览器中访问网址：<code>http://public_IP:4000/</code> ，访问公网 IP 的 4000 端口，如果宠物诊所系统的工作正常，应该看到如下界面。</p>
+<p>观察宠物诊所前端应用的正常启动过程。然后在浏览器中访问网址： <code>http://public_IP:4000/</code> ，访问公网 IP 的 4000 端口，如果宠物诊所系统的工作正常，应该看到如下界面。</p>
 <p class="image-container"><img alt="2020-11-04_23-12-48" src="img/4fc95ef629675eaf.jpeg"></p>
 <p>点击 Home 按钮右侧的其它三个菜单，多点击几次，制造一些人为的系统功能调用，目的是生成 APM 追踪数据。</p>
 <p>下一步进入 APM 应用查看追踪数据结果。</p>
@@ -669,8 +661,7 @@ systemctl status nginx
       </google-codelab-step>
     
       <google-codelab-step label="实施服务质量监控" duration="20">
-        <aside class="special"><p>可观测性监控管理的王冠是实现&#34;基于服务质量目标（SLO）&#34;的监控。设定 SRE 风格的服务质量目标，进入 P90、P95、P99 的 n 个 9 的监控风格是目前的趋势。</p>
-</aside>
+        <p>Positive : 可观测性监控管理的王冠是实现&#34;基于服务质量目标（SLO）&#34;的监控。设定 SRE 风格的服务质量目标，进入 P90、P95、P99 的 n 个 9 的监控风格是目前的趋势。</p>
 <p>使用 Canvas 的画布功能，定制如下的 SLO 监控大屏。</p>
 <h2 is-upgraded>创建 heartbeat-* 索引模式</h2>
 <p>点击 Kibana 界面左下角的 management 图标，点击 <code>index pattern</code> ，点击 <code>Create index pattern</code> 按钮，输入 ‘heartbeat-*&#39; 后，点击 <code>Next step</code> 按钮</p>
@@ -714,18 +705,17 @@ systemctl status nginx
 <p class="image-container"><img alt="2020-11-05_00-13-06" src="img/6a4c7412bbf82e5f.jpeg"></p>
 <p>下载名为 <a href="canvas-workpad-petclinic.json" target="_blank">canvas-workpad-petclinic.json</a> 的示例文件。</p>
 <p>在 Kibana 左侧的菜单里选择 <code>Canvas</code> 画布菜单，点击 <code>Import workpad JSON file</code> 按钮，导入后既可以看到名为 <code>宠物商店：SLO管理监控大屏</code> 的监控画布。</p>
-<aside class="warning"><p>本课程完成了 Elastic Stack 技术栈的所有主要功能模块的配置和使用。讲解了针对宠物医院这个多层次应用的可观测性构建，采集到了四个方面的可关联分析的时序数据流。还参考 SRE 的管理方法，创建了 SLI 的可视化数据指标监控图标，并为 SLI 设定了 SLO管理目标。最后将宠物诊所应用的所有 SLI/SLO 管理监控图表都集成到了一个统一的仪表板中。</p>
-</aside>
+<p>Negative : 本课程完成了 Elastic Stack 技术栈的所有主要功能模块的配置和使用。讲解了针对宠物医院这个多层次应用的可观测性构建，采集到了四个方面的可关联分析的时序数据流。还参考 SRE 的管理方法，创建了 SLI 的可视化数据指标监控图标，并为 SLI 设定了 SLO管理目标。最后将宠物诊所应用的所有 SLI/SLO 管理监控图表都集成到了一个统一的仪表板中。</p>
 
 
       </google-codelab-step>
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>

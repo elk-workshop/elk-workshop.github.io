@@ -9,7 +9,7 @@
   <title>搭建单节点 Elasticsearch 集群服务</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -62,8 +62,7 @@
     
       <google-codelab-step label="环境需求检查" duration="2">
         <p>顺利完成本 Lab 的笔记本电脑的软硬件需求如下。</p>
-<aside class="special"><p>建议使用配置足够的笔记本电脑，在本机的命令行直接运行本 Lab 的相关操作，已获取最佳体验。或者使用一个本地运行的虚拟机，效果更佳。</p>
-</aside>
+<p>Positive : 建议使用配置足够的笔记本电脑，在本机的命令行直接运行本 Lab 的相关操作，已获取最佳体验。或者使用一个本地运行的虚拟机，效果更佳。</p>
 <h2 is-upgraded>笔记本电脑</h2>
 <ul>
 <li>8GB 内存或更多</li>
@@ -85,21 +84,19 @@
 <li>CPU： 2 vCPU</li>
 <li>内存：最低 4GB， 最好 8 GB</li>
 <li>磁盘：最低20 GB</li>
-<li>网络：  <ul>
+<li>网络： <ul>
 <li>本地虚拟机：可以被笔记本电脑访问，同时虚拟机也可以访问互联网下载和安装Yum源中的软件</li>
 <li>云主机：可以从YUM下载安装包，具备公网IP地址，防火墙设置公网可以访问这些端口：TCP9200， TCP5601</li>
 </ul>
 </li>
 </ul>
-<aside class="warning"><p>打开命令行工具软件，使用SSH登陆准备好的CentOS虚拟机。</p>
-</aside>
+<p>Negative : 打开命令行工具软件，使用SSH登陆准备好的CentOS虚拟机。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="安装 Elasticsearch 服务器" duration="5">
-        <aside class="special"><p>远程下载安装 Elasticsearch 服务器软件。</p>
-</aside>
+        <p>Positive : 远程下载安装 Elasticsearch 服务器软件。</p>
 <p>使用清华大学的YUM镜像源安装。</p>
 <pre><code language="language-shell" class="language-shell">sudo yum install -y https://mirror.tuna.tsinghua.edu.cn/elasticstack/yum/elastic-7.x/7.15.1/elasticsearch-7.15.1-x86_64.rpm
 </code></pre>
@@ -150,7 +147,7 @@ sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
 sudo systemctl status elasticsearch
 </code></pre>
-<p>使用 <code>sudo tail -f /var/log/elasticsearch/elk-es01.log</code> 命令查看当前 Elasticsearch 服务的日志。</p>
+<p>使用 <code>sudo tail -f /var/log/elasticsearch/elk-es01.log</code>  命令查看当前 Elasticsearch 服务的日志。</p>
 <p>初始化 ES 服务器内建用户的密码。</p>
 <pre><code language="language-shell" class="language-shell">sudo /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive -b
 </code></pre>
@@ -208,15 +205,13 @@ Changed password for user [elastic]
 <p>在浏览器中验证 Elasticsearch 集群服务的状态，打开浏览器中访问这个网址 <code>http://IP_ADDRESS:9200</code> 。或者访问本地虚拟机的 IP 地址，或者云主机的公网IP地址，例如：<code>http://192.168.50.11:9200</code> ，访问结果应如下图所示：</p>
 <p class="image-container"><img alt="2020-10-28_11-35-01" src="img/42317fb1250e878e.jpeg"></p>
 <p>然后尝试访问这个网址 <code>http://IP_address:9200/_cat/nodes\?v</code> 。</p>
-<aside class="warning"><p>注意：请确保将 Elasticsearch 服务运行正常，可以在网页浏览器中登录/验证 elastic 用户的密码 security123。</p>
-</aside>
+<p>Negative : 注意：请确保将 Elasticsearch 服务运行正常，可以在网页浏览器中登录/验证 elastic 用户的密码 security123。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="索引一些文档「可选实践」" duration="8">
-        <aside class="special"><p>【这一部分练习可以略过】这个本地运行的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对文档的增删改查（CURD）等操作。</p>
-</aside>
+        <p>Positive : 【这一部分练习可以略过】这个本地运行的 Elasticsearch 集群提供着功能完整的 RESTFul API 服务，包括对文档的增删改查（CURD）等操作。</p>
 <h2 is-upgraded>索引单个和返回单个文档</h2>
 <p>索引一个文档，该文档只具有一个键值对数据 &#34;name&#34;: &#34;John Doe&#34; 。</p>
 <pre><code language="language-bash" class="language-bash">curl --user elastic:security123 -X PUT &#34;localhost:9200/customer/_doc/1?pretty&#34; -H &#39;Content-Type: application/json&#39; -d&#39;
@@ -266,10 +261,10 @@ Changed password for user [elastic]
 <p>在有大量文档的时候，可以使用 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docs-bulk.html" target="_blank">buck API</a> 进行批量索引（导入）的操作。</p>
 <p>确认软件包目录下有一个名为 <code>account.json</code> 的文件。否则根据下面的提示下载该文件。</p>
 <p>下载测试数据文件 <a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank">accounts.json</a> ，这个文件中有一千条人工生成的数据。</p>
-<p><a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank"><paper-button class="colored" raised>点此下载 account.json 文件</paper-button></a></p>
+<p><br>[点此下载 account.json 文件](https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true)<br></p>
 <p>或者在Linux 的操作系统中使用命令下载该文件。</p>
 <p>curl -O https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json</p>
-<p>将 <code>account.json</code> 文件下载到测试目录中，用文本编辑器打开浏览确认，或者在 Linux 系统中执行命令 <code>cat account.json</code>。这个文件中有一千条数据记录。</p>
+<p>将 <code>account.json</code> 文件下载到测试目录中，用文本编辑器打开浏览确认，或者在 Linux 系统中执行命令  <code>cat account.json</code>。这个文件中有一千条数据记录。</p>
 <p>在命令行中，进入以上测试数据文件的目录中，运行下面的两条命令。</p>
 <pre><code language="language-sh" class="language-sh">curl --user elastic:security123 -H &#34;Content-Type: application/json&#34; -XPOST &#34;localhost:9200/bank/_bulk?pretty&amp;refresh&#34; --data-binary &#34;@accounts.json&#34;
 curl --user elastic:security123 &#34;localhost:9200/_cat/indices?v&#34;
@@ -282,15 +277,13 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <p>上面的结果表明：当前的集群中已经创建了两个索引 <code>bank</code> 和 <code>customer</code> ; 名为 <code>bank</code> 的索引显示文档数为 1000，这就是刚才用 bulk API 导入的数据。</p>
 <p>如果在浏览器中访问这个网址 http://IP_ADDRESS:9200/_cat/indices?v 也可以看到如下相同结果。</p>
 <p class="image-container"><img alt="2020-10-28_12-58-30" src="img/fba2aff51dffabce.jpeg"></p>
-<aside class="warning"><p><code>_doc</code> 和 <code>_bulk</code> API 索引了单个和批量的数据文档。名为 <code>bank</code> 和 <code>customer</code> 的索引也在过程中被创建。</p>
-</aside>
+<p>Negative : <code>_doc</code> 和 <code>_bulk</code> API 索引了单个和批量的数据文档。名为 <code>bank</code> 和 <code>customer</code> 的索引也在过程中被创建。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="测试搜索功能「可选实践」" duration="6">
-        <aside class="special"><p>【这一部分练习可以略过】使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
-</aside>
+        <p>Positive : 【这一部分练习可以略过】使用 _search API 进行搜索，Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Query DSL</a> 有一整套的搜索能力。</p>
 <h2 is-upgraded>搜索 1</h2>
 <p>说明：</p>
 <ul>
@@ -324,7 +317,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <ul>
 <li>目标 bank 索引</li>
 <li>搜索所有文档</li>
-<li>从返回结果中取出第 10 到 19 个文档。  <ul>
+<li>从返回结果中取出第 10 到 19 个文档。 <ul>
 <li>from 结果的起始位置</li>
 <li>size 返回的数据条数</li>
 </ul>
@@ -370,7 +363,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>文档相关性最高分是 9.507477</li>
 <li>相关性最高的文档，address 字段中同时包含了  <code>mill</code> 和 <code>lane</code> 两个关键词。</li>
 </ul>
-<h2 is-upgraded>搜索 4</h2>
+<p>###搜索 4</p>
 <p>说明：</p>
 <ul>
 <li>目标 bank 索引</li>
@@ -429,15 +422,13 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>在 1000 个文档中成功的搜索到 217 个文档</li>
 <li>在返回结果中观察 <code>balance</code>  的数值是否满足搜索条件</li>
 </ul>
-<aside class="warning"><p>通过 <code>_search</code> API 成功的完成了 5 个目的不同的搜索操作，体会 Elasticsearch 的搜索能力。</p>
-</aside>
+<p>Negative : 通过 <code>_search</code> API 成功的完成了 5 个目的不同的搜索操作，体会 Elasticsearch 的搜索能力。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="搜索结果的聚合分析「可选实践」" duration="6">
-        <aside class="special"><p>【这一部分练习可以略过】Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
-</aside>
+        <p>Positive : 【这一部分练习可以略过】Elasticsearch 可以在搜索结果中进行聚合分析  <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html" target="_blank">Aggregations</a> ，通过各种结构汇计算总搜索结果数据。</p>
 <h2 is-upgraded>聚合运算 1</h2>
 <p>说明：</p>
 <ul>
@@ -499,7 +490,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>结果同上一个聚合</li>
 <li>另外增加了每个州的所有银行账户的余额求平均值运算</li>
 </ul>
-<h2 is-upgraded>聚合运算 3</h2>
+<p>###聚合运算 3</p>
 <p>说明：</p>
 <ul>
 <li>其它功能同上</li>
@@ -534,8 +525,7 @@ yellow open   customer D9ijmP_iR225damqVPQwkw   1   1          1            0   
 <li>观察 bucket 里的聚合结果</li>
 <li>按每个州的所有银行账户的平均值倒排序</li>
 </ul>
-<aside class="warning"><p>通过 <code>_search</code> API 中的 <code>aggs</code> 运算成功的完成了 3 个目的不同的搜索结果聚合运算操作，体会 Elasticsearch 的数据搜索后的聚合运算分析能力。</p>
-</aside>
+<p>Negative :  通过 <code>_search</code> API 中的 <code>aggs</code> 运算成功的完成了 3 个目的不同的搜索结果聚合运算操作，体会 Elasticsearch 的数据搜索后的聚合运算分析能力。</p>
 
 
       </google-codelab-step>
@@ -569,8 +559,7 @@ systemctl status   kibana.service
 <p class="image-container"><img alt="2021-03-25_15-07-47" src="img/54178de9ef74f38d.jpg"></p>
 <h2 is-upgraded>启用企业版许可 30 天试用</h2>
 <p>点击 Kibana 左上角菜单中点击 &#34;Stack Management&#34; –&gt; &#34;许可管理&#34;，点击 &#34;开始试用&#34; 按钮，启用 30 天的高级功能的试用期。</p>
-<aside class="warning"><p>注意：至此完成了 Elastic Stack 的基础准备工作，Elasticsearch + Kibana 的服务都处于正常运行状态，启用了企业版功能的试用。</p>
-</aside>
+<p>Negative : 注意：至此完成了 Elastic Stack 的基础准备工作，Elasticsearch + Kibana 的服务都处于正常运行状态，启用了企业版功能的试用。</p>
 <h2 is-upgraded>登录 Kibana 控制台导入&amp;查看示例数据</h2>
 <p>到目前为止，Elasticsearch 集群运行在无密码的开发模式，因此无需输入用户名和密码。</p>
 <p>打开浏览器访问网址 <code>localhost:5601</code> 或者虚拟机的 IP 地址，例如  <code>192.168.50.11:5601</code>； 登陆后点击&#34;添加数据&#34;按钮。然后点击页面中的&#34;样例数据&#34;标签页，进入样例数据导入界面。</p>
@@ -592,18 +581,17 @@ systemctl status   kibana.service
 <p>点击左侧的向下三角图标，打开索引选择菜单，选中刚才创建的 bank 索引模式。</p>
 <p class="image-container"><img alt="2020-10-28_23-54-33" src="img/9df60b0c4b57e172.jpeg"></p>
 <p>参考左侧的可用字段，这是 bank 索引的所有字段。点击第一条数据的向下按钮，查看该文档。</p>
-<aside class="warning"><p>成功的导入和查看了 Kibana 产品附带的三组示例数据。使用 Kibana 图形界面探索了批量导入的 bank 索引中的数据。</p>
-</aside>
+<p>Negative : 成功的导入和查看了 Kibana 产品附带的三组示例数据。使用 Kibana 图形界面探索了批量导入的 bank 索引中的数据。</p>
 
 
       </google-codelab-step>
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>

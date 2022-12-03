@@ -9,7 +9,7 @@
   <title>Elastic 安全实战工作坊(中等)</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -100,7 +100,7 @@ end
 <li>kibana-7.12.0-x86_64.rpm</li>
 </ul>
 <p>你可以在 Elastic 官网下载，也可以在这个百度网盘下载（示例配置文件）：链接: https://pan.baidu.com/s/180iRADaE1kdqPptPokdSoQ  密码: 82ui</p>
-<h2 is-upgraded>安装配置 Elasticsearch</h2>
+<p>###安装配置 Elasticsearch</p>
 <p>首先，开始安装和配置 Elasticsearch 服务，假设后续步骤的所有安装包和示例配置文件都位于 <code>/vagrant</code> 目录下，你的 rpm 软件包和配置文件也可以位于其它路径中（如果你用的不是 Vagrant 虚拟机的话，也建议将 5 个 rpm 安装包和 5 个示例配置文件都放到这个路径中，后续的课程中只需要复制粘贴命令即可，这样就方便很多），执行安装命令如下：</p>
 <pre><code language="language-shell" class="language-shell">cd /vagrant/rpm
 sudo rpm -ivh  elasticsearch-7.12.0-x86_64.rpm
@@ -142,7 +142,7 @@ sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
 sudo systemctl status elasticsearch
 </code></pre>
-<p>使用 <code>sudo tail -f /var/log/elasticsearch/elk-sec01.log</code> 命令查看当前 Elasticsearch 服务的日志。</p>
+<p>使用 <code>sudo tail -f /var/log/elasticsearch/elk-sec01.log</code>  命令查看当前 Elasticsearch 服务的日志。</p>
 <p>初始化 ES 服务器内建用户的密码。</p>
 <pre><code language="language-shell" class="language-shell">sudo /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive -b
 </code></pre>
@@ -168,8 +168,7 @@ Changed password for user [remote_monitoring_user]
 Changed password for user [elastic]
 </code></pre>
 <p>在浏览器中访问http://192.168.50.11:9200/ ，测试 Elasticsearch 服务是否正常，确认上面配置的 elastic 用户的密码 <code>security123</code> 登录。</p>
-<aside class="warning"><p>注意：请确保将 Elasticsearch 服务运行正常，可以在网页浏览器中登录/验证 elastic 用户的密码 security123。</p>
-</aside>
+<p>Negative : 注意：请确保将 Elasticsearch 服务运行正常，可以在网页浏览器中登录/验证 elastic 用户的密码 security123。</p>
 <h2 is-upgraded>安装配置 Kibana</h2>
 <p>在 rpm 软件安装包的目录中，执行 Kibana 安装命令，如下所示：</p>
 <pre><code language="language-shell" class="language-shell">cd /vagrant/rpm/
@@ -198,7 +197,7 @@ sudo systemctl status   kibana.service
 </code></pre>
 <p>在浏览器里测试登录 Kibana 的地址  http://192.168.50.11:5601 ，使用 elastic 用户名和密码 security123。点击主页上的&#34;安全&#34;的链接，你应该看到如下的界面。</p>
 <p class="image-container"><img alt="2021-03-24_13-13-23" src="img/9f1c02938474b18b.png"></p>
-<h3 is-upgraded>创建 GeoIp 解析流水线</h3>
+<p>####创建 GeoIp 解析流水线</p>
 <p>还需要为摄入数据创建一个用于解析 IP 地址地理位置的 pipeline ，这个操作在 Kibana 的开发者工具中完成。将下面的代码复制粘贴到 Kibana 的开发者工具中。</p>
 <pre><code language="language-json" class="language-json">PUT _ingest/pipeline/geoip-info
 {
@@ -247,19 +246,16 @@ GET _ingest/pipeline/geoip-info
 <p>将左侧编辑器文本框中的光标移动到 <code>PUT _ingest/pipeline/geoip-info</code> 这一行，点击右侧扳手图标傍边的三角按钮，执行 pipeline 创建操作。</p>
 <p class="image-container"><img alt="2021-03-24_14-26-10" src="img/18e5c0ae6c62212c.png"></p>
 <p>点击 GET _ingest/pipeline/geoip-info 这个语句右侧的三角形，查看刚才创建的流水线的信息。</p>
-<aside class="warning"><p>注意：这个数据丰富流水线会在 Beats 的配置文件中触发，必须正确创建以上流水线，才能顺利完成后续练习。</p>
-</aside>
-<h3 is-upgraded>启用 ELK 技术栈自监控</h3>
+<p>Negative : 注意：这个数据丰富流水线会在 Beats 的配置文件中触发，必须正确创建以上流水线，才能顺利完成后续练习。</p>
+<p>####启用 ELK 技术栈自监控</p>
 <p>点击 Kibana 左上角菜单中点击 &#34;堆栈监控&#34;，点击按钮下方的文字链接 &#34;<strong>或，使用内部收集设置</strong>&#34;， 点开&#34;打开监控&#34; 按钮，启用自监控（监控数据驻留在本集群内部），结果如下所示。</p>
 <p class="image-container"><img alt="2021-03-25_15-01-45" src="img/e7e094a76e1fda35.png"></p>
 <p>在以上的监控功能中，特别是 Beats 这一块，能看到各种 Beats 在被监控节点上的部署结果和运行现状，在后续的测试过程中，建议多次访问这个监控页面查看安装配置结果。</p>
-<aside class="warning"><p>注意：这个监控页面需要依赖于 Beats 的配置文件中启用了监控功能，建议在所有 Beats 配置文件中打开这个开关。</p>
-</aside>
-<h3 is-upgraded>启用企业版许可 30 天试用</h3>
+<p>Negative : 注意：这个监控页面需要依赖于 Beats 的配置文件中启用了监控功能，建议在所有 Beats 配置文件中打开这个开关。</p>
+<p>####启用企业版许可 30 天试用</p>
 <p>点击 Kibana 左上角菜单中点击 &#34;Stack Management&#34; –&gt; &#34;许可管理&#34;，点击 &#34;开始试用&#34; 按钮，启用 30 天的高级功能的试用期。</p>
 <p class="image-container"><img alt="2021-03-25_15-07-47" src="img/d202a2240ad45634.png"></p>
-<aside class="warning"><p>注意：至此完成了 Elastic Stack 的基础准备工作，Elasticsearch + Kibana 的服务都处于正常运行状态，完成了技术栈的自监控、启用了企业版功能的试用。</p>
-</aside>
+<p>Negative : 注意：至此完成了 Elastic Stack 的基础准备工作，Elasticsearch + Kibana 的服务都处于正常运行状态，完成了技术栈的自监控、启用了企业版功能的试用。</p>
 
 
       </google-codelab-step>
@@ -267,7 +263,7 @@ GET _ingest/pipeline/geoip-info
       <google-codelab-step label="安全事件收集" duration="30">
         <p>如果使用 Elastic 的 Beats （以及相关模块）采集和摄入安全事件数据，那么所有数据在进入 Elasticsearch 的过程中就完成了和统一通用数据定义 ECS 的适配。相同含义字段在各个不同数据源中的差异性就在这个过程中得到了调和，在 Kibana 分析安全数据的过程中，也是基于数据已经得到了 ECS 的标准化了。</p>
 <p>下面分步骤配置三种最常用的 Beats 数据采集工具。</p>
-<h2 is-upgraded>安装配置 Auditbeat</h2>
+<p>###安装配置 Auditbeat</p>
 <p>Auditbeat 支持的操作系统包括：</p>
 <ul>
 <li>Linux（DEB，RPM，tar.gz）</li>
@@ -384,16 +380,14 @@ sudo auditbeat test output
 sudo systemctl start  auditbeat
 sudo systemctl status  auditbeat
 </code></pre>
-<aside class="warning"><p>注意：以上的这两条测试命令  auditbeat <strong>test config</strong> 和  auditbeat <strong>test output</strong> 适用于后续的其它 Beats 的启动前测试。它们能确保 Beats 服务使用目标配置文件正确运行。</p>
-</aside>
+<p>Negative : 注意：以上的这两条测试命令  auditbeat <strong>test config</strong> 和  auditbeat <strong>test output</strong> 适用于后续的其它 Beats 的启动前测试。它们能确保 Beats 服务使用目标配置文件正确运行。</p>
 <p>如果上面的服务启动结果正常，很快的下面可以在 Kibana 的 Discovery 功能中，查看  Auditbeat-* 这个索引的数据。</p>
 <p class="image-container"><img alt="2021-03-25_14-47-58" src="img/b821dbce0871306a.png"></p>
 <p>在 Kibana 的 Dashboard 中查看Auditbeat 的数据分析仪表板 (搜索 system 关键字)。</p>
 <p class="image-container"><img alt="2021-03-25_14-47-32" src="img/9ddd4ebfa7b27e53.png"></p>
 <p>在 Kibana 的堆栈检测中查看这个 Beat 的运行状态。</p>
 <p class="image-container"><img alt="2021-03-25_15-14-12" src="img/2542f0a99494dff9.png"></p>
-<aside class="warning"><p>注意：至此完成了 Auditbeat 在这个服务器上的部署和配置，并且确认仪表板中的数据都是更新的，这个 Beat采集代理的监控状态也正常。</p>
-</aside>
+<p>Negative : 注意：至此完成了 Auditbeat 在这个服务器上的部署和配置，并且确认仪表板中的数据都是更新的，这个 Beat采集代理的监控状态也正常。</p>
 <h2 is-upgraded>安装配置 Pecketbeat</h2>
 <p>Pecketbeat 是一个应用监控和性能分析系统，它可以嗅探服务器上发生的网络包，解码 7 层的网络消息，然后将分析结果发送到后台的 Elasticsearch 服务中进行分析， 支持的操作系统包括：</p>
 <ul>
@@ -524,8 +518,7 @@ sudo yum update -y
 <p>在 Kibana 的安全应用中，点击网络视图，将看到如下所示：</p>
 <p class="image-container"><img alt="2021-03-25_16-05-51" src="img/8f32babf633dde32.png"></p>
 <p>将鼠标移动到日本的那个红点上，显示详细信息。</p>
-<aside class="warning"><p>注意：至此完成了 Packetbeat 的配置和调试工作，还可以再次确认相关仪表板和 Beat 代理监控的状态。</p>
-</aside>
+<p>Negative : 注意：至此完成了 Packetbeat 的配置和调试工作，还可以再次确认相关仪表板和 Beat 代理监控的状态。</p>
 <h2 is-upgraded>安装配置 Filebeat</h2>
 <p>在 Kibana 的主页上点击&#34;添加数据&#34;按钮后，点击 &#34;安全&#34;，这里展示的是 Elastic 官方支持的安全事件数据采集模块，大部分是通过 Filebeat 日志文件集成的方式完成。</p>
 <p class="image-container"><img alt="2021-03-25_16-15-18" src="img/58bb37455d4eadd6.png"></p>
@@ -622,8 +615,7 @@ sudo systemctl status   filebeat
 <p>Filebeat 正常运行了几分钟之后，回到 Kibana 中安全应用的主页，在主机事件区域中，可以看到 Filebeat 上传的事件数量。查看 Filebeat 的系统概况仪表板【[Filebeat System] Syslog dashboard ECS】，如下所示：</p>
 <p class="image-container"><img alt="2021-03-25_16-30-23" src="img/bbbac9e2297c5b48.png"></p>
 <p>点击上图的 sudo commands， SSH logins 和 New users 等标签页，查看系统日志的详细分析图。</p>
-<aside class="warning"><p>注意：至此完成了 所有 Elastic 提供的安全事件采集和分析工具体系的搭建。</p>
-</aside>
+<p>Negative : 注意：至此完成了 所有 Elastic 提供的安全事件采集和分析工具体系的搭建。</p>
 
 
       </google-codelab-step>
@@ -643,8 +635,7 @@ sudo systemctl status   filebeat
 <li>点击屏幕右上角的&#34;添加到收藏夹&#34;按钮，可以将这个时间线分析查询条件，放到 &#34;安全&#34; 应用的首页，作为快捷入口。</li>
 </ol>
 <p>这样就定义了一个典型的可以重复使用的搜索分析场景，这个时间线也可以逐渐迭代和进化它的搜索条件，调整输出的字段，从而调整它的精度和用途。</p>
-<aside class="warning"><p>注意：时间线是人工安全事件巡检分析的入口，利用它在一个界面中执行分析和搜索操作，它默认使用来自所有数据源的事件。</p>
-</aside>
+<p>Negative : 注意：时间线是人工安全事件巡检分析的入口，利用它在一个界面中执行分析和搜索操作，它默认使用来自所有数据源的事件。</p>
 <h3 is-upgraded>创建安全事故分析案例</h3>
 <p>当某个时间线的分析结果被判定为安全事故之后，就需要根据它来创建一个故障调查案例，这是 SIEM 的常用场景。点击时间线右上角的 &#34;附加到案例&#34;，选择 &#34;附加到新案例&#34; 选项，进入新建案例界面，如下图所示：</p>
 <p class="image-container"><img alt="2021-03-25_22-58-08" src="img/3e5012b2f8e683c6.png"></p>
@@ -658,8 +649,7 @@ sudo systemctl status   filebeat
 <li>在案例页面上查看该新建案例，添加后续的调查分析注释，点击 &#34;进行中&#34; 按钮。</li>
 <li>查看当前案例的状态，在事故调查完毕后，可以点击&#34;关闭案例&#34;按钮。</li>
 </ol>
-<aside class="warning"><p>注意：人工安全分析的结果，加 ML 自动分析的结果，加内部外部的安全情报分析等等都会触发 SecOps 人员创建进一步调查案例，立案调查是为了锁定和消除安全风险根因。</p>
-</aside>
+<p>Negative : 注意：人工安全分析的结果，加 ML 自动分析的结果，加内部外部的安全情报分析等等都会触发 SecOps 人员创建进一步调查案例，立案调查是为了锁定和消除安全风险根因。</p>
 <h3 is-upgraded>基于 EQL 的复杂用户登录分析</h3>
 <p>本练习旨在帮助你理解 EQL 的分析方法。</p>
 <p>在模拟若干次操作系统 SSH 登录的操作，至少包含下面一组事件：</p>
@@ -682,7 +672,7 @@ sudo systemctl status   filebeat
 [authentication where event.outcome == &#34;failure&#34;]
 [authentication where event.outcome == &#34;success&#34;]
 </code></pre>
-<ol type="1">
+<ol type="1" start="4">
 <li>点击刷新按钮查看搜索结果。结果中红色的区域就是匹配出来的三个事件。</li>
 </ol>
 <p>可以尝试删除搜索语句中第一行的 &#34;[authentication where event.outcome == &#34;failure&#34;]&#34; 查询条件，看看搜索结果有什么不同。</p>
@@ -700,8 +690,7 @@ sudo systemctl status   filebeat
 <li>EQL的学习曲线很低：EQL语法看起来像其他常见的查询语言，如SQL。EQL让您直观地编写和读取查询，这使得快速、反复搜索。</li>
 <li>EQL是为安全管理用例设计的：虽然您可以将其用于任何基于事件的数据，但我们创建EQL用于威胁狩猎。EQL不仅支持妥协指标（indicator of compromise  IOC）搜索，而且可以描述超越IOC的活动。</li>
 </ul>
-<aside class="warning"><p>注意：EQL 是专门为安全狩猎、为复杂性较高的安全分析而生的；不仅可以在 Kibana SIEM 的时间线–&gt; &#34;相关性&#34; 这个界面中使用，而且可以直接通过 Elasticsearch 的 API调用 <code>/_eql/</code> 完成所有搜索功能，这也是和其它系统集成的接口。</p>
-</aside>
+<p>Negative : 注意：EQL 是专门为安全狩猎、为复杂性较高的安全分析而生的；不仅可以在 Kibana SIEM 的时间线–&gt; &#34;相关性&#34; 这个界面中使用，而且可以直接通过 Elasticsearch 的 API调用  <code>/_eql/</code> 完成所有搜索功能，这也是和其它系统集成的接口。</p>
 
 
       </google-codelab-step>
@@ -733,7 +722,7 @@ sudo systemctl status   filebeat
 <p>如上图所示：</p>
 <ol type="1">
 <li>被触发的检测规则信号量统计</li>
-<li>所有触发检测规则的事件清单  <ul>
+<li>所有触发检测规则的事件清单 <ul>
 <li>查看详情</li>
 <li>添加到时间线</li>
 <li>附件到案例</li>
@@ -756,14 +745,12 @@ sudo systemctl status   filebeat
 <li>点击 &#34;创建新规则&#34;</li>
 <li>选择 &#34;事件关联&#34;</li>
 <li>确认索引模式</li>
-<li>在 EQL 查询中输入下面的查询语句</li>
-</ol>
-<pre><code language="language-sql" class="language-sql">   sequence by host.name, source.ip, user.name  with maxspan=15s
-   [authentication where event.outcome == &#34;failure&#34;]
-   [authentication where event.outcome == &#34;failure&#34;]
-   [authentication where event.outcome == &#34;success&#34;]
+<li>在 EQL 查询中输入下面的查询语句<pre><code language="language-sql" class="language-sql">sequence by host.name, source.ip, user.name  with maxspan=15s
+[authentication where event.outcome == &#34;failure&#34;]
+[authentication where event.outcome == &#34;failure&#34;]
+[authentication where event.outcome == &#34;success&#34;]
 </code></pre>
-<ol type="1">
+</li>
 <li>点击继续，后在关于规则中输入规则的名称： 自定义–登录检测规则 ，输入描述 &#34; 15 秒内，两次错误登录后成功登录&#34;</li>
 <li>默认严重性选择高</li>
 <li>默认风险分数修改为 49</li>
@@ -774,15 +761,14 @@ sudo systemctl status   filebeat
 <li>回到 检测 页面，我们应该能够看到，刚才创建的规则已经产生了新的信号量。</li>
 </ol>
 <p>自定义规则可以是企业环境中特定的安全威胁检测机制，如果这种特定威胁已经发生过了，那么SecOps 团队应该马上进行消除工作，在消除了威胁造成的影响后，为了防止这个威胁的复发，应该创建对应的检测规则，并定期执行和告警，这种工作方式可以日积月累出很多扎实的威胁狩猎知识库。</p>
-<aside class="warning"><p>注意：Elastic Security 内置规则，加上企业安全分析师有的放矢的安全狩猎都会逐步让规则检测库丰富和完善。基于规则的自动化巡检消除了大量日常手工重复安全巡视的工作量。所有启用的规则经过定期的优化、调校和测试会变得更加精准。</p>
-</aside>
+<p>Negative : 注意：Elastic Security 内置规则，加上企业安全分析师有的放矢的安全狩猎都会逐步让规则检测库丰富和完善。基于规则的自动化巡检消除了大量日常手工重复安全巡视的工作量。所有启用的规则经过定期的优化、调校和测试会变得更加精准。</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="外部系统集成" duration="20">
         <p>Suricata 是一个高性能的IDS、IPS和网络安全监控的引擎。 它是开源的，由一个社区经营的非营利基金会开放信息安全基金会（OISF）开发。 Filebeat 也提供了官方的支持模块。</p>
-<h3 is-upgraded>安装配置 Suricata</h3>
+<p>####安装配置 Suricata</p>
 <p>这是一款比较流行的开源软件 CentOS 的 epel 仓库中就有，通过下面的命令安装。</p>
 <pre><code language="language-sh" class="language-sh">sudo yum -y install epel-release
 sudo yum -y install suricata
@@ -833,8 +819,7 @@ sudo systemctl restart filebeat
 <li>优化 Suricata 的规则</li>
 <li>优化 Suricata 的告警规则，减少噪音和假阳性告警</li>
 </ol>
-<aside class="warning"><p>注意：想一想你的其它昂贵的安全管理工具的数据都发挥了应有的价值了么？如果这些工具集的数据的价值无法通过一种统一的数据定义标准化起来，就无法</p>
-</aside>
+<p>Negative : 注意：想一想你的其它昂贵的安全管理工具的数据都发挥了应有的价值了么？如果这些工具集的数据的价值无法通过一种统一的数据定义标准化起来，就无法</p>
 
 
       </google-codelab-step>
@@ -865,10 +850,10 @@ sudo systemctl restart filebeat
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>
